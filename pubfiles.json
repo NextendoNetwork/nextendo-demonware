@@ -1,0 +1,21 @@
+{
+  "season": 37,
+  "season_start": "Sat, 09 Feb 2025 00:00:00 GMT",
+  "season_end": "Tue, 09 Feb 2036 01:00:00 GMT",
+  "buff_start": "Sat, 16 Sep 2023 00:00:00 GMT",
+  "buff_end": "Wed, 01 Dec 2027 01:00:00 GMT",
+  "events": {
+    "DarkAlchemy": true,
+    "KanaiPowers": true,
+    "NestingPortals": true,
+    "SwarmRifts": true
+  },
+  "legendary_find": "1.0",
+  "gold_find": "1.0",
+  "xp": "1.0",
+  "hero_publish_frequency_minutes": "30",
+  "cross_platform_save_migration": true,
+  "seasonal_global_leaderboards": true,
+  "diablo4_advertisement": false,
+  "update_version": "1"
+}

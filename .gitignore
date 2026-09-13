@@ -1,0 +1,27 @@
+/diablo-3
+*.exe
+*.exe~
+*.linux
+cert.pem
+key.pem
+nextendo_secret.key
+# Build outputs / compiled servers
+*.out
+/bin/
+/dist/
+# Secrets & local config - NEVER commit
+.env
+*.pem
+*.key
+*.pfx
+*.der
+# Runtime state: tickets, generated publisher files, raw captures
+sessions/
+pubfiles/
+dumps/
+capture/
+# Runtime logs
+stderr.txt
+stdout.txt
+*.log
+*.err

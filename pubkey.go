@@ -1,0 +1,14 @@
+package main
+
+// bdPublicKeyDER est la cle publique RSA-2048 (SubjectPublicKeyInfo DER, 294 octets)
+// du client Demonware. Il s'en sert comme etiquette HKDF pour transformer la cle de
+// 24 octets du ticket dans une variante de la poignee de main que D3 n'utilise pas.
+var bdPublicKeyDER = mustHex("" +
+	"30820122300d06092a864886f70d01010105000382010f003082010a0282010100c0a20b1f6cb81b1270ed1aef306c75" +
+	"9dc1088999f02ac8ac2fc7d5d03b612939f38f6239daf12011e792e916242296099eac19cd243e58c6408678d7df7077" +
+	"cbde8042b138f31d6a3c98e485dbfb533a8647ce58b1d3d70b833d146bda40241f162b0e4922e4b763ffaa40c244dfdc" +
+	"3f8c1e60b46f3edab24e50cafc624b62c7e1775e83cde0b5fcc6aaa0c26b28cc8aa7957b1e67e05bafc65449e6ac7a8d" +
+	"1de67d120494c3234a006058336fe79419fff6e0c64050b79d0ecddfe7925d8494130661bc4475547054774cc0287dfc" +
+	"c99a9238d4d5eef3274466132c06f064e7ecf875fd15d41b91459d4a3f40e935537ffc9661e1487421f00420413002d2" +
+	"f90203010001" +
+	"")
