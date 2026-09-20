@@ -20,9 +20,8 @@ This server does not run alone. It sits behind the rest of the Nextendo stack, a
 | **sni-router** | required | A route sending `crimson-switch-auth3.*.demonware.net` to `BACKEND_D3` (default `127.0.0.1:8460`), and the PROXY protocol v1 header on that route (`SNI_PROXY_PROTOCOL=1` on the router, `NEXTENDO_PROXY_PROTOCOL=1` here) so the auth sees the player's real address. Neither is in sni-router's `main` yet. The lobby (TCP/UDP 3074) does not go through the router. |
 | **nextendo-account** | required for account gates and presence | `POST /internal/online-check` and `POST /internal/presence-batch`, both authenticated with `X-Internal-Key` (`NEXTENDO_INTERNAL_KEY`). Already in `main`. With `NEXTENDO_REQUIRE_ACCOUNT=0` a missing or unreachable account service only logs. |
 | **nextendo-dashboard** | optional | A `d3` source polling this server's `/api/stats` on port 8093 (`DASH_D3_URL`, `DASH_D3_TOKEN`). Without it the server works, it just is not on the shared dashboard. |
-| **baas-jwks**, RS256 BAAS tokens in nextendo-account | only for real consoles | Letting a real Switch link an account without Nintendo. Emulators (tested: Citron) do not need it. Not specific to Diablo III. |
 | **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack, and the game must never reach the real Demonware. A console uses Atmosphere hosts entries; an emulator uses the resolver of its host. |
-| **TLS certificate** | required | `CERT_FILE` / `KEY_FILE` for the auth port (default `cert.pem` / `key.pem`, never committed). It must be a certificate the client accepts for `*.demonware.net`. |
+| **TLS certificate** | required | `CERT_FILE` / `KEY_FILE` for the auth port (default `cert.pem` / `key.pem`, never committed): a certificate for the three `crimson-switch-auth3.*.demonware.net` names from a CA your clients trust. Yours to provide. |
 | **Game files on the client** | required | The client must run the current game update. A client without it finds updated games but can never join them. |
 
 For co-op between a console running d3hack and a stock peer, keep d3hack's cheat sections off and set `MaxParagonLevel = 20000`: gameplay-changing patches on one side desync the session and the game drops the join a few seconds later. Community buffs are served by this server (`pubfiles.json`) instead.
@@ -45,10 +44,7 @@ These steps follow the generic [deployment guide](https://github.com/NextendoNet
    - `NEXTENDO_PROXY_PROTOCOL=1` when sni-router emits the PROXY header (it should);
    - `NEXTENDO_REQUIRE_ACCOUNT=1` once your accounts are live (0 only logs);
    - `DASH_TOKEN` to a random value (the shared dashboard uses it).
-4. **Create a TLS certificate** for the auth hostnames and point `CERT_FILE` / `KEY_FILE` at it. A self-signed one, for testing where the client is set up to trust it:
-
-       openssl req -x509 -newkey rsa:2048 -nodes -days 825 -keyout key.pem -out cert.pem          -subj "/CN=crimson-switch-auth3.prod.demonware.net"          -addext "subjectAltName=DNS:crimson-switch-auth3.prod.demonware.net,DNS:crimson-switch-auth3.cert.demonware.net,DNS:crimson-switch-auth3.dev.demonware.net"
-
+4. **Use your own TLS certificate.** Point `CERT_FILE` / `KEY_FILE` at the certificate and key your deployment already uses for its game servers. sni-router passes the TLS through untouched, so this is the certificate the client sees: it must cover `crimson-switch-auth3.prod.demonware.net`, `crimson-switch-auth3.cert.demonware.net` and `crimson-switch-auth3.dev.demonware.net`, and be issued by the CA your clients already trust (the same setup as the other Nextendo servers, see the deployment guide). No certificate is shipped with this server, and `cert.pem` and `key.pem` are never committed.
 5. **Route it in sni-router.** Set `BACKEND_D3=127.0.0.1:8460` (or wherever the auth port is) and `SNI_PROXY_PROTOCOL=1`, restart the router.
 6. **Point the DNS at the stack** as listed in Requirements, and open TCP 3074, UDP 3074 and the auth and dashboard ports in the host firewall.
 7. **Add it to the dashboard (optional).** Set `DASH_D3_URL=http://127.0.0.1:8093` and `DASH_D3_TOKEN` (the `DASH_TOKEN` above) on nextendo-dashboard.
