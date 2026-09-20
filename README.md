@@ -187,3 +187,5 @@ facts were read from them and **reimplemented** here in Go; no code was copied.
   — Demonware reverse-engineering tools.
 
 Everything specific to Diablo III (ticket layout, lobby handshake and crypto, task reply format, the service/task map) was reverse-engineered from the game binary; the addresses and layouts are documented in the source comments.
+
+Crash Team Racing Nitro-Fueled (title 5775): the server code for it is **[CollectingW](https://github.com/CollectingW)**'s, from the [`crash-team-racing` branch of CollectingW/diablo-3](https://github.com/CollectingW/diablo-3/tree/crash-team-racing) (pull request #1 of `nx-mod/diablo-3`). It is merged here as sent, with English comments and log strings only where the merge touched them; the French left in `ctr_*.go` and `lobbydoc.go` is theirs and still to translate. The reverse engineering of CTR's Demonware behaviour is theirs.
