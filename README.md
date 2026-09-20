@@ -2,94 +2,85 @@
 
 Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network). Source only — no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
 
-Diablo III does not use NEX: its online layer is **Demonware**. This server speaks it end to end — auth, the encrypted lobby, remote tasks, matchmaking, NAT discovery — and plugs into the Nextendo stack like the other game servers: a route in sni-router, the account gates and presence of nextendo-account, and `/api/stats` for nextendo-dashboard.
+Diablo III does not use NEX: its online layer is **Demonware**. This server speaks it end to end (auth, the encrypted lobby, remote tasks, matchmaking, NAT discovery) and plugs into the Nextendo stack like the other game servers: a route in sni-router, the account gates and presence of nextendo-account, and `/api/stats` for nextendo-dashboard.
 
 ## What works
 
-- Login and "connected to the Diablo network"; season and community events served from `pubfiles.json`, with optional monthly season rotation and weekly Challenge Rifts (see Optional features)
-- Public games: create, find, join, player counts, NAT introductions
-- Co-op between a Switch and an emulator (tested: CFW Switch, Citron 2.7.7)
-- Friend lookups inside the game, and presence reported to nextendo-account
+- Login and "connected to the Diablo network".
+- Season and community events served from `pubfiles.json` ([PUBFILES.md](PUBFILES.md)), with optional monthly season rotation and weekly Challenge Rifts (see [Optional features](#optional-features)).
+- Public games: create, find, join, player counts, NAT introductions.
+- Co-op between a Switch and an emulator (tested: CFW Switch, Citron 2.7.7).
+- Friend lookups inside the game, and presence reported to nextendo-account.
 
 ## Requirements
 
-This server does not run alone. It sits behind the rest of the Nextendo stack, and a few of those pieces need changes that are shipped as separate pull requests.
+This server runs behind the rest of the Nextendo stack. Two of the pieces need changes that are shipped as separate pull requests.
 
 | component | needed? | what it must provide |
 |---|---|---|
-| **sni-router** | required | A route sending `crimson-switch-auth3.*.demonware.net` to `BACKEND_D3` (default `127.0.0.1:8460`), and the PROXY protocol v1 header on that route (`SNI_PROXY_PROTOCOL=1` on the router, `NEXTENDO_PROXY_PROTOCOL=1` here) so the auth sees the player's real address. Neither is in sni-router's `main` yet. The lobby (TCP/UDP 3074) does not go through the router. |
-| **nextendo-account** | required for account gates and presence | `POST /internal/online-check` and `POST /internal/presence-batch`, both authenticated with `X-Internal-Key` (`NEXTENDO_INTERNAL_KEY`). Already in `main`. With `NEXTENDO_REQUIRE_ACCOUNT=0` a missing or unreachable account service only logs. |
-| **nextendo-dashboard** | optional | A `d3` source polling this server's `/api/stats` on port 8093 (`DASH_D3_URL`, `DASH_D3_TOKEN`). Without it the server works, it just is not on the shared dashboard. |
-| **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack, and the game must never reach the real Demonware. A console uses Atmosphere hosts entries; an emulator uses the resolver of its host. |
-| **TLS certificate** | required | `CERT_FILE` / `KEY_FILE` for the auth port (default `cert.pem` / `key.pem`, never committed): a certificate for the three `crimson-switch-auth3.*.demonware.net` names from a CA your clients trust. Yours to provide. |
-| **Game files on the client** | required | The client must run the current game update. A client without it finds updated games but can never join them. |
+| **sni-router** | required | A route sending `crimson-switch-auth3.*.demonware.net` to `BACKEND_D3` (default `127.0.0.1:8460`), with the PROXY protocol v1 header (`SNI_PROXY_PROTOCOL=1` on the router, `NEXTENDO_PROXY_PROTOCOL=1` here) so the auth sees the player's real address. Neither is in sni-router's `main` yet. The lobby (3074) does not go through the router. |
+| **nextendo-account** | for account gates and presence | `POST /internal/online-check` and `POST /internal/presence-batch`, authenticated with `X-Internal-Key`. Already in `main`. With `NEXTENDO_REQUIRE_ACCOUNT=0`, an unreachable account service is only logged. |
+| **nextendo-dashboard** | optional | A `d3` source polling `/api/stats` on port 8093 (`DASH_D3_URL`, `DASH_D3_TOKEN`). Without it the server works but is not on the shared dashboard. |
+| **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack; the game must never reach the real Demonware. A console uses Atmosphere hosts entries, an emulator the resolver of its host. |
+| **TLS certificate** | required | A certificate and key for the three `crimson-switch-auth3.*.demonware.net` names, from a CA your clients trust (`CERT_FILE`, `KEY_FILE`). Yours to provide; none is shipped and none is committed. |
+| **Game update on the client** | required | The client must run the current game update, or it finds updated games but can never join them. |
 
-For co-op between a console running d3hack and a stock peer, keep d3hack's cheat sections off and set `MaxParagonLevel = 20000`: gameplay-changing patches on one side desync the session and the game drops the join a few seconds later. Community buffs are served by this server (`pubfiles.json`) instead.
+## Install
 
-## Install into a Nextendo deployment
+These steps follow the generic [deployment guide](https://github.com/NextendoNetwork/nextendo-docs/blob/main/DEPLOYMENT.md); every value is a placeholder for your own.
 
-These steps follow the generic [deployment guide](https://github.com/NextendoNetwork/nextendo-docs/blob/main/DEPLOYMENT.md); every value is a placeholder you replace with your own.
-
-1. **Prerequisites.** Go 1.23 or newer, and a running `nextendo-account` and `sni-router` (see Requirements above).
-2. **Get the code and build it.**
+1. **Prerequisites.** Go 1.23 or newer, and a running nextendo-account and sni-router.
+2. **Build.**
 
        git clone https://github.com/NextendoNetwork/diablo-3.git
        cd diablo-3
        go build -o server .
 
-3. **Create the environment file.** `cp example.env .env`, then set:
-   - `NEXTENDO_HOST` to the IPv4 address players reach this server on;
-   - `NEXTENDO_ACCOUNT_URL` to your nextendo-account;
-   - `NEXTENDO_INTERNAL_KEY` and `NEXTENDO_SECRET` to the **same values** nextendo-account uses, otherwise the gates and presence calls are refused;
-   - `NEXTENDO_PROXY_PROTOCOL=1` when sni-router emits the PROXY header (it should);
-   - `NEXTENDO_REQUIRE_ACCOUNT=1` once your accounts are live (0 only logs);
-   - `DASH_TOKEN` to a random value (the shared dashboard uses it).
-4. **Use your own TLS certificate.** Point `CERT_FILE` / `KEY_FILE` at the certificate and key your deployment already uses for its game servers. sni-router passes the TLS through untouched, so this is the certificate the client sees: it must cover `crimson-switch-auth3.prod.demonware.net`, `crimson-switch-auth3.cert.demonware.net` and `crimson-switch-auth3.dev.demonware.net`, and be issued by the CA your clients already trust (the same setup as the other Nextendo servers, see the deployment guide). No certificate is shipped with this server, and `cert.pem` and `key.pem` are never committed.
-5. **Route it in sni-router.** Set `BACKEND_D3=127.0.0.1:8460` (or wherever the auth port is) and `SNI_PROXY_PROTOCOL=1`, restart the router.
-6. **Point the DNS at the stack** as listed in Requirements, and open TCP 3074, UDP 3074 and the auth and dashboard ports in the host firewall.
-7. **Add it to the dashboard (optional).** Set `DASH_D3_URL=http://127.0.0.1:8093` and `DASH_D3_TOKEN` (the `DASH_TOKEN` above) on nextendo-dashboard.
-8. **Start it and check.**
+   The standard library only. `go test ./...` runs the tests.
+3. **Configure.** `cp example.env .env` and edit it; every variable is documented in that file. At minimum:
+   - `NEXTENDO_HOST`: the IPv4 address players reach this server on;
+   - `NEXTENDO_ACCOUNT_URL`: your nextendo-account;
+   - `NEXTENDO_INTERNAL_KEY` and `NEXTENDO_SECRET`: the **same values** nextendo-account uses, or the gates and presence calls are refused;
+   - `NEXTENDO_PROXY_PROTOCOL=1`, since sni-router sends the PROXY header;
+   - `NEXTENDO_REQUIRE_ACCOUNT=1` once your accounts are live (`0` only logs);
+   - `DASH_TOKEN`: a random value.
+4. **Certificate.** Point `CERT_FILE` and `KEY_FILE` at the certificate your deployment uses for its game servers. sni-router passes the TLS through untouched, so this is the certificate the client sees. It must cover `crimson-switch-auth3.prod.demonware.net`, `.cert.` and `.dev.`, and come from the CA your clients already trust.
+5. **sni-router.** Set `BACKEND_D3=127.0.0.1:8460` (or wherever the auth port is) and `SNI_PROXY_PROTOCOL=1`, then restart it.
+6. **DNS and firewall.** Point the names in the table above at the stack, and open the ports below on the host firewall before the first run: a dismissed firewall prompt leaves a silent block rule.
+7. **Dashboard (optional).** On nextendo-dashboard set `DASH_D3_URL=http://127.0.0.1:8093` and `DASH_D3_TOKEN` to your `DASH_TOKEN`.
+8. **Run and check.**
 
        ./server
 
-   The log should show `[D3 Auth] listening HTTPS`, `[D3 Lobby] listening TCP` and `[D3 NAT] listening UDP`. Then `curl http://127.0.0.1:8093/healthz` returns 200, and a game logging in produces `[D3 Auth] ... -> 200 code=700`.
-
-## Build
-
-    go build -o server.exe .
-    go test ./...
-
-Standard library only.
-
-## Configure and run
-
-Copy `example.env` to `.env` and edit it; every variable is documented there. At minimum set `NEXTENDO_HOST` (the server's IPv4 as players see it), the three secrets (`NEXTENDO_INTERNAL_KEY`, `NEXTENDO_SECRET`, `DASH_TOKEN`) and `NEXTENDO_ACCOUNT_URL`.
-
-    server.exe
+   The log shows `[D3 Auth] listening HTTPS`, `[D3 Lobby] listening TCP` and `[D3 NAT] listening UDP`. `curl http://127.0.0.1:8093/healthz` returns 200, and a game logging in logs `[D3 Auth] ... -> 200 code=700`.
 
 | port | what |
 |---|---|
-| 8460 TCP (TLS) | Demonware auth, behind sni-router (`*.demonware.net` -> `BACKEND_D3`) |
-| 3074 TCP | lobby (`LOBBY_PORTS` also opens 3075-3080) |
+| 8460 TCP (TLS) | Demonware auth, behind sni-router |
+| 3074 TCP | lobby (`LOBBY_PORTS` also opens 3075 to 3080) |
 | 3074 UDP | NAT discovery and introductions |
 | 8093 HTTP | `/api/stats?key=DASH_TOKEN`, `/healthz`, `/pubfiles/` |
 
-Open the ports in the host firewall before the first run. A dismissed firewall prompt creates a silent block rule.
+## Publisher files
 
-The season, community events and the item blacklist are generated from `pubfiles.json` (every setting is explained in [PUBFILES.md](PUBFILES.md), the season themes in [SEASONS.md](SEASONS.md)):
+The season, the community events with their multipliers, and the item blacklist come from `pubfiles.json`. Every setting is explained in [PUBFILES.md](PUBFILES.md) and the season themes in [SEASONS.md](SEASONS.md).
 
-    server.exe pubfiles    # regenerate Config.txt / Seasons.txt / Blacklist.txt and exit
+    server pubfiles    # regenerate Config.txt / Seasons.txt / Blacklist.txt and exit
 
-The lobby reads the publisher files on every request, so changing the season or an event needs no restart.
+The lobby reads them on every request, so a change needs no restart; players see it the next time they connect.
 
 ## Optional features
 
-Both are off or inert until you set them up, and neither has been tried against a running game yet (the settings and the code are covered by tests).
+Both are off or inert until you set them up. Neither has been tried on a running game yet; the code and settings are covered by tests.
 
-- **Monthly season rotation.** The season advances every month through all the seasons the server knows (14 to 39 built in, more added in `pubfiles.json`), with the theme of each season switched on, and starts over after the last. Set `"season_rotation": { "enabled": true }` in `pubfiles.json`. See [PUBFILES.md](PUBFILES.md#season-rotation) and [SEASONS.md](SEASONS.md).
-- **Weekly Challenge Rifts.** Put `challengerift_config.dat` and the `challengerift_NN.dat` files from d3hack's release zip (`config/d3hack-nx/rift_data/`) in `D3_RIFTDATA` (default `riftdata/`) and the server serves them, one per week, looping back to the first. The files are captured game data and are not in this repository. See [PUBFILES.md](PUBFILES.md#challenge-rifts).
+- **Monthly season rotation.** The season advances every month through all the seasons the server knows (14 to 39 built in, more added in `pubfiles.json`) with each season's theme switched on, then starts over. Enable it with `"season_rotation": { "enabled": true }`. See [PUBFILES.md](PUBFILES.md#season-rotation).
+- **Weekly Challenge Rifts.** Put `challengerift_config.dat` and the `challengerift_NN.dat` files from d3hack's release zip (`config/d3hack-nx/rift_data/`) in `D3_RIFTDATA` (default `riftdata/`) and the server serves one per week, looping back to the first. The files are captured game data and are not in this repository. See [PUBFILES.md](PUBFILES.md#challenge-rifts).
 
-Runtime state (`sessions/`, `pubfiles/`, `dumps/`) is created next to the binary and ignored by git; `riftdata/` is yours to fill and is ignored too. `D3_DUMPS=<dir>` records raw auth bodies and lobby frames; `D3_VERBOSE=1` logs every decrypted lobby message.
+## Development notes
+
+- Runtime state (`sessions/`, `pubfiles/`, `dumps/`) is created next to the binary and ignored by git, as is `riftdata/`.
+- `D3_DUMPS=<dir>` records raw auth bodies and lobby frames; `D3_VERBOSE=1` logs every decrypted lobby message.
+- For co-op between a console running d3hack and a stock peer, keep d3hack's cheat sections off and set `MaxParagonLevel = 20000`. Gameplay-changing patches on one side desync the session and the game drops the join a few seconds later. Community buffs come from this server instead.
 
 ## Credits
 
@@ -119,6 +110,4 @@ facts were read from them and **reimplemented** here in Go; no code was copied.
   **[hosseinpourziyaie/demonware-companion](https://github.com/hosseinpourziyaie/demonware-companion)**
   — Demonware reverse-engineering tools.
 
-Everything specific to Diablo III (ticket layout, lobby handshake and crypto,
-task reply format, the service/task map) was reverse-engineered from the game
-binary; function and offsets are documented in the source comments.
+Everything specific to Diablo III (ticket layout, lobby handshake and crypto, task reply format, the service/task map) was reverse-engineered from the game binary; the addresses and layouts are documented in the source comments.
