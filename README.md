@@ -21,9 +21,30 @@ This server runs behind the rest of the Nextendo stack. Two of the pieces need c
 | **sni-router** | required | A route sending `crimson-switch-auth3.*.demonware.net` to `BACKEND_D3` (default `127.0.0.1:8460`), with the PROXY protocol v1 header (`SNI_PROXY_PROTOCOL=1` on the router, `NEXTENDO_PROXY_PROTOCOL=1` here) so the auth sees the player's real address. Neither is in sni-router's `main` yet. The lobby (3074) does not go through the router. |
 | **nextendo-account** | for account gates and presence | `POST /internal/online-check` and `POST /internal/presence-batch`, authenticated with `X-Internal-Key`. Already in `main`. With `NEXTENDO_REQUIRE_ACCOUNT=0`, an unreachable account service is only logged. |
 | **nextendo-dashboard** | optional | A `d3` source polling `/api/stats` on port 8093 (`DASH_D3_URL`, `DASH_D3_TOKEN`). Without it the server works but is not on the shared dashboard. |
-| **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack; the game must never reach the real Demonware. A console uses Atmosphere hosts entries, an emulator the resolver of its host. |
+| **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack; the game must never reach the real Demonware. A console uses Atmosphere hosts entries, an emulator the resolver of its host: exact lines in [Hosts entries](#hosts-entries). |
 | **TLS certificate** | required | A certificate and key for the three `crimson-switch-auth3.*.demonware.net` names, from a CA your clients trust (`CERT_FILE`, `KEY_FILE`). Yours to provide; none is shipped and none is committed. |
 | **Game update on the client** | required | The client must run the current game update, or it finds updated games but can never join them. |
+
+## Hosts entries
+
+Diablo III must reach these names on your stack and never on the real Demonware. The auth names go to the machine running sni-router; the lobby and STUN names go straight to the diablo-3 server (the lobby does not pass through the router), which is the address you set as `NEXTENDO_HOST`. They can be the same machine.
+
+```
+<ROUTER_IP> crimson-switch-auth3.prod.demonware.net
+<ROUTER_IP> crimson-switch-auth3.cert.demonware.net
+<ROUTER_IP> crimson-switch-auth3.dev.demonware.net
+<D3_IP>     crimson-switch-lobby.prod.demonware.net
+<D3_IP>     crimson-switch-lobby.cert.demonware.net
+<D3_IP>     crimson-switch-lobby.dev.demonware.net
+<D3_IP>     stun.us.demonware.net
+<D3_IP>     stun.eu.demonware.net
+<D3_IP>     stun.jp.demonware.net
+<D3_IP>     stun.au.demonware.net
+```
+
+- **Switch (Atmosphere):** add the lines to the end of both `/atmosphere/hosts/emummc.txt` and `/atmosphere/hosts/sysmmc.txt` (the last matching line wins), make sure `enable_dns_mitm = u8!0x1` is set under `[atmosphere]` in `/atmosphere/config/system_settings.ini`, and reboot the console.
+- **Emulator:** the same lines in the hosts file of the machine whose resolver the emulator uses, or in the emulator's own redirect if it has one.
+- Without the STUN lines the console sends its NAT probes to Activision, and online games stay local only.
 
 ## Install
 
@@ -46,7 +67,7 @@ These steps follow the generic [deployment guide](https://github.com/NextendoNet
    - `DASH_TOKEN`: a random value.
 4. **Certificate.** Point `CERT_FILE` and `KEY_FILE` at the certificate your deployment uses for its game servers. sni-router passes the TLS through untouched, so this is the certificate the client sees. It must cover `crimson-switch-auth3.prod.demonware.net`, `.cert.` and `.dev.`, and come from the CA your clients already trust.
 5. **sni-router.** Set `BACKEND_D3=127.0.0.1:8460` (or wherever the auth port is) and `SNI_PROXY_PROTOCOL=1`, then restart it.
-6. **DNS and firewall.** Point the names in the table above at the stack, and open the ports below on the host firewall before the first run: a dismissed firewall prompt leaves a silent block rule.
+6. **DNS and firewall.** Add the [hosts entries](#hosts-entries), and open the ports below on the host firewall before the first run: a dismissed firewall prompt leaves a silent block rule.
 7. **Dashboard (optional).** On nextendo-dashboard set `DASH_D3_URL=http://127.0.0.1:8093` and `DASH_D3_TOKEN` to your `DASH_TOKEN`.
 8. **Run and check.**
 
