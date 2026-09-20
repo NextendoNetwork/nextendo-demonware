@@ -1,6 +1,6 @@
 # diablo-3
 
-Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network), with **Crash Team Racing Nitro-Fueled** support contributed by CollectingW (see [Crash Team Racing](#crash-team-racing)). Source only — no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
+Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network), with **Crash Team Racing Nitro-Fueled** support contributed by [CollectingW](https://github.com/CollectingW) (see [Crash Team Racing](#crash-team-racing)). Source only — no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
 
 Diablo III does not use NEX: its online layer is **Demonware**. This server speaks it end to end (auth, the encrypted lobby, remote tasks, matchmaking, NAT discovery) and plugs into the Nextendo stack like the other game servers: a route in sni-router, the account gates and presence of nextendo-account, and `/api/stats` for nextendo-dashboard.
 
@@ -93,7 +93,7 @@ The lobby reads them on every request, so a change needs no restart; players see
 
 ## Crash Team Racing
 
-Crash Team Racing Nitro-Fueled (Demonware title 5775) speaks the same lobby protocol as Diablo III, so its support lives in this server instead of a fork. It was written by **CollectingW** (pull request #1 of `nx-mod/diablo-3`) and is merged here with the comments and log strings translated to English and a few lines of glue to fit our friend lookup. Every CTR-specific path is gated on the title the client announces; title 5745 (Diablo III) behaves as before.
+Crash Team Racing Nitro-Fueled (Demonware title 5775) speaks the same lobby protocol as Diablo III, so its support lives in this server instead of a fork. It was written by **[CollectingW](https://github.com/CollectingW)** (pull request #1 of `nx-mod/diablo-3`) and is merged here with the comments and log strings translated to English and a few lines of glue to fit our friend lookup. Every CTR-specific path is gated on the title the client announces; title 5745 (Diablo III) behaves as before.
 
 What it adds, from the pull request:
 
@@ -107,7 +107,7 @@ What it adds, from the pull request:
 
 The merge changed one thing for Diablo III: games whose host disconnects are now orphaned and removed when the host does not come back, instead of staying findable until the connection closes. A task the server cannot parse now gets an empty success instead of no answer.
 
-Not checked by us: this merge builds and every test passes, including CollectingW's, but we have not run Crash Team Racing against it, and Diablo III has not been re-tested on a running game since the merge. CTR's hostnames for the hosts entries and its sni-router route have not been verified.
+Checked by us: this merge builds and every test passes, including CollectingW's, and Diablo III was run on the merged build on a local stack (a CFW Switch and a Citron phone logged in, season 37 was served, and a game was created and found). Not checked by us: Crash Team Racing itself, which we have never run against this server. CTR's hostnames for the hosts entries and its sni-router route have not been verified.
 
 ## Optional features
 
@@ -163,7 +163,7 @@ What this server does not do, and what has not been checked. Read this before re
   — the Switch online stack this server plugs into: NSA/BaaS accounts, dauth,
   the SNI router that carries Demonware traffic, and the game-server pattern
   (gates, presence, dashboard) this server follows.
-- **CollectingW** — wrote the Crash Team Racing Nitro-Fueled support in this server (pull request #1 of `nx-mod/diablo-3`): title-aware login, signed auth replies, umbrella tokens, contextual and async matchmaking, friend sessions and the rich presence service, with tests. The reverse engineering of CTR's Demonware behaviour is theirs.
+- **[CollectingW](https://github.com/CollectingW)** — wrote the Crash Team Racing Nitro-Fueled support in this server (pull request #1 of `nx-mod/diablo-3`): title-aware login, signed auth replies, umbrella tokens, contextual and async matchmaking, friend sessions and the rich presence service, with tests. The reverse engineering of CTR's Demonware behaviour is theirs.
 - **[D3Hack](https://github.com/god-jester/D3StudioFork)** by **jester**, on
   [exlaunch](https://github.com/shadowninja108/exlaunch) by **Shadow** — used
   as the instrumentation platform (hooks and logging inside the game) and as the
