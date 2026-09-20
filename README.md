@@ -80,7 +80,7 @@ Copy `example.env` to `.env` and edit it; every variable is documented there. At
 
 Open the ports in the host firewall before the first run. A dismissed firewall prompt creates a silent block rule.
 
-The season, community events and the item blacklist are generated from `pubfiles.json`:
+The season, community events and the item blacklist are generated from `pubfiles.json` (every setting is explained in [PUBFILES.md](PUBFILES.md)):
 
     server.exe pubfiles    # regenerate Config.txt / Seasons.txt / Blacklist.txt and exit
 
