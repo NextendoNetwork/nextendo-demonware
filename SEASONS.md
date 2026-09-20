@@ -33,6 +33,7 @@ Themes by season. The event flags are d3hack's season mapping; the names and mec
 ## Notes
 
 - Seasons **1 to 13 had no theme**: Blizzard introduced themed seasons with Season 14, Season of Greed ("Season 14 First Look: Themed Seasons", June 2018, on news.blizzard.com). They are plain seasons, so nothing is switched on for them. Whether the game accepts a season number that low has not been tested here.
+- **Client build and season.** A client may have to match the served season. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with the server and with each other; later seasons are untested on them.
 - Season **23** (followers) has a name but no event flag, because the change is built into the game.
 - Season **28** is mapped to `DarkAlchemy` as in d3hack, although its theme is known by the name Rites of Sanctuary. The flag is what the game reads, so it is the part that matters.
 - The themes are listed once, in `season_themes` in `pubfiles.json` (see [PUBFILES.md](PUBFILES.md#season-themes)). When a new season is announced, add a line there; no code change is needed, and the rotation picks it up in numeric order.

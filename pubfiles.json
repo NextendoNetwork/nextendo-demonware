@@ -5,6 +5,9 @@
   // ---- Season --------------------------------------------------------------------------------
 
   // Season number served while rotation is off. 39 is the latest known season.
+  // A client may have to match the season: game builds 2.7.6 and 2.7.7 were tested working with season 37,
+  // with this server and with each other. Newer seasons are untested on them; if a client will not accept a
+  // character, serve 37.
   "season": 39,
 
   // The season's window, as "Www, DD Mon YYYY hh:mm:ss GMT". The day of the month MUST have two digits (09, not 9).

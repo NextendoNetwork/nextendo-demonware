@@ -20,7 +20,7 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 
 | field | default | effect |
 |---|---|---|
-| `season` | `39` | Season number: the latest known one. Ignored while rotation is on. |
+| `season` | `39` | Season number: the latest known one. The tested one is 37 (see below). Ignored while rotation is on. |
 | `season_start`, `season_end` | 2020-01-01, 2050-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
 | `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
 | `season_theme` | `true` | Switch on the served season's theme events automatically ([season themes](#season-themes)). |
@@ -34,6 +34,8 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 | `season_rotation` | off | Advance the season every month ([below](#season-rotation)). |
 | `season_themes` | 14 to 39 | The events of each season: the one place they are listed ([below](#season-themes)). |
 | `challenge_rifts` | `weekly` | Weekly Challenge Rifts ([below](#challenge-rifts)). |
+
+**Season and client build.** A client may have to match the season the server serves. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Newer seasons (38, 39 and above) have not been tested against those builds, and a console on 2.7.6 refused to create a new character while season 39 was served (the cause is not confirmed). If a client will not accept a character, serve season 37.
 
 Example, a file that keeps season 39 and its theme, adds doubled goblins and 2x experience:
 

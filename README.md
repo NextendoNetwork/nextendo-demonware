@@ -9,7 +9,7 @@ Diablo III does not use NEX: its online layer is **Demonware**. This server spea
 - Login and "connected to the Diablo network".
 - Season and community events served from `pubfiles.json` ([PUBFILES.md](PUBFILES.md)), with optional monthly season rotation and weekly Challenge Rifts (see [Optional features](#optional-features)).
 - Public games: create, find, join, player counts, NAT introductions.
-- Co-op between a Switch and an emulator (tested: CFW Switch, Citron 2.7.7).
+- Co-op between a Switch and an emulator. Tested: game builds 2.7.6 (CFW Switch) and 2.7.7 (Citron), both with season 37, working against this server and against each other.
 - Friend lookups inside the game, and presence reported to nextendo-account.
 
 ## Requirements
@@ -23,7 +23,7 @@ This server runs behind the rest of the Nextendo stack. Two of the pieces need c
 | **nextendo-dashboard** | optional | A `d3` source polling `/api/stats` on port 8093 (`DASH_D3_URL`, `DASH_D3_TOKEN`). Without it the server works but is not on the shared dashboard. |
 | **DNS** | required | `crimson-switch-auth3.*.demonware.net`, `crimson-switch-lobby.*.demonware.net` and `stun.{us,eu,jp,au}.demonware.net` must resolve to the stack; the game must never reach the real Demonware. A console uses Atmosphere hosts entries, an emulator the resolver of its host: exact lines in [Hosts entries](#hosts-entries). |
 | **TLS certificate** | required | A certificate and key for the three `crimson-switch-auth3.*.demonware.net` names, from a CA your clients trust (`CERT_FILE`, `KEY_FILE`). Yours to provide; none is shipped and none is committed. |
-| **Game update on the client** | required | The client must run the current game update, or it finds updated games but can never join them. |
+| **Game update on the client** | required | The client must run the current game update, or it finds updated games but can never join them. The client may also have to match the season being served: builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Later seasons have not been tested against those builds. |
 
 ## Hosts entries
 
