@@ -168,9 +168,8 @@ func buildBlacklist(_ pubConfig) string {
 }
 
 // maxGameTime is the last moment a signed 32-bit time can hold (19 Jan 2038
-// 03:14:07 GMT). The game keeps these dates in 32 bits (d3hack uses the same
-// limit for its rift end time), so a later date wraps to the past and the
-// season looks over: heroes are then refused as "not a seasonal hero".
+// 03:14:07 GMT). The game appears to keep these dates in 32 bits (d3hack uses
+// the same limit for its rift end time), so a later date may wrap into the past.
 const maxGameTime = 1<<31 - 1
 
 // latestSafeDate replaces a date past maxGameTime.

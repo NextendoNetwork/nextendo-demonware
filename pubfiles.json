@@ -6,15 +6,15 @@
 
   // Season number served while rotation is off. 39 is the latest known season.
   // A client may have to match the season: game builds 2.7.6 and 2.7.7 were tested working with season 37,
-  // with this server and with each other. Newer seasons are untested on them. A hero is tied to the season it was
-  // created in: after this number changes, the game calls heroes from another season "not a seasonal hero".
-  // Pick one season and keep it.
+  // with this server and with each other. Newer seasons are untested on them.
+  // WARNING: changing this number, up or down, can damage a savegame. Serving several seasons in turn to one
+  // console left it refusing new seasonal heroes until its save was deleted. Pick one season and keep it, never
+  // lower it after a save has played a higher one, and back saves up before changing it.
   "season": 39,
 
   // The season's window, as "Www, DD Mon YYYY hh:mm:ss GMT". The day of the month MUST have two digits (09, not 9).
-  // Keep the end far in the future so a season never ends while a player is connected, BUT BEFORE 19 Jan 2038:
-  // the game keeps these dates in 32 bits, so a later date wraps to the past and the season looks over
-  // (heroes are then refused as "not a seasonal hero"). The server replaces any later date with 1 Jan 2038.
+  // Keep the end far in the future so a season never ends while a player is connected, but BEFORE 19 Jan 2038:
+  // the game appears to keep these dates in 32 bits. The server replaces any later date with 1 Jan 2038.
   "season_start": "Wed, 01 Jan 2020 00:00:00 GMT",
   "season_end": "Tue, 01 Jan 2036 00:00:00 GMT",
 

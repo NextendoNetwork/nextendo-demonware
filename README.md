@@ -92,7 +92,7 @@ The lobby reads them on every request, so a change needs no restart; players see
 
 ## Optional features
 
-Both are off or inert until you set them up. Neither has been tried on a running game yet; the code and settings are covered by tests.
+Both are off or inert until you set them up. Season rotation changes the season for every save that plays on the server, and changing the season, up or down, can damage a savegame: see [PUBFILES.md](PUBFILES.md#settings). Neither has been tried on a running game yet; the code and settings are covered by tests.
 
 - **Monthly season rotation.** The season advances every month through the seasons listed in `pubfiles.json` (14 to 39; add more there) with each season's theme switched on, then starts over. Enable it with `"season_rotation": { "enabled": true }`. See [PUBFILES.md](PUBFILES.md#season-rotation).
 - **Weekly Challenge Rifts.** Put `challengerift_config.dat` and the `challengerift_NN.dat` files from d3hack's release zip (`config/d3hack-nx/rift_data/`) in `D3_RIFTDATA` (default `riftdata/`) and the server serves one per week, looping back to the first. The files are captured game data and are not in this repository. See [PUBFILES.md](PUBFILES.md#challenge-rifts).

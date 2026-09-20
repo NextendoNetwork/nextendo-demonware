@@ -35,7 +35,9 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 | `season_themes` | 14 to 39 | The events of each season: the one place they are listed ([below](#season-themes)). |
 | `challenge_rifts` | `weekly` | Weekly Challenge Rifts ([below](#challenge-rifts)). |
 
-**Season and client build.** A client may have to match the season the server serves. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Newer seasons (38, 39 and above) have not been tested against those builds. A hero is tied to the season it was created in: after the served season changes, the game reports heroes from another season as "not a seasonal hero" (seen while different seasons were served to one console; the exact rule is not confirmed). So choose one season and keep it, and create heroes while it is being served; rotation changes it on purpose.
+**Season and client build.** A client may have to match the season the server serves. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Newer seasons (38, 39 and above) have not been tested against those builds.
+
+**Changing the season, up or down, can damage a savegame.** On the one console where this was tested, serving season 37, then 69, then 39, then 37 again left it refusing every new seasonal hero ("not a seasonal hero") even though the server files were exactly the ones that had worked before; deleting the save fixed it. Going down in season is the case seen, and the game most likely records the season on the save, but the exact rule is not confirmed. So: choose one season and keep it, never lower it once a save has played on a higher one, and back up saves before changing it (JKSV on a Switch).
 
 Example, a file that keeps season 39 and its theme, adds doubled goblins and 2x experience:
 
@@ -84,13 +86,13 @@ With rotation on, the season advances every month through **the seasons listed i
 | `first`, `last` | `0`, `0` | Optional inclusive bounds on which seasons take part; `0` is no bound. |
 | `interval_seconds` | `0` | For testing: seconds per season instead of a month, counted from `anchor` (`YYYY-MM-DD` works too). |
 
-Before enabling it: each month the season changes, so characters created in the season leave it, as at a real season end (use a fixed `season` for a stable seasonal character). Season numbers outside the ones the game shipped with have not been tested.
+Before enabling it, read the warning under [Settings](#settings) about changing the season. Rotation changes the season every month and, after the last listed season, goes back to the first, which is a big step **down**: expect it to disturb any save that has played a season. Use a fixed `season` for stable seasonal characters. Season numbers outside the ones the game shipped with have not been tested.
 
 ### Dates
 
 The format is `Www, DD Mon YYYY hh:mm:ss GMT`, for example `Sat, 09 Feb 2025 00:00:00 GMT`. The day must have **two digits** (`09`, not `9`) or the file cannot be parsed.
 
-**No date may be later than 19 January 2038.** The game keeps these dates in 32 bits, so a later one wraps into the past and the season looks over: a seasonal hero is then refused as "not a seasonal hero" when it tries to join. The server replaces any date past that limit with `Fri, 01 Jan 2038 00:00:00 GMT` and logs it, but keep your own dates below it.
+**Keep every date before 19 January 2038.** The game appears to keep these dates in 32 bits (d3hack limits its rift end to the same moment), so a later one may wrap into the past. The server replaces any date past that limit with `Fri, 01 Jan 2038 00:00:00 GMT` and logs it, but keep your own dates below it.
 
 ## Challenge Rifts
 
