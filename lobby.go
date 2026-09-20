@@ -1,9 +1,9 @@
 package main
 
-// Ecoute du lobby. 3074 est le port historique du stack bd (partage avec Xbox
-// Live) ; les voisins sont ouverts parce que le port reel n'est pas deductible
-// du binaire. La connexion elle-meme (hello, poignee de main, canal chiffre) est
-// dans handshake.go.
+// Lobby listener. 3074 is the bd stack's historical port (shared with Xbox
+// Live); the neighboring ports are also opened because the real port can't
+// be deduced from the binary. The connection itself (hello, handshake,
+// encrypted channel) is in handshake.go.
 
 import (
 	"log"

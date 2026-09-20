@@ -1,17 +1,19 @@
 package main
 
-// Fichiers « publisher » que Diablo III recupere au demarrage de sa session en
-// ligne : saison active, evenements communautaires et liste noire d'objets.
+// "Publisher" files that Diablo III fetches when its online session starts:
+// the active season, community events and the item blacklist.
 //
-// Ce sont trois fichiers TEXTE que le jeu recoit sous forme de chaine, par
-// bdStorage.getPublisherFile (10/21) sur le lobby (services.go) :
+// These are three TEXT files the game receives as a string, via
+// bdStorage.getPublisherFile (10/21) on the lobby (services.go). The formats
+// come from the consumer itself (d3hack, season_events.hpp, which synthesizes
+// them client-side to play offline):
 //
-//	seasons_config.txt    [Season N] + fenetre Start/End
-//	config.txt            lignes Cle "valeur", dont tous les CommunityBuff*
-//	blacklist_config.txt   sections [GBID] / [SNO]
+//	seasons_config.txt    [Season N] + Start/End window
+//	config.txt            Key "value" lines, including all the CommunityBuff*
+//	blacklist_config.txt   [GBID] / [SNO] sections
 //
-// pubfiles.json pilote le contenu. Les fichiers sont ecrits au demarrage et par
-// « server pubfiles » ; le lobby les relit a chaque requete.
+// pubfiles.json drives the content. The files are written at startup and by
+// "server.exe pubfiles"; the lobby re-reads them on every request.
 
 import (
 	"encoding/json"
@@ -24,31 +26,32 @@ import (
 	"strings"
 )
 
-// pubConfig pilote le contenu servi. Un seul fichier a editer pour changer la
-// saison ou allumer un evenement.
+// pubConfig drives the served content. One file to edit to change the season
+// or turn an event on.
 type pubConfig struct {
-	// Saison active (37 par defaut, la derniere testee).
+	// Active season. d3hack ran on 37: we keep the same default so behavior
+	// matches what has already been tested.
 	Season uint32 `json:"season"`
 
-	// Fenetre de la saison. Le jeu exige « ???, DD MMM YYYY hh:mm:ss GMT » avec
-	// un jour sur DEUX chiffres — un jour a un chiffre casse l'analyse.
+	// Season window. The game requires "???, DD MMM YYYY hh:mm:ss GMT" with a
+	// TWO-digit day — a one-digit day breaks the parsing.
 	SeasonStart string `json:"season_start"`
 	SeasonEnd   string `json:"season_end"`
 
-	// Fenetre des buffs communautaires (independante de la saison).
+	// Community buff window (independent of the season).
 	BuffStart string `json:"buff_start"`
 	BuffEnd   string `json:"buff_end"`
 
-	// Evenements communautaires. Chaque entree devient
-	// CommunityBuff<Nom> "1"/"0" dans config.txt.
+	// Community events. Each entry becomes CommunityBuff<Name> "1"/"0" in
+	// config.txt.
 	Events map[string]bool `json:"events"`
 
-	// Multiplicateurs de trouvaille. Le jeu les lit comme des reels.
+	// Find multipliers. The game reads them as floats.
 	LegendaryFind string `json:"legendary_find"`
 	GoldFind      string `json:"gold_find"`
 	XP            string `json:"xp"`
 
-	// Divers reglages de config.txt qui ne sont pas des evenements.
+	// Other config.txt settings that aren't events.
 	HeroPublishFrequencyMinutes string `json:"hero_publish_frequency_minutes"`
 	CrossPlatformSaveMigration  bool   `json:"cross_platform_save_migration"`
 	SeasonalGlobalLeaderboards  bool   `json:"seasonal_global_leaderboards"`
@@ -56,10 +59,10 @@ type pubConfig struct {
 	UpdateVersion               string `json:"update_version"`
 }
 
-// knownEvents est la liste complete des buffs que le jeu reconnait, dans
-// l'ordre du fichier d'origine. Une cle absente de Events est emise a "0" plutot
-// qu'omise : le jeu lit la valeur, et un champ manquant n'est pas la meme chose
-// qu'un champ a faux.
+// knownEvents is the complete list of buffs the game recognizes, in the order
+// d3hack emits them. A key missing from Events is emitted as "0" rather than
+// omitted: the game reads the value, and a missing field is not the same thing
+// as a field set to false.
 var knownEvents = []string{
 	"DoubleGoblins",
 	"DoubleBountyBags",
@@ -91,8 +94,8 @@ func defaultPubConfig() pubConfig {
 		SeasonEnd:   "Tue, 09 Feb 2036 01:00:00 GMT",
 		BuffStart:   "Sat, 16 Sep 2023 00:00:00 GMT",
 		BuffEnd:     "Wed, 01 Dec 2027 01:00:00 GMT",
-		// Rien d'allume par defaut : un serveur doit ressembler a la production
-		// tant qu'on ne decide pas le contraire.
+		// Nothing on by default: a server should look like production until
+		// we decide otherwise.
 		Events:                      map[string]bool{},
 		LegendaryFind:               "1.0",
 		GoldFind:                    "1.0",
@@ -112,8 +115,8 @@ func boolStr(b bool) string {
 	return "0"
 }
 
-// buildSeasons rend seasons_config.txt. Les deux lignes de commentaire sont
-// celles du fichier d'origine : elles documentent la contrainte de format.
+// buildSeasons returns seasons_config.txt. The two comment lines are those of
+// the original file: they document the format constraint.
 func buildSeasons(c pubConfig) string {
 	var b strings.Builder
 	b.WriteString("# Format for dates MUST be: \" ? ? ? , DD MMM YYYY hh : mm:ss UTC\"\n")
@@ -124,7 +127,7 @@ func buildSeasons(c pubConfig) string {
 	return b.String()
 }
 
-// buildConfig rend config.txt : une ligne Cle "valeur" par reglage.
+// buildConfig returns config.txt: one Key "value" line per setting.
 func buildConfig(c pubConfig) string {
 	var b strings.Builder
 	line := func(k, v string) { fmt.Fprintf(&b, "%s \"%s\"\n", k, v) }
@@ -147,8 +150,8 @@ func buildConfig(c pubConfig) string {
 	return b.String()
 }
 
-// buildBlacklist rend blacklist_config.txt. Les deux sections doivent exister
-// meme vides, sinon le jeu n'a rien a analyser.
+// buildBlacklist returns blacklist_config.txt. Both sections must exist even
+// when empty, otherwise the game has nothing to parse.
 func buildBlacklist(_ pubConfig) string {
 	return "# Item blacklist served by diablo-3\n[GBID]\n\n[SNO]\n"
 }
@@ -157,8 +160,8 @@ func loadPubConfig(path string) (pubConfig, error) {
 	c := defaultPubConfig()
 	raw, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
-		// Premiere execution : on ecrit le fichier par defaut pour qu'il y ait
-		// quelque chose a editer, plutot que d'echouer.
+		// First run: write the default file so there is something to edit,
+		// rather than failing.
 		out, _ := json.MarshalIndent(c, "", "  ")
 		if werr := os.WriteFile(path, out, 0o644); werr == nil {
 			log.Printf("[D3 Pubfiles] %s created with defaults", path)
@@ -174,7 +177,7 @@ func loadPubConfig(path string) (pubConfig, error) {
 	return c, nil
 }
 
-// writePubfiles genere les trois fichiers de cfgPath dans outDir.
+// writePubfiles generates the three files from cfgPath into outDir.
 func writePubfiles(cfgPath, outDir string) error {
 	cfg, err := loadPubConfig(cfgPath)
 	if err != nil {
@@ -215,8 +218,8 @@ func writePubfiles(cfgPath, outDir string) error {
 	return nil
 }
 
-// pubfilesHandler sert les fichiers generes en lecture seule (port du tableau
-// de bord) : /pubfiles/ les liste, /pubfiles/<nom> en rend un.
+// pubfilesHandler serves the generated files read-only (dashboard port):
+// /pubfiles/ lists them, /pubfiles/<name> returns one.
 func pubfilesHandler(w http.ResponseWriter, r *http.Request) {
 	name := strings.TrimPrefix(r.URL.Path, "/pubfiles/")
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")

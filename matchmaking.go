@@ -1,24 +1,24 @@
 package main
 
-// bdMatchMaking (service 21) : les parties publiques.
+// bdMatchMaking (service 21): public games.
 //
-// Vu en direct (Citron, partie rapide) : 21/5 findSessions, puis 21/1
-// createSession, puis 21/2 updateSession. Format des objets lu dans les
-// requetes D3 et recoupe avec bdMatchMakingInfo de Ezz-lol/boiii-free :
+// Seen live (Citron, quick match): 21/5 findSessions, then 21/1
+// createSession, then 21/2 updateSession. Object format read from D3's
+// requests and cross-checked against Ezz-lol/boiii-free's bdMatchMakingInfo:
 //
 //	createSession (21/1)  : info
 //	updateSession (21/2)  : 13 blob sessionID[8] | info
 //	deleteSession (21/3)  : 13 blob sessionID[8]
-//	updatePlayers (21/12) : 13 blob sessionID[8] | 08 u32 nbJoueurs | info
-//	findSessions  (21/5)  : 08 u32 requete | 08 u32 debut | 08 u32 max | filtres types
+//	updatePlayers (21/12) : 13 blob sessionID[8] | 08 u32 numPlayers | info
+//	findSessions  (21/5)  : 08 u32 query | 08 u32 start | 08 u32 max | typed filters
 //
-//	info (client -> serveur) : 13 blob hostAddr | 08 u32 gameType | 08 u32 maxPlayers | attributs D3 types
-//	resultat (serveur -> client) : 13 blob hostAddr | 13 blob sessionID[8] | 08 u32 gameType
-//	                               | 08 u32 maxPlayers | 08 u32 numPlayers | attributs D3 types
+//	info (client -> server) : 13 blob hostAddr | 08 u32 gameType | 08 u32 maxPlayers | typed D3 attributes
+//	result (server -> client) : 13 blob hostAddr | 13 blob sessionID[8] | 08 u32 gameType
+//	                            | 08 u32 maxPlayers | 08 u32 numPlayers | typed D3 attributes
 //
-// hostAddr (67 octets) est un bdCommonAddr : IP locale + port, adresses de
-// relais, IP publique + port, type de NAT. Le jeu s'en sert pour se connecter
-// en P2P a l'hote ; le serveur ne fait que le retransmettre.
+// hostAddr (67 bytes) is a bdCommonAddr: local IP + port, relay addresses,
+// public IP + port, NAT type. The game uses it to connect P2P to the host;
+// the server only relays it.
 
 import (
 	"crypto/rand"
@@ -40,12 +40,12 @@ const (
 
 type mmSession struct {
 	id         [8]byte
-	owner      uint64 // numero de connexion lobby de l'hote
+	owner      uint64 // host's lobby connection number
 	hostAddr   []byte
 	gameType   uint32
 	maxPlayers uint32
 	numPlayers uint32
-	attrs      []byte // octets types tels qu'envoyes par l'hote, apres maxPlayers
+	attrs      []byte // typed bytes exactly as sent by the host, after maxPlayers
 	updated    time.Time
 }
 
@@ -82,7 +82,7 @@ func (r *bdReader) blob() ([]byte, error) {
 	return v, nil
 }
 
-// rest rend les octets restants sans l'octet nul qui termine chaque requete.
+// rest returns the remaining bytes without the null byte that ends every request.
 func (r *bdReader) rest() []byte {
 	v := r.b[r.off:]
 	if len(v) > 0 && v[len(v)-1] == 0 {
@@ -93,7 +93,7 @@ func (r *bdReader) rest() []byte {
 
 func (w *bdWriter) raw(p []byte) { w.b = append(w.b, p...) }
 
-// readInfo lit un bdMatchMakingInfo envoye par le client.
+// readInfo reads a bdMatchMakingInfo sent by the client.
 func readInfo(r *bdReader) (host []byte, gameType, maxPlayers uint32, attrs []byte, err error) {
 	if host, err = r.blob(); err != nil {
 		return
@@ -108,7 +108,7 @@ func readInfo(r *bdReader) (host []byte, gameType, maxPlayers uint32, attrs []by
 	return
 }
 
-// dropSessionsOf retire les parties d'une connexion fermee.
+// dropSessionsOf removes the games of a closed connection.
 func dropSessionsOf(conn uint64) {
 	sessionsMu.Lock()
 	defer sessionsMu.Unlock()
@@ -119,13 +119,13 @@ func dropSessionsOf(conn uint64) {
 	}
 }
 
-// onMatchMaking traite le service 21. Rend nil si la tache n'est pas geree.
+// onMatchMaking handles service 21. Returns nil if the task isn't handled.
 func (l *lobbyConn) onMatchMaking(task byte, r *bdReader) []byte {
 	switch task {
 	case mmCreateSession:
 		host, gt, maxp, attrs, err := readInfo(r)
 		if err != nil {
-			l.logf("createSession illisible: %v", err)
+			l.logf("createSession unreadable: %v", err)
 			return taskReply(task, errUnhandled, nil)
 		}
 		s := &mmSession{owner: l.n, hostAddr: host, gameType: gt, maxPlayers: maxp, numPlayers: 1, attrs: attrs, updated: time.Now()}
@@ -134,19 +134,19 @@ func (l *lobbyConn) onMatchMaking(task byte, r *bdReader) []byte {
 		sessions[s.id] = s
 		n := len(sessions)
 		sessionsMu.Unlock()
-		l.logf("matchmaking CREATE session=%X gameType=%d max=%d hote=%s (%d parties ouvertes)",
+		l.logf("matchmaking CREATE session=%X gameType=%d max=%d host=%s (%d open games)",
 			s.id, gt, maxp, hex.EncodeToString(host[:min(6, len(host))]), n)
 		return taskReply(task, 0, func(w *bdWriter) uint32 { w.blobv(s.id[:]); return 1 })
 
 	case mmUpdateSession:
 		sid, err := r.blob()
 		if err != nil || len(sid) != 8 {
-			l.logf("updateSession: id illisible (%v)", err)
+			l.logf("updateSession: id unreadable (%v)", err)
 			return taskReply(task, 0, nil)
 		}
 		host, gt, maxp, attrs, err := readInfo(r)
 		if err != nil {
-			l.logf("updateSession %X: info illisible: %v", sid, err)
+			l.logf("updateSession %X: info unreadable: %v", sid, err)
 			return taskReply(task, 0, nil)
 		}
 		var id [8]byte
@@ -157,15 +157,15 @@ func (l *lobbyConn) onMatchMaking(task byte, r *bdReader) []byte {
 			s.hostAddr, s.gameType, s.maxPlayers, s.attrs, s.updated = host, gt, maxp, attrs, time.Now()
 		}
 		sessionsMu.Unlock()
-		l.logf("matchmaking UPDATE session=%X connue=%v", id, ok)
+		l.logf("matchmaking UPDATE session=%X known=%v", id, ok)
 		return taskReply(task, 0, nil)
 
 	case mmUpdatePlayers:
-		// Vu en direct quand la console a rejoint la partie de Citron :
-		// 13 blob sessionID | 08 u32 nbJoueurs | info complete.
+		// Seen live when the console joined Citron's game:
+		// 13 blob sessionID | 08 u32 numPlayers | full info.
 		sid, err := r.blob()
 		if err != nil || len(sid) != 8 {
-			l.logf("updateSessionPlayers: id illisible (%v)", err)
+			l.logf("updateSessionPlayers: id unreadable (%v)", err)
 			return taskReply(task, 0, nil)
 		}
 		players, _ := r.u32()
@@ -182,7 +182,7 @@ func (l *lobbyConn) onMatchMaking(task byte, r *bdReader) []byte {
 			s.updated = time.Now()
 		}
 		sessionsMu.Unlock()
-		l.logf("matchmaking JOUEURS session=%X joueurs=%d/%d connue=%v", id, players, maxp, ok)
+		l.logf("matchmaking PLAYERS session=%X players=%d/%d known=%v", id, players, maxp, ok)
 		return taskReply(task, 0, nil)
 
 	case mmDeleteSession:
@@ -220,7 +220,7 @@ func (l *lobbyConn) onMatchMaking(task byte, r *bdReader) []byte {
 		if len(found) > int(maxr) {
 			found = found[:maxr]
 		}
-		l.logf("matchmaking FIND requete=%d debut=%d max=%d -> %d partie(s)", query, start, maxr, len(found))
+		l.logf("matchmaking FIND query=%d start=%d max=%d -> %d game(s)", query, start, maxr, len(found))
 		return taskReply(task, 0, func(w *bdWriter) uint32 {
 			for _, s := range found {
 				w.blobv(s.hostAddr)

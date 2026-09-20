@@ -1,8 +1,8 @@
 package main
 
-// bdPublicKeyDER est la cle publique RSA-2048 (SubjectPublicKeyInfo DER, 294 octets)
-// du client Demonware. Il s'en sert comme etiquette HKDF pour transformer la cle de
-// 24 octets du ticket dans une variante de la poignee de main que D3 n'utilise pas.
+// bdPublicKeyDER is the RSA-2048 public key (SubjectPublicKeyInfo DER, 294 bytes)
+// read from the NSO at rodata 0xF07E90. The client uses it as an HKDF label to
+// transform the ticket's 24-byte key when the conn+0x208 flag is set.
 var bdPublicKeyDER = mustHex("" +
 	"30820122300d06092a864886f70d01010105000382010f003082010a0282010100c0a20b1f6cb81b1270ed1aef306c75" +
 	"9dc1088999f02ac8ac2fc7d5d03b612939f38f6239daf12011e792e916242296099eac19cd243e58c6408678d7df7077" +

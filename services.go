@@ -1,22 +1,22 @@
 package main
 
-// Taches distantes du lobby (bdRemoteTask).
+// Lobby remote tasks (bdRemoteTask), read from the NSO.
 //
-// Requete client (message chiffre, type interne 0x86) : un bdByteBuffer TYPE
-// dont le premier octet — l'identifiant de service — est ecrit brut :
+// Client request (encrypted message, inner type 0x86): a TYPED bdByteBuffer
+// whose first byte — the service identifier — is written raw:
 //
-//	u8 service | 03 u8 tache | arguments types
+//	u8 service | 03 u8 task | typed arguments
 //
-// Reponse (type interne 0x01) :
+// Reply (inner type 0x01, pump 0xBE96E0 -> 0xBE3FE0 -> 0xC00370):
 //
-//	0A u64 transaction | 08 u32 erreur | 03 u8 | 08 u32 nbResultats | 08 u32 total | resultats
+//	0A u64 transaction | 08 u32 error | 03 u8 | 08 u32 numResults | 08 u32 total | results
 //
-// L'erreur 0 donne des resultats, 200 laisse la tache en attente, toute autre
-// valeur la fait echouer proprement. Les taches sont servies dans l'ordre (la
-// premiere en attente prend la reponse) : pas d'identifiant a apparier.
+// Error 0 yields results, 200 leaves the task pending, any other value makes
+// it fail cleanly. Tasks are served in order (the first pending one takes the
+// reply): there is no identifier to match.
 //
-// Etiquettes de type :
-// 01 bool, 03 u8, 08 u32, 0A u64, 10 chaine terminee par NUL, 13 blob (08 u32 + octets).
+// Type tags (readers 0xBD90E0/0xBD9170/0xBDA100/0xBDA220/0xBDA4C0):
+// 01 bool, 03 u8, 08 u32, 0A u64, 10 NUL-terminated string, 13 blob (08 u32 + bytes).
 
 import (
 	"encoding/binary"
@@ -47,13 +47,13 @@ const (
 	taskGetServerTime    = 6
 )
 
-// Erreur renvoyee pour une tache non geree : non nulle et differente de 200,
-// la tache passe en echec au lieu d'expirer (une expiration coupe le lobby).
+// Error returned for an unhandled task: nonzero and different from 200, so
+// the task fails instead of timing out (a timeout drops the lobby).
 const errUnhandled = 1
 
 var transactions atomic.Uint64
 
-// bdWriter ecrit un bdByteBuffer type.
+// bdWriter writes a typed bdByteBuffer.
 type bdWriter struct{ b []byte }
 
 func (w *bdWriter) u8(v byte) { w.b = append(w.b, tagU8, v) }
@@ -71,7 +71,7 @@ func (w *bdWriter) blobv(p []byte) {
 	w.b = append(w.b, p...)
 }
 
-// bdReader lit un bdByteBuffer type (arguments des requetes).
+// bdReader reads a typed bdByteBuffer (request arguments).
 type bdReader struct {
 	b   []byte
 	off int
@@ -118,7 +118,7 @@ func (r *bdReader) str() (string, error) {
 	return s, nil
 }
 
-// taskReply construit la charge d'une reponse de tache.
+// taskReply builds the payload of a task reply.
 func taskReply(task byte, errCode uint32, results func(w *bdWriter) uint32) []byte {
 	w := &bdWriter{}
 	w.u64(transactions.Add(1))
@@ -132,7 +132,7 @@ func taskReply(task byte, errCode uint32, results func(w *bdWriter) uint32) []by
 	if results != nil {
 		n = results(body)
 	}
-	// Le client ne lit le total que s'il y a au moins un resultat.
+	// 0xC005B0 only reads the total if there is at least one result.
 	w.u32(n)
 	if n > 0 {
 		w.u32(n)
@@ -141,17 +141,17 @@ func taskReply(task byte, errCode uint32, results func(w *bdWriter) uint32) []by
 	return w.b
 }
 
-// onTask traite une requete dechiffree. payload = octets apres le type interne.
+// onTask handles a decrypted request. payload = bytes after the inner type.
 func (l *lobbyConn) onTask(payload []byte) {
 	if len(payload) < 3 {
-		l.logf("tache: charge trop courte %X", payload)
+		l.logf("task: payload too short %X", payload)
 		return
 	}
 	service := payload[0]
 	r := &bdReader{b: payload, off: 1}
 	task, err := r.u8()
 	if err != nil {
-		l.logf("tache: service %d sans id de tache (%v): %X", service, err, payload)
+		l.logf("task: service %d without a task id (%v): %X", service, err, payload)
 		return
 	}
 	noteTask(l, service, task)
@@ -161,26 +161,26 @@ func (l *lobbyConn) onTask(payload []byte) {
 	case service == svcTitleUtilities && task == taskGetServerTime:
 		now := uint32(time.Now().Unix())
 		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.u32(now); return 1 })
-		l.logf("tache bdTitleUtilities.getServerTime -> %d", now)
+		l.logf("task bdTitleUtilities.getServerTime -> %d", now)
 
 	case service == svcStorage && task == taskGetPublisherFile:
 		ctx, err1 := r.str()
 		name, err2 := r.str()
 		if err1 != nil || err2 != nil {
-			l.logf("getPublisherFile: arguments illisibles: %X", payload)
+			l.logf("getPublisherFile: unreadable arguments: %X", payload)
 			reply = taskReply(task, errUnhandled, nil)
 			break
 		}
 		data, path := l.publisherFile(name)
 		if data == nil {
-			// Aucun resultat plutot qu'une erreur : le jeu traite « fichier
-			// absent » comme un cas normal.
+			// No result rather than an error: the game treats a "missing
+			// file" as a normal case.
 			reply = taskReply(task, 0, nil)
-			l.logf("tache bdStorage.getPublisherFile ctx=%q file=%q -> ABSENT", ctx, name)
+			l.logf("task bdStorage.getPublisherFile ctx=%q file=%q -> MISSING", ctx, name)
 			break
 		}
 		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.blobv(data); return 1 })
-		l.logf("tache bdStorage.getPublisherFile ctx=%q file=%q -> %s (%d octets)", ctx, name, path, len(data))
+		l.logf("task bdStorage.getPublisherFile ctx=%q file=%q -> %s (%d bytes)", ctx, name, path, len(data))
 
 	case service == svcTitleUtilities && task == 9:
 		reply = l.onGetUserNames(task, r)
@@ -193,24 +193,23 @@ func (l *lobbyConn) onTask(payload []byte) {
 	case service == svcMatchMaking:
 		if reply = l.onMatchMaking(task, r); reply == nil {
 			reply = taskReply(task, 0, nil)
-			l.logf("tache matchmaking NON GEREE tache=%d args:\n%s", task, hex.Dump(payload))
+			l.logf("task matchmaking UNHANDLED task=%d args:\n%s", task, hex.Dump(payload))
 		}
 
 	default:
-		// Succes sans resultat : benin pour les requetes de liste, et une
-		// erreur risque de marquer le service indisponible cote jeu.
+		// Success with no result: harmless for list requests, whereas an
+		// error may mark the service unavailable on the game side.
 		reply = taskReply(task, 0, nil)
-		l.logf("tache NON GEREE service=%d tache=%d (succes vide) args:\n%s", service, task, hex.Dump(payload))
+		l.logf("task UNHANDLED service=%d task=%d (empty success) args:\n%s", service, task, hex.Dump(payload))
 	}
 
 	if err := l.sendEncrypted(innerTaskReply, reply); err != nil {
-		l.logf("envoi reponse: %v", err)
+		l.logf("send reply: %v", err)
 	}
 }
 
-// publisherFile cherche le fichier dans le dossier des fichiers publisher, sans tenir
-// compte de la casse (le jeu demande « Config.txt », le generateur ecrit
-// « config.txt »).
+// publisherFile looks the file up in the pubfiles folder, ignoring case (the
+// game asks for "Config.txt", the generator writes "config.txt").
 func (l *lobbyConn) publisherFile(name string) ([]byte, string) {
 	base := filepath.Base(name)
 	entries, err := os.ReadDir(l.pubDir)
@@ -234,8 +233,8 @@ func (l *lobbyConn) publisherFile(name string) ([]byte, string) {
 	return nil, ""
 }
 
-// Noms demandes par le jeu -> noms des fichiers generes.
-// Vu en direct : Config.txt, Seasons.txt, Blacklist.txt.
+// Real names requested by the game -> names written by the generator (taken
+// from d3hack's cache). Seen live: Config.txt, Seasons.txt, Blacklist.txt.
 var pubFileAliases = map[string]string{
 	"seasons.txt":   "seasons_config.txt",
 	"blacklist.txt": "blacklist_config.txt",

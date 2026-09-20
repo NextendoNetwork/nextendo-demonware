@@ -1,16 +1,16 @@
 package main
 
-// Identite du joueur lue dans la requete d'authentification.
+// Player identity read from the authentication request.
 //
-// extra_data (chaine JSON) porte « username » (le surnom Nintendo) et « token »
-// (id_token NSA). Le champ « nnex » du jeton vaut « nx2.<b64>.<sig> » ou <b64>
-// decode donne « <PID Nextendo>.<surnom>.<expiration> ». Ce PID est le compte
-// Nextendo du joueur ; Citron s'en sert aussi comme identifiant d'ami. La
-// signature est verifiee dans gates.go.
+// extra_data (a JSON string) carries "username" (the Nintendo nickname) and
+// "token" (the NSA id_token). The token's "nnex" claim is "nx2.<b64>.<sig>",
+// where <b64> decodes to "<Nextendo PID>.<nickname>.<expiry>". This PID is
+// the player's Nextendo account; Citron also uses it as its friend identifier
+// (seen: player1 = 1800000101). The signature is checked in gates.go.
 //
-// Nature de l'appareil, pour l'online-check de nextendo-account : l'id_token de
-// l'emulateur porte les claims « di » et « sn », celui de la console (emis via
-// le BaaS Nextendo) non. Constate sur Citron 2.7.7 et une Switch.
+// Device kind, for nextendo-account's online-check: the emulator's id_token
+// carries the "di" and "sn" claims, the console's (issued via Nextendo's BaaS)
+// does not. Observed 2026-09-13 on Citron 2.7.7 and a CFW Switch.
 
 import (
 	"encoding/base64"
@@ -30,7 +30,7 @@ func b64any(s string) []byte {
 	return nil
 }
 
-// playerIdentity rend l'identite du joueur et le claim nnex brut ("" s'il manque).
+// playerIdentity returns the player identity and the raw nnex claim ("" if missing).
 func playerIdentity(body []byte) (playerID, string) {
 	id := playerID{Kind: "switch"}
 	var req struct {
@@ -63,7 +63,7 @@ func playerIdentity(body []byte) (playerID, string) {
 	}
 	id.Sub = claims.Sub
 	if len(claims.DI) > 0 || len(claims.SN) > 0 {
-		id.Kind = "ryujinx" // nom Nextendo de la nature « emulateur »
+		id.Kind = "ryujinx" // Nextendo's name for the "emulator" device kind
 	}
 	nn := strings.TrimPrefix(claims.Nnex, "nx2.")
 	if i := strings.IndexByte(nn, '.'); i > 0 {

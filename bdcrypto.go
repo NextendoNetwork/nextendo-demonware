@@ -1,12 +1,13 @@
 package main
 
-// Primitives cryptographiques du lobby Demonware (SHA-1 partout) :
+// Demonware lobby crypto primitives, reproduced identically to what the
+// client does (LibTomCrypt in the NSO, SHA-1 throughout).
 //
-//	hmacSHA1(cle 20 octets, donnees)
-//	hkdfExpandSHA1(cle, etiquette, n)  — T1 = HMAC(k, lbl||01),
-//	          Ti = HMAC(k, T(i-1)||lbl||i), sortie tronquee a n
-//	sha1(donnees)
-//	AES-128-CBC pour le canal chiffre
+//	0xBDB5F0  hmacSHA1(20-byte key, data)
+//	0xBDB730  hkdfExpandSHA1(key, label, n)  — T1 = HMAC(k, lbl||01),
+//	          Ti = HMAC(k, T(i-1)||lbl||i), output truncated to n
+//	0xBDC9D0  sha1(data)
+//	+0x230/+0x238: AES-128-CBC (0x6B0-byte object, inited with 16 bytes)
 
 import (
 	"crypto/aes"
@@ -31,8 +32,8 @@ func hmacSHA1(key, data []byte) []byte {
 	return m.Sum(nil)
 }
 
-// hkdfExpandSHA1 : le premier bloc ne prefixe pas
-// de T(0) vide, le compteur est un octet qui commence a 1.
+// hkdfExpandSHA1 follows the loop at 0xBDB730: the first block does not
+// prefix an empty T(0), the counter is a byte starting at 1.
 func hkdfExpandSHA1(key, label []byte, n int) []byte {
 	out := make([]byte, 0, n+sha1.Size)
 	var prev []byte
@@ -47,18 +48,18 @@ func hkdfExpandSHA1(key, label []byte, n int) []byte {
 	return out[:n]
 }
 
-// sessionKeys est ce que les deux cotes derivent a la fin de la poignee de main.
+// sessionKeys is what 0xBFBB80 derives at the end of the handshake.
 type sessionKeys struct {
-	clientTag [8]byte // 8 derniers octets du message 0x82
-	serverChk [8]byte // a renvoyer dans 0x83
-	c2sMAC    []byte  // 20 octets
-	s2cMAC    []byte  // 20 octets
-	c2sAES    []byte  // 16 octets
-	s2cAES    []byte  // 16 octets
+	clientTag [8]byte // last 8 bytes of the 0x82 message
+	serverChk [8]byte // to send back in 0x83 (compared to conn+0x224)
+	c2sMAC    []byte  // conn+0x240, 20 bytes
+	s2cMAC    []byte  // conn+0x254, 20 bytes
+	c2sAES    []byte  // conn+0x230 object, 16 bytes
+	s2cAES    []byte  // conn+0x238 object, 16 bytes
 }
 
-// deriveKeys : secret = HMAC-SHA1(cle=SHA1(transcript), msg=cle24), puis
-// CLIENTCHAL (16) et BDDATA (72).
+// deriveKeys: secret = HMAC-SHA1(key=SHA1(transcript), msg=key24), then
+// CLIENTCHAL (16) and BDDATA (72).
 func deriveKeys(transcript, key24 []byte) sessionKeys {
 	digest := sha1.Sum(transcript)
 	secret := hmacSHA1(digest[:], key24)
@@ -76,15 +77,15 @@ func deriveKeys(transcript, key24 []byte) sessionKeys {
 	return k
 }
 
-// wrapKey24 est la variante « cle enveloppee » de la poignee de main : la cle du ticket passe par
-// HKDF avec la cle publique DER comme etiquette.
+// wrapKey24 is the conn+0x208 flag's variant: the ticket key goes through
+// HKDF with the DER public key as the label.
 func wrapKey24(key24 []byte) []byte {
 	return hkdfExpandSHA1(key24, bdPublicKeyDER, 24)
 }
 
 func aesCBCDecrypt(key, iv, ct []byte) ([]byte, error) {
 	if len(ct) == 0 || len(ct)%aes.BlockSize != 0 {
-		return nil, errors.New("longueur chiffree invalide")
+		return nil, errors.New("invalid ciphertext length")
 	}
 	b, err := aes.NewCipher(key)
 	if err != nil {
@@ -97,7 +98,7 @@ func aesCBCDecrypt(key, iv, ct []byte) ([]byte, error) {
 
 func aesCBCEncrypt(key, iv, pt []byte) ([]byte, error) {
 	if len(pt)%aes.BlockSize != 0 {
-		return nil, errors.New("clair non aligne")
+		return nil, errors.New("plaintext not block-aligned")
 	}
 	b, err := aes.NewCipher(key)
 	if err != nil {

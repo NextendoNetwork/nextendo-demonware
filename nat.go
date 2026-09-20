@@ -1,28 +1,28 @@
 package main
 
-// Sondes NAT Demonware sur UDP 3074 (hotes stun.{us,eu,jp,au}.demonware.net).
-// Ce n'est pas du STUN RFC 5389 : trois octets d'en-tete bruts « type | version
-// | bourrage », puis des champs bruts. Format repris du serveur STUN de
-// project-bo4/shield-development (meme generation du SDK Demonware) et confirme
-// par les sondes de la console :
+// Demonware NAT probes on UDP 3074 (hosts stun.{us,eu,jp,au}.demonware.net).
+// This is not RFC 5389 STUN: three raw header bytes "type | version |
+// padding", then raw fields. Format taken from project-bo4/shield-development's
+// STUN server (same Demonware SDK generation) and confirmed by the console's
+// probes:
 //
-//	1e 03 00       type 30, decouverte d'IP  -> 31 | 02 | 00 | ip[4] | port u16
-//	14 02 00 00    type 20, decouverte NAT   -> 21 | 02 | 00 | ip[4] | port u16 | ipServeur[4] | portServeur u16
+//	1e 03 00       type 30, IP discovery  -> 31 | 02 | 00 | ip[4] | port u16
+//	14 02 00 00    type 20, NAT discovery -> 21 | 02 | 00 | ip[4] | port u16 | serverIp[4] | serverPort u16
 //
-// L'IP s'ecrit en ordre reseau, le port en u16 petit-boutiste. Sans ces
-// reponses le type de NAT reste inconnu et le jeu ne propose que des parties
-// locales.
+// The IP is written in network order, the port as a little-endian u16. Without
+// these replies the NAT type stays unknown and the game only offers local
+// games.
 //
-// Traversee NAT (paquets de 29 octets, format documente par
-// Protarium-Network/bo2-wiiu-demonware) :
+// NAT traversal (29-byte packets, format documented by
+// Protarium-Network/bo2-wiiu-demonware):
 //
-//	type | u16 version | id[10] | hmac[4] | adresseSource[6] | adresseDest[6]
+//	type | u16 version | id[10] | hmac[4] | sourceAddress[6] | destAddress[6]
 //
-// 0x0A : un joueur qui rejoint demande a etre presente a l'hote. On renvoie le
-// paquet OCTET POUR OCTET a la destination avec le type 0x0B (INTRO) ; le HMAC
-// couvre les adresses et seul le demandeur le verifie, donc rien d'autre ne doit
-// changer. L'hote repond 0x0C directement au demandeur, ce qui ouvre la
-// connexion P2P. 0x0E : keepalive, sans reponse.
+// 0x0A: a joining player asks to be introduced to the host. We send the packet
+// back BYTE FOR BYTE to the destination with type 0x0B (INTRO); the HMAC covers
+// the addresses and only the requester verifies it, so nothing else may
+// change. The host answers 0x0C directly to the requester, which opens the P2P
+// connection. 0x0E: keepalive, no reply.
 
 import (
 	"encoding/binary"
@@ -40,8 +40,8 @@ const natSeenMax = 4096
 
 var (
 	natSeenMu sync.Mutex
-	natSeen   = map[string]int{} // signature de paquet -> occurrences (journal borne)
-	natIntros atomic.Int64       // presentations relayees, pour le tableau de bord
+	natSeen   = map[string]int{} // packet signature -> occurrences (bounded log)
+	natIntros atomic.Int64       // introductions relayed, for the dashboard
 )
 
 func serveNAT(port int) {

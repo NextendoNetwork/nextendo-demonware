@@ -99,7 +99,7 @@ func noteTask(l *lobbyConn, service, task byte) {
 	statsMu.Unlock()
 }
 
-// Demonware service and task names.
+// Service and task names as identified from the game binary (service map).
 var serviceNames = map[byte]string{
 	4: "bdStats", 6: "bdMessaging", 10: "bdStorage", 12: "bdTitleUtilities",
 	21: "bdMatchMaking", 23: "bdCounter", 27: "bdDML", 29: "UserData",
@@ -225,13 +225,13 @@ func buildStats() apiStats {
 	gs := make([]apiGathering, 0, len(snaps))
 	for _, s := range snaps {
 		host := who[s.owner]
-		state := "en recherche"
+		state := "searching"
 		if s.numPlayers >= 2 {
-			state = "apparié"
+			state = "matched"
 		}
 		g := apiGathering{
 			ID: binary.LittleEndian.Uint32(s.id[:4]), HostPID: host.PID, HostName: host.Username,
-			Type: fmt.Sprintf("Partie publique (type %d)", s.gameType), Mode: s.gameType,
+			Type: fmt.Sprintf("Public game (type %d)", s.gameType), Mode: s.gameType,
 			Players: []apiLobbyP{{PID: host.PID, Name: host.Username, Host: true}},
 			Count:   int(s.numPlayers), Max: uint16(s.maxPlayers), State: state,
 		}
@@ -252,12 +252,12 @@ func buildStats() apiStats {
 			continue
 		}
 		pl := apiPlayer{
-			PID: p.PID, Name: p.Username, IP: cs.addr, State: "en ligne",
+			PID: p.PID, Name: p.Username, IP: cs.addr, State: "online",
 			OnlineSecs: int(time.Since(cs.first).Seconds()), Calls: cs.calls,
 			LastAction: cs.lastAction, IdleSecs: int(time.Since(cs.last).Seconds()),
 		}
 		if g, hosts := hosting[n]; hosts {
-			pl.State, pl.Gathering, pl.Mode, pl.IsHost = "dans un lobby", g.ID, g.Type, true
+			pl.State, pl.Gathering, pl.Mode, pl.IsHost = "in a lobby", g.ID, g.Type, true
 		}
 		if prev, dup := byPID[p.PID]; dup && prev.IdleSecs <= pl.IdleSecs {
 			continue

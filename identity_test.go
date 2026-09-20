@@ -39,10 +39,10 @@ func signNnex(secret []byte, payload string) string {
 func expiry(d time.Duration) string { return strconv.FormatInt(time.Now().Add(d).Unix(), 10) }
 
 func TestPlayerIdentityConsole(t *testing.T) {
-	nn := signNnex([]byte("0123456789abcdef"), "1800000101.alice."+expiry(time.Hour))
-	// Claims seen on a Switch: no di / sn.
-	id, got := playerIdentity(authBody("alice", jwt(t, map[string]any{"sub": "0123456789abcdef", "bs:did": "x", "nnex": nn})))
-	if id.PID != 1800000101 || id.Username != "alice" || id.Kind != "switch" || id.Sub != "0123456789abcdef" {
+	nn := signNnex([]byte("0123456789abcdef"), "1800000101.player1."+expiry(time.Hour))
+	// Claims seen on a CFW Switch: no di / sn.
+	id, got := playerIdentity(authBody("player1", jwt(t, map[string]any{"sub": "0123456789abcdef", "bs:did": "x", "nnex": nn})))
+	if id.PID != 1800000101 || id.Username != "player1" || id.Kind != "switch" || id.Sub != "0123456789abcdef" {
 		t.Fatalf("identity = %+v", id)
 	}
 	if got != nn {
@@ -51,13 +51,13 @@ func TestPlayerIdentityConsole(t *testing.T) {
 }
 
 func TestPlayerIdentityEmulator(t *testing.T) {
-	nn := signNnex([]byte("0123456789abcdef"), "1800000102.bob."+expiry(time.Hour))
+	nn := signNnex([]byte("0123456789abcdef"), "1800000102.player2."+expiry(time.Hour))
 	// Claims seen on Citron: di and sn present.
 	id, _ := playerIdentity(authBody("", jwt(t, map[string]any{"sub": "s", "di": "d", "sn": "n", "nnex": nn})))
 	if id.PID != 1800000102 || id.Kind != "ryujinx" {
 		t.Fatalf("identity = %+v", id)
 	}
-	if id.Username != "bob" {
+	if id.Username != "player2" {
 		t.Fatalf("username from nnex = %q", id.Username)
 	}
 }
@@ -74,13 +74,13 @@ func TestNextendoPIDFromToken(t *testing.T) {
 	defer func() { nextendoSecret = saved }()
 	nextendoSecret = []byte("0123456789abcdef")
 
-	if pid, ok := nextendoPIDFromToken(signNnex(nextendoSecret, "1800000102.bob."+expiry(time.Hour))); !ok || pid != 1800000102 {
+	if pid, ok := nextendoPIDFromToken(signNnex(nextendoSecret, "1800000102.player2."+expiry(time.Hour))); !ok || pid != 1800000102 {
 		t.Fatalf("valid token: pid=%d ok=%v", pid, ok)
 	}
-	if _, ok := nextendoPIDFromToken(signNnex([]byte("another-secret!!"), "1800000102.bob."+expiry(time.Hour))); ok {
+	if _, ok := nextendoPIDFromToken(signNnex([]byte("another-secret!!"), "1800000102.player2."+expiry(time.Hour))); ok {
 		t.Fatal("token signed with another secret accepted")
 	}
-	if _, ok := nextendoPIDFromToken(signNnex(nextendoSecret, "1800000102.bob."+expiry(-time.Hour))); ok {
+	if _, ok := nextendoPIDFromToken(signNnex(nextendoSecret, "1800000102.player2."+expiry(-time.Hour))); ok {
 		t.Fatal("expired token accepted")
 	}
 	if _, ok := nextendoPIDFromToken(signNnex(nextendoSecret, "1800000006.Kazuu.1787343209")); ok {
@@ -105,13 +105,13 @@ func TestAdmitPlayer(t *testing.T) {
 	if ok, _ := admitPlayer(&playerID{Username: "guest"}, "", "127.0.0.1"); ok {
 		t.Fatal("NEXTENDO_REQUIRE_ACCOUNT=1 accepted a player without PID")
 	}
-	if ok, why := admitPlayer(&playerID{Username: "alice", PID: 1800000101}, "", "127.0.0.1"); !ok {
+	if ok, why := admitPlayer(&playerID{Username: "player1", PID: 1800000101}, "", "127.0.0.1"); !ok {
 		t.Fatalf("unreachable account server must fail open: %s", why)
 	}
 
 	requireSignedToken = true
 	nextendoSecret = []byte("0123456789abcdef")
-	good := signNnex(nextendoSecret, "1800000101.alice."+expiry(time.Hour))
+	good := signNnex(nextendoSecret, "1800000101.player1."+expiry(time.Hour))
 	if ok, why := admitPlayer(&playerID{PID: 1800000101}, good, "127.0.0.1"); !ok {
 		t.Fatalf("signed token refused: %s", why)
 	}

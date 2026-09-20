@@ -1,12 +1,14 @@
 package main
 
-// Authentification Demonware de Diablo III Switch (titre « crimson »).
+// Demonware authentication for Diablo III Switch (title "crimson").
 //
-// Le client (bdAuthSwitch, transport bdHTTPCurl) tape
+// The client (bdAuthSwitch, transport bdHTTPCurl) hits
 //
 //	https://crimson-switch-auth3.prod.demonware.net:<port>/auth/
 //
-// via sni-router, puis bascule sur le lobby (lobby.go).
+// via sni-router, then switches to the lobby (lobby.go). The game's NSO gives
+// the hosts, the URL template "https://%s:%d/auth/" and the ticket vocabulary;
+// the body format comes from captures and the parser at 0xBE30C0.
 
 import (
 	"crypto/rand"
@@ -27,7 +29,7 @@ import (
 	"time"
 )
 
-// Magic du ticket bdAuth : octets DE AD BD EF.
+// bdAuth ticket magic, read from the NSO (rodata 0xF07FB8): bytes DE AD BD EF.
 const ticketMagic uint32 = 0xEFBDADDE
 
 var authReqNum atomic.Uint64
@@ -40,7 +42,7 @@ func serveAuth() error {
 		body, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 		r.Body.Close()
 
-		// Ligne de requete seulement : le corps porte l'id_token NSA du joueur.
+		// Request line only: the body carries the player's NSA id_token.
 		log.Printf("[D3 Auth] #%d %s %s%s from %s (%d bytes)", n, r.Method, r.Host, r.URL.RequestURI(), r.RemoteAddr, len(body))
 		if dumps != "" && len(body) > 0 {
 			name := fmt.Sprintf("%03d_%s_%s.bin", n, r.Method,
@@ -50,14 +52,14 @@ func serveAuth() error {
 			}
 		}
 
-		// --- reponse d'authentification ---------------------------------
-		// Champs attendus par le client :
-		//   code          doit valoir 700 (0x2BC), sinon la tache echoue
-		//   iv_seed       entier, relu par le client
-		//   client_ticket base64 -> exactement 128 octets
-		//   server_ticket base64 -> exactement 128 octets, recopies tels quels
-		//                 dans l'objet auth puis transmis au lobby. Opaque pour
-		//                 le client : son contenu ne regarde que notre lobby.
+		// --- auth response ---------------------------------------------
+		// Shape deduced from the parser in the NSO (0xBE30C0):
+		//   code          must be 700 (0x2BC), otherwise the task fails
+		//   iv_seed       integer, echoed back by the client
+		//   client_ticket base64 -> exactly 128 bytes
+		//   server_ticket base64 -> exactly 128 bytes, copied verbatim into
+		//                 the auth object and passed on to the lobby. Opaque
+		//                 to the client: only our lobby cares about its content.
 		var req struct {
 			AuthTask string `json:"auth_task"`
 			IVSeed   string `json:"iv_seed"`
@@ -66,7 +68,7 @@ func serveAuth() error {
 		}
 		_ = json.Unmarshal(body, &req)
 
-		// Gardes Nextendo AVANT d'emettre le moindre ticket (gates.go).
+		// Nextendo gates BEFORE issuing any ticket at all (gates.go).
 		id, nnex := playerIdentity(body)
 		if ok, reason := admitPlayer(&id, nnex, clientIP(r)); !ok {
 			log.Printf("[D3 Auth] #%d %q pid=%d kind=%s REFUSED (%s)", n, id.Username, id.PID, id.Kind, reason)
@@ -74,13 +76,16 @@ func serveAuth() error {
 			return
 		}
 
-		// Le client compare les 4 premiers octets du ticket au magic 0xEFBDADDE
-		// (octets DE AD BD EF). S'ils correspondent, le ticket est lu en clair —
-		// c'est ce qui permet un serveur autonome, sans cle ni patch du client.
+		// The client reads the ticket's first 4 bytes and compares them to the
+		// magic 0xEFBDADDE (bytes DE AD BD EF), resolved via an
+		// R_AARCH64_RELATIVE relocation to 0xF07FB8. If they match, the
+		// decryption branch is skipped and the ticket is read in the clear —
+		// this is what makes a standalone server possible with no key and no
+		// client patch.
 		//
-		// Disposition du ticket, 128 octets pile :
+		// Layout read from parse_ticket (0xBFCF30), 128 bytes packed:
 		//   +0 u32 magic | +4 u8 | +5 u32 | +9 u32 | +13 u32
-		//   +17 u64 | +25 u64 | +33 [64] cle de session | +97 [24] | +121 [3] | +124 [4]
+		//   +17 u64 | +25 u64 | +33 [64] session key | +97 [24] | +121 [3] | +124 [4]
 		clientTicket := make([]byte, 128)
 		binary.LittleEndian.PutUint32(clientTicket[0:], ticketMagic)
 		clientTicket[4] = 1
@@ -89,20 +94,24 @@ func serveAuth() error {
 		binary.LittleEndian.PutUint32(clientTicket[13:], uint32(time.Now().Unix()))
 		binary.LittleEndian.PutUint64(clientTicket[17:], 1) // user id
 		binary.LittleEndian.PutUint64(clientTicket[25:], uint64(time.Now().Unix()+86400))
-		if _, err := rand.Read(clientTicket[33:97]); err != nil { // cle de session
+		if _, err := rand.Read(clientTicket[33:97]); err != nil { // session key
 			log.Printf("[D3 Auth] rand: %v", err)
 		}
-		// +97 [24] : la cle du lobby, qui signe la poignee de main. On y met les
-		// 24 premiers octets de la cle de session.
+		// +97 [24]: the lobby key. The lobby connection (0xBFC8F0) copies a
+		// config block whose bytes 0x88..0xA0 become conn+0x100, the key that
+		// signs the handshake. It comes from the parsed ticket's 24-byte
+		// field; we put the session key's first 24 bytes there so both
+		// possible reads land on the same value.
 		copy(clientTicket[97:121], clientTicket[33:57])
 
-		// Opaque pour le client : il le recopie tel quel et le transmet au lobby
-		// dans le 0x82. C'est notre lobby qui le relit, donc on y met tout.
+		// Opaque to the client: it copies this back verbatim and passes it to
+		// the lobby in the 0x82. Our lobby is the one that reads it back, so
+		// we put everything in it.
 		serverTicket := append([]byte{}, clientTicket...)
 
-		// Le lobby retrouve la cle de la session en essayant les tickets emis
-		// recemment : c'est le tag du 0x82 qui designe le bon. L'identite du
-		// joueur (amis en ligne, presence) est retrouvee par les 8 octets de cle.
+		// The lobby recovers the session key by trying recently issued
+		// tickets: the 0x82's tag picks the right one. The player's identity
+		// (online friends, presence) is recovered from the 8-byte key.
 		if err := os.MkdirAll(sessDir, 0o755); err == nil {
 			name := fmt.Sprintf("%d_%x.tkt", time.Now().Unix(), clientTicket[33:37])
 			if err := os.WriteFile(filepath.Join(sessDir, name), clientTicket, 0o644); err != nil {
@@ -118,22 +127,24 @@ func serveAuth() error {
 			ivSeed = "0"
 		}
 
-		// auth_task est lu AVANT code : sans lui la reponse est rejetee (735).
-		// Ce n'est PAS un echo : requete et reponse s'apparient en n -> n+1
-		// (la console envoie 78 et attend 79).
+		// auth_task is read BEFORE code and validated by vtable[0x40]: without
+		// it the response is rejected before code is even looked at (735 back).
+		// This is NOT an echo: bdAuth pairs request and response as n -> n+1
+		// (the console sends 78 and expects 79, seen via a d3hack hook).
 		authTask := "79"
 		if v, err := strconv.Atoi(req.AuthTask); err == nil {
 			authTask = strconv.Itoa(v + 1)
 		}
 
-		// Le client encode TOUS ses entiers en chaines JSON ("auth_task": "78") :
-		// on repond dans le meme style. L'ORDRE compte (parseur sequentiel :
-		// auth_task, code, iv_seed, client_ticket, server_ticket), d'ou une
-		// struct et pas une map.
+		// The client encodes ALL its integers as JSON strings ("auth_task":
+		// "78"): we reply in the same style. ORDER matters (a sequential
+		// parser: auth_task, code, iv_seed, client_ticket, server_ticket),
+		// hence a struct and not a map.
 		//
-		// extra_data est une CHAINE contenant du JSON ; le client y lit
-		// nso_subscription_status. L'etat d'abonnement fait donc partie de la
-		// reponse d'auth : aucun patch du jeu.
+		// extra_data: vtable[0x50] (0xBE1440) reads it as a STRING, reparses
+		// it as JSON, then looks up nso_subscription_status read as a u16; a
+		// successful read makes it return true. The subscription state is
+		// thus part of the auth response: no game patch, no real NSO.
 		extra, _ := json.Marshal(map[string]string{
 			"nso_subscription_status": "1",
 		})
@@ -165,7 +176,7 @@ func serveAuth() error {
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", authPort),
 		Handler: h,
-		// Le client est un curl embarque de 2018 : ne pas exiger TLS 1.2+.
+		// The client is an embedded 2018 curl: don't require TLS 1.2+.
 		TLSConfig:         &tls.Config{MinVersion: tls.VersionTLS10},
 		ReadHeaderTimeout: 15 * time.Second,
 	}
@@ -182,7 +193,7 @@ func serveAuth() error {
 	return srv.ServeTLS(ln, certFile, keyFile)
 }
 
-// clientIP rend l'adresse de l'appelant sans le port (127.0.0.1 derriere sni-router).
+// clientIP returns the caller's address without the port (127.0.0.1 behind sni-router).
 func clientIP(r *http.Request) string {
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {

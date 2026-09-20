@@ -1,20 +1,21 @@
 package main
 
-// Amis en ligne dans D3.
+// Online friends in D3.
 //
-// A la connexion, le jeu demande 12/9 (getUserNames) avec les identifiants de
-// ses amis Nintendo. Ces identifiants dependent de la plateforme :
+// On connect, the game asks 12/9 (getUserNames) with its Nintendo friends'
+// identifiers. These identifiers depend on the platform:
 //
-//	console : identifiant de compte appareil de l'ami (liste d'amis BaaS)
-//	Citron  : PID Nextendo de l'ami
+//	console: friend's device account identifier (BaaS friend list)
+//	         e.g. player2 = 0x0123456789ABCDEF
+//	Citron : friend's Nextendo PID, e.g. player1 = 1800000101
 //
-// Resultat 12/9 : 0A u64 id | 10 chaine surnom.
-// Resultat 29/4 : 0A u64 id | 13 blob.
+// Result 12/9 (reader 0xBFCE70, 0x60-byte object): 0A u64 id | 10 nickname string.
+// Result 29/4 (reader 0xBF6860, 0x30-byte object): 0A u64 id | 13 blob.
 //
-// On repond pour les amis actuellement connectes au lobby. Le joueur d'une
-// connexion est connu par son ticket (auth.go ecrit sessions/id_<cle>.json) ;
-// les identifiants d'appareil viennent des listes d'amis que la console
-// recupere via baas-proxy, relues dans son journal.
+// We answer for friends currently connected to the lobby. A connection's
+// player is known from its ticket (d3-auth writes sessions/id_<key>.json);
+// device identifiers come from the friend lists the console fetches via
+// baas-proxy, read back from its log.
 
 import (
 	"bufio"
@@ -33,24 +34,24 @@ type playerID struct {
 	Username string `json:"username"`
 	PID      uint64 `json:"pid"`
 	Sub      string `json:"sub"`
-	Kind     string `json:"kind,omitempty"` // "switch" ou "ryujinx" (emulateur), cf. identity.go
+	Kind     string `json:"kind,omitempty"` // "switch" or "ryujinx" (emulator), see identity.go
 }
 
 var (
 	onlineMu sync.Mutex
-	online   = map[uint64]*playerID{} // numero de connexion -> joueur
+	online   = map[uint64]*playerID{} // connection number -> player
 
 	userDataMu sync.Mutex
-	userData   = map[string][]byte{} // surnom|contexte -> blob 29/1
+	userData   = map[string][]byte{} // nickname|context -> 29/1 blob
 
 	aliasMu     sync.Mutex
-	aliases     = map[uint64]string{} // identifiant d'appareil / NSA -> surnom
+	aliases     = map[uint64]string{} // device/NSA identifier -> nickname
 	aliasLoaded time.Time
 )
 
-// Connexions dont le fichier d'identite n'existait pas encore a la poignee de
-// main (ticket emis avant un redemarrage). On retente a chaque recherche
-// d'amis : le fichier apparait des que le joueur se reauthentifie.
+// Connections whose identity file didn't exist yet at handshake time (ticket
+// issued by an older d3-auth). We retry on every friend lookup: the file
+// appears as soon as the player re-authenticates.
 var pending = map[uint64]pendingID{}
 
 type pendingID struct {
@@ -58,7 +59,7 @@ type pendingID struct {
 	ticket []byte
 }
 
-// loadIdentity retrouve le joueur d'un ticket via le fichier ecrit par auth.go.
+// loadIdentity recovers a ticket's player via the file written by d3-auth.
 func (l *lobbyConn) loadIdentity(ticket []byte) {
 	if len(ticket) < 41 {
 		return
@@ -67,7 +68,7 @@ func (l *lobbyConn) loadIdentity(ticket []byte) {
 		onlineMu.Lock()
 		pending[l.n] = pendingID{conn: l, ticket: append([]byte{}, ticket...)}
 		onlineMu.Unlock()
-		l.logf("identite en attente (ticket %x)", ticket[33:41])
+		l.logf("identity pending (ticket %x)", ticket[33:41])
 	}
 }
 
@@ -86,11 +87,11 @@ func (l *lobbyConn) tryIdentity(ticket []byte) bool {
 	online[l.n] = &id
 	delete(pending, l.n)
 	onlineMu.Unlock()
-	l.logf("joueur %q pid=%d", id.Username, id.PID)
+	l.logf("player %q pid=%d", id.Username, id.PID)
 	return true
 }
 
-// retryPending retente les identites manquantes.
+// retryPending retries the missing identities.
 func retryPending() {
 	onlineMu.Lock()
 	todo := make([]pendingID, 0, len(pending))
@@ -110,8 +111,8 @@ func dropOnline(conn uint64) {
 	onlineMu.Unlock()
 }
 
-// refreshAliases relit les listes d'amis passees par baas-proxy (au plus une
-// fois par minute) pour apprendre identifiant d'appareil/NSA -> surnom.
+// refreshAliases re-reads the friend lists baas-proxy relayed (at most once
+// per minute) to learn device/NSA identifier -> nickname.
 func refreshAliases() {
 	aliasMu.Lock()
 	defer aliasMu.Unlock()
@@ -162,8 +163,8 @@ func refreshAliases() {
 	}
 }
 
-// nicknameOnline rend le surnom d'un joueur connecte designe par id (PID ou
-// identifiant d'appareil/NSA).
+// nicknameOnline returns the nickname of a connected player identified by id
+// (PID or device/NSA identifier).
 func nicknameOnline(id uint64) string {
 	retryPending()
 	refreshAliases()
@@ -186,8 +187,8 @@ func (w *bdWriter) str(s string) {
 	w.b = append(w.b, 0)
 }
 
-// u64s lit une suite d'u64 types (0A) et, s'il y en a, un tableau d'u64
-// (6E | 08 u32 taille | u32 nombre | u64 bruts).
+// u64s reads a run of typed u64s (0A) and, if present, a u64 array
+// (6E | 08 u32 size | u32 count | raw u64s).
 func (r *bdReader) u64s() []uint64 {
 	var out []uint64
 	for r.off < len(r.b) {
@@ -216,7 +217,7 @@ func (r *bdReader) u64s() []uint64 {
 	return out
 }
 
-// onGetUserNames : 12/9.
+// onGetUserNames: 12/9.
 func (l *lobbyConn) onGetUserNames(task byte, r *bdReader) []byte {
 	ids := r.u64s()
 	type hit struct {
@@ -229,7 +230,7 @@ func (l *lobbyConn) onGetUserNames(task byte, r *bdReader) []byte {
 			hits = append(hits, hit{id, name})
 		}
 	}
-	l.logf("amis getUserNames %d demande(s) -> %d en ligne %v", len(ids), len(hits), hits)
+	l.logf("friends getUserNames %d request(s) -> %d online %v", len(ids), len(hits), hits)
 	return taskReply(task, 0, func(w *bdWriter) uint32 {
 		for _, h := range hits {
 			w.u64(h.id)
@@ -239,20 +240,20 @@ func (l *lobbyConn) onGetUserNames(task byte, r *bdReader) []byte {
 	})
 }
 
-// onUserData : service 29. 1 = ecrire ses donnees, 4 = lire celles d'une liste.
+// onUserData: service 29. 1 = write own data, 4 = read a list's.
 func (l *lobbyConn) onUserData(task byte, r *bdReader) []byte {
 	ctx, _ := r.str()
 	switch task {
 	case 1:
 		data, err := r.blob()
 		if err != nil || l.player == nil {
-			l.logf("userdata SET ctx=%q ignore (%v, joueur=%v)", ctx, err, l.player != nil)
+			l.logf("userdata SET ctx=%q ignored (%v, player=%v)", ctx, err, l.player != nil)
 			return taskReply(task, 0, nil)
 		}
 		userDataMu.Lock()
 		userData[strings.ToLower(l.player.Username)+"|"+ctx] = data
 		userDataMu.Unlock()
-		l.logf("userdata SET %s ctx=%q %d octets", l.player.Username, ctx, len(data))
+		l.logf("userdata SET %s ctx=%q %d bytes", l.player.Username, ctx, len(data))
 		return taskReply(task, 0, nil)
 	case 4:
 		if r.off < len(r.b) && r.b[r.off] == tagBool {
@@ -276,7 +277,7 @@ func (l *lobbyConn) onUserData(task byte, r *bdReader) []byte {
 				hits = append(hits, hit{id, d})
 			}
 		}
-		l.logf("userdata GET ctx=%q %d demande(s) -> %d", ctx, len(ids), len(hits))
+		l.logf("userdata GET ctx=%q %d request(s) -> %d", ctx, len(ids), len(hits))
 		return taskReply(task, 0, func(w *bdWriter) uint32 {
 			for _, h := range hits {
 				w.u64(h.id)
