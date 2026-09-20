@@ -12,9 +12,11 @@
   "season": 39,
 
   // The season's window, as "Www, DD Mon YYYY hh:mm:ss GMT". The day of the month MUST have two digits (09, not 9).
-  // Keep the end far in the future so a season never ends while a player is connected.
+  // Keep the end far in the future so a season never ends while a player is connected, BUT BEFORE 19 Jan 2038:
+  // the game keeps these dates in 32 bits, so a later date wraps to the past and the season looks over
+  // (heroes are then refused as "not a seasonal hero"). The server replaces any later date with 1 Jan 2038.
   "season_start": "Wed, 01 Jan 2020 00:00:00 GMT",
-  "season_end": "Sat, 01 Jan 2050 00:00:00 GMT",
+  "season_end": "Tue, 01 Jan 2036 00:00:00 GMT",
 
   // true: the served season's theme events are switched on automatically, taken from "season_themes" below.
   // false: no theme is applied and you control every event yourself in "events".

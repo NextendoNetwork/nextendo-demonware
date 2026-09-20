@@ -21,7 +21,7 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 | field | default | effect |
 |---|---|---|
 | `season` | `39` | Season number: the latest known one. The tested one is 37 (see below). Ignored while rotation is on. |
-| `season_start`, `season_end` | 2020-01-01, 2050-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
+| `season_start`, `season_end` | 2020-01-01, 2036-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
 | `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
 | `season_theme` | `true` | Switch on the served season's theme events automatically ([season themes](#season-themes)). |
 | `events` | all off | Extra community events on top of the theme, by name ([events](#events)). |
@@ -71,7 +71,7 @@ The `"template"` entry in the shipped file has all 21 events at `0`. It is not a
 
 ### Season rotation
 
-With rotation on, the season advances every month through **the seasons listed in `season_themes`**, sorted by number, looping back to the first after the last and skipping gaps. With 39 and 420 listed, the month after 39 is 420. `season` and `season_start` are then ignored, the season's theme follows automatically, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end` (2050 by default), so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
+With rotation on, the season advances every month through **the seasons listed in `season_themes`**, sorted by number, looping back to the first after the last and skipping gaps. With 39 and 420 listed, the month after 39 is 420. `season` and `season_start` are then ignored, the season's theme follows automatically, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end` (2036 by default), so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
 
 ```json
 "season_rotation": { "enabled": true, "anchor": "2026-09" }
@@ -89,6 +89,8 @@ Before enabling it: each month the season changes, so characters created in the 
 ### Dates
 
 The format is `Www, DD Mon YYYY hh:mm:ss GMT`, for example `Sat, 09 Feb 2025 00:00:00 GMT`. The day must have **two digits** (`09`, not `9`) or the file cannot be parsed.
+
+**No date may be later than 19 January 2038.** The game keeps these dates in 32 bits, so a later one wraps into the past and the season looks over: a seasonal hero is then refused as "not a seasonal hero" when it tries to join. The server replaces any date past that limit with `Fri, 01 Jan 2038 00:00:00 GMT` and logs it, but keep your own dates below it.
 
 ## Challenge Rifts
 

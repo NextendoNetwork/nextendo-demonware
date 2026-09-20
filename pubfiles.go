@@ -167,6 +167,38 @@ func buildBlacklist(_ pubConfig) string {
 	return "# Item blacklist served by diablo-3\n[GBID]\n\n[SNO]\n"
 }
 
+// maxGameTime is the last moment a signed 32-bit time can hold (19 Jan 2038
+// 03:14:07 GMT). The game keeps these dates in 32 bits (d3hack uses the same
+// limit for its rift end time), so a later date wraps to the past and the
+// season looks over: heroes are then refused as "not a seasonal hero".
+const maxGameTime = 1<<31 - 1
+
+// latestSafeDate replaces a date past maxGameTime.
+const latestSafeDate = "Fri, 01 Jan 2038 00:00:00 GMT"
+
+// clampGameDate returns s unchanged unless it is a date later than the game can
+// hold, in which case it returns latestSafeDate and true.
+func clampGameDate(s string) (string, bool) {
+	t, err := time.Parse("Mon, 02 Jan 2006 15:04:05 GMT", s)
+	if err != nil || t.Unix() <= maxGameTime {
+		return s, false
+	}
+	return latestSafeDate, true
+}
+
+// clampDates applies clampGameDate to every date in c.
+func clampDates(c *pubConfig) {
+	for name, d := range map[string]*string{
+		"season_start": &c.SeasonStart, "season_end": &c.SeasonEnd,
+		"buff_start": &c.BuffStart, "buff_end": &c.BuffEnd,
+	} {
+		if fixed, changed := clampGameDate(*d); changed {
+			log.Printf("[D3 Pubfiles] %s %q is past 19 Jan 2038, which the game cannot hold: using %q", name, *d, fixed)
+			*d = fixed
+		}
+	}
+}
+
 func loadPubConfig(path string) (pubConfig, error) {
 	c := defaultPubConfig()
 	raw, err := os.ReadFile(path)
@@ -184,6 +216,7 @@ func loadPubConfig(path string) (pubConfig, error) {
 	if err := json.Unmarshal(stripJSONComments(raw), &c); err != nil {
 		return c, fmt.Errorf("%s: %w", path, err)
 	}
+	clampDates(&c)
 	return c, nil
 }
 

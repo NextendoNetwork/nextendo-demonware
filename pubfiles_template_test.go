@@ -26,7 +26,7 @@ func TestStripJSONComments(t *testing.T) {
 // fresh install starts from: it must say what the docs say the defaults are.
 func TestShippedDefaults(t *testing.T) {
 	c := defaultPubConfig()
-	if c.Season != 39 || c.SeasonStart != "Wed, 01 Jan 2020 00:00:00 GMT" || c.SeasonEnd != "Sat, 01 Jan 2050 00:00:00 GMT" {
+	if c.Season != 39 || c.SeasonStart != "Wed, 01 Jan 2020 00:00:00 GMT" || c.SeasonEnd != "Tue, 01 Jan 2036 00:00:00 GMT" {
 		t.Errorf("season %d %q %q", c.Season, c.SeasonStart, c.SeasonEnd)
 	}
 	if !c.SeasonTheme {
@@ -97,5 +97,35 @@ func TestLoadPubConfigOverDefaults(t *testing.T) {
 	raw, err := os.ReadFile(missing)
 	if err != nil || string(raw) != string(defaultPubfiles) {
 		t.Errorf("created file differs from the shipped one (err=%v)", err)
+	}
+}
+
+// A date past 19 Jan 2038 wraps in the game's 32-bit time and ends the season, so
+// it is replaced when the config is read.
+func TestDatesPastTheGameLimitAreClamped(t *testing.T) {
+	for in, want := range map[string]string{
+		"Sat, 01 Jan 2050 00:00:00 GMT": latestSafeDate,
+		"Tue, 19 Jan 2038 03:14:08 GMT": latestSafeDate,
+		"Tue, 19 Jan 2038 03:14:07 GMT": "Tue, 19 Jan 2038 03:14:07 GMT", // the last second that fits
+		"Tue, 01 Jan 2036 00:00:00 GMT": "Tue, 01 Jan 2036 00:00:00 GMT",
+		"not a date":                    "not a date",
+	} {
+		if got, _ := clampGameDate(in); got != want {
+			t.Errorf("%q -> %q, want %q", in, got, want)
+		}
+	}
+	if _, changed := clampGameDate(latestSafeDate); changed {
+		t.Error("the replacement date is itself out of range")
+	}
+	p := filepath.Join(t.TempDir(), "pubfiles.json")
+	if err := os.WriteFile(p, []byte(`{"season_end": "Sat, 01 Jan 2050 00:00:00 GMT", "buff_end": "Sat, 01 Jan 2060 00:00:00 GMT"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	c, err := loadPubConfig(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if c.SeasonEnd != latestSafeDate || c.BuffEnd != latestSafeDate {
+		t.Errorf("loaded season_end %q buff_end %q", c.SeasonEnd, c.BuffEnd)
 	}
 }
