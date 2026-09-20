@@ -211,6 +211,12 @@ func (l *lobbyConn) onTask(payload []byte) {
 // publisherFile looks the file up in the pubfiles folder, ignoring case (the
 // game asks for "Config.txt", the generator writes "config.txt").
 func (l *lobbyConn) publisherFile(name string) ([]byte, string) {
+	if data, path, ok := riftFile(name, time.Now()); ok {
+		return data, path
+	}
+	if data, path, ok := rotatedPubfile(name, time.Now()); ok {
+		return data, path
+	}
 	base := filepath.Base(name)
 	entries, err := os.ReadDir(l.pubDir)
 	if err != nil {

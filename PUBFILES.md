@@ -1,83 +1,110 @@
 # Publisher files
 
-When a Diablo III session starts, the game asks the lobby for three small text files: the active season, the community events and multipliers, and an item blacklist. This page explains how they are produced and every setting you can change.
+When an online session starts, Diablo III asks the lobby for three small text files: the season, the community events with their multipliers, and an item blacklist. The server generates them from `pubfiles.json`.
 
 ## How it works
 
-| the game asks for | file the server writes (`D3_PUBFILES`, default `pubfiles/`) | content |
+| the game asks for | generated file (`D3_PUBFILES`, default `pubfiles/`) | content |
 |---|---|---|
-| `Config.txt` | `config.txt` | `Key "value"` lines: community events, multipliers, a few flags |
+| `Config.txt` | `config.txt` | `Key "value"` lines: events, multipliers, flags |
 | `Seasons.txt` | `seasons_config.txt` | one `[Season N]` block with a start and end date |
-| `Blacklist.txt` | `blacklist_config.txt` | `[GBID]` and `[SNO]` sections (empty by default) |
+| `Blacklist.txt` | `blacklist_config.txt` | `[GBID]` and `[SNO]` sections, empty for now |
 
-The files are generated from `pubfiles.json` (`D3_PUBFILES_CONFIG`). Generated files are overwritten on every start, so **edit `pubfiles.json`, never the files in `pubfiles/`** (the `pubfiles/` folder is not committed to git).
+Edit `pubfiles.json` (`D3_PUBFILES_CONFIG`), never the generated files: they are rewritten on every start, and `pubfiles/` is not committed. Then run `server pubfiles` (regenerate and exit) or restart. The lobby reads the files on every request, and the game fetches them when a session starts, so players see a change the next time they connect. A missing `pubfiles.json` is created with the defaults.
 
-1. Edit `pubfiles.json`.
-2. Run `server pubfiles` to regenerate the files and exit, or restart the server (it regenerates on start).
-3. The lobby reads the files on every request, so no restart is needed after regenerating.
-4. The game fetches the files when its online session starts, so players see a change **the next time they connect**, not mid-session.
+Check what is served at `http://<server>:8093/pubfiles/` (`/pubfiles/<name>` for one file).
 
-If `pubfiles.json` does not exist, the server creates it with the defaults below.
+## Settings
 
-To see what is being served: `http://<server>:8093/pubfiles/` lists the files and `/pubfiles/<name>` returns one (port `DASH_PORT`).
-
-## pubfiles.json
+Fields you leave out keep their defaults.
 
 | field | default | effect |
 |---|---|---|
-| `season` | `37` | Season number written to `seasons_config.txt`. |
-| `season_start`, `season_end` | 2025-02-09 to 2036-02-09 | Season window. See [Dates](#dates). |
-| `buff_start`, `buff_end` | 2023-09-16 to 2027-12-01 | Window in which the community buffs are active. Independent of the season. See [Dates](#dates). |
-| `events` | `{}` | Community events, by name, `true` or `false`. See [Events](#events). |
-| `legendary_find`, `gold_find`, `xp` | `"1.0"` | Multipliers, as text. The game reads them as floating-point numbers; `"1.0"` is the normal value. |
-| `hero_publish_frequency_minutes` | `"30"` | `HeroPublishFrequencyMinutes` in `config.txt`. |
+| `season` | `37` | Season number. |
+| `season_start`, `season_end` | 2025-02-09, 2036-02-09 | Season window ([dates](#dates)). |
+| `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
+| `events` | `{}` | Community events by name, `true` or `false` ([events](#events)). |
+| `legendary_find`, `gold_find`, `xp` | `"1.0"` | Multipliers, as text. `"1.0"` is normal. |
+| `hero_publish_frequency_minutes` | `"30"` | `HeroPublishFrequencyMinutes`. |
 | `cross_platform_save_migration` | `true` | `EnableCrossPlatformSaveMigration`. |
 | `seasonal_global_leaderboards` | `true` | `SeasonalGlobalLeaderboardsEnabled`. |
 | `diablo4_advertisement` | `false` | `EnableDiablo4Advertisement`. |
 | `update_version` | `"1"` | `UpdateVersion`. |
+| `season_rotation`, `season_themes` | off | Monthly rotation ([below](#season-rotation)). |
+| `challenge_rifts` | `weekly` | Weekly Challenge Rifts ([below](#challenge-rifts)). |
 
-A fresh install has no event switched on, so the server behaves like the production configuration until you decide otherwise.
-
-Example, a double-goblins weekend with 2x experience:
+Example, doubled goblins and bounty bags with 2x experience:
 
 ```json
-{
-  "season": 37,
-  "events": { "DoubleGoblins": true, "DoubleBountyBags": true },
-  "xp": "2.0"
-}
+{ "events": { "DoubleGoblins": true, "DoubleBountyBags": true }, "xp": "2.0" }
 ```
-
-Fields you leave out keep their defaults.
 
 ### Events
 
-Each entry in `events` becomes `CommunityBuff<Name> "1"` (on) or `"0"` (off) in `config.txt`. The game recognizes exactly these 21 names, and the server always writes all of them (a name you leave out is written as `"0"`, because the game reads the value and a missing line is not the same as an off one):
+Each event becomes `CommunityBuff<Name> "1"` or `"0"` in `config.txt`. The game knows exactly these 21 names, and the server always sends all of them, `"0"` for any you leave out (a missing line is not the same as an off one). Unknown names are ignored. What an event does is defined by the game.
 
-`DoubleGoblins`, `DoubleBountyBags`, `RoyalGrandeur`, `LegacyOfNightmares`, `TriunesWill`, `Pandemonium`, `KanaiPowers`, `TrialsOfTempests`, `SeasonOnly`, `ShadowClones`, `FourthKanaisCubeSlot`, `EtherealItems`, `SoulShards`, `SwarmRifts`, `SanctifiedItems`, `DarkAlchemy`, `ParagonCap`, `NestingPortals`, `EasterEggWorld`, `DoubleRiftKeystones`, `DoubleBloodShards`.
+`DoubleGoblins` `DoubleBountyBags` `RoyalGrandeur` `LegacyOfNightmares` `TriunesWill` `Pandemonium` `KanaiPowers` `TrialsOfTempests` `SeasonOnly` `ShadowClones` `FourthKanaisCubeSlot` `EtherealItems` `SoulShards` `SwarmRifts` `SanctifiedItems` `DarkAlchemy` `ParagonCap` `NestingPortals` `EasterEggWorld` `DoubleRiftKeystones` `DoubleBloodShards`
 
-A name that is not in this list is ignored. What each event does in game is defined by the game itself, not by this server; the names are the game's own.
+Only `DarkAlchemy`, `KanaiPowers`, `NestingPortals` and `SwarmRifts` have been run in live co-op. Leave `SeasonOnly` and `ParagonCap` off: d3hack notes that any `SeasonOnly` value other than `1` crashes on item drop, yet its own generated file writes `0` and so does this server. That conflict is unresolved, and `ParagonCap` is untested.
 
-Two cautions, both from the d3hack source and not yet tested here:
+### Season rotation
 
-- `SeasonOnly`: a comment in d3hack's built-in configuration says any value other than `1` (or leaving the line out) crashes on item drop. d3hack's own generated file writes `0`, and this server has run with `0`, so leave it off unless you are testing it.
-- `ParagonCap`: same advice, leave it off.
+A season is a number and window plus a theme, which the game receives as community events ([SEASONS.md](SEASONS.md) lists them; seasons 1 to 13 have none). With rotation on, the season advances every month through **all the seasons the server knows**: the built-in 14 to 39 plus any you add, sorted by number, looping back to the first after the last and skipping gaps. `season`, `season_start` and `season_end` are then ignored, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end`, so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
+
+```json
+"season_rotation": { "enabled": true, "anchor": "2026-09" }
+```
+
+| field | default | meaning |
+|---|---|---|
+| `enabled` | `false` | Turn rotation on. |
+| `anchor` | `"2026-09"` | Month (`YYYY-MM`) in which the first season of the list runs. |
+| `theme_events` | `true` | Also switch on the current season's events. Your own `events` stay on. |
+| `first`, `last` | `0`, `0` | Optional inclusive bounds on which seasons take part; `0` is no bound. |
+| `interval_seconds` | `0` | For testing: seconds per season instead of a month, counted from `anchor` (`YYYY-MM-DD` works too). |
+
+**To add a season, no code change:** give it a theme in `season_themes`, as a list of the events that are on or as an object with `0` or `1` for each. An entry also replaces a built-in theme. An empty list is a season with no theme.
+
+```json
+"season_themes": {
+  "40":  ["SanctifiedItems"],
+  "41":  { "SanctifiedItems": 1, "SoulShards": 1, "Pandemonium": 0 },
+  "420": []
+}
+```
+
+Either way the game always gets all 21 events. The shipped `pubfiles.json` has a `"template"` entry with all 21 set to `0`; it is not a season number, so it is ignored. Copy it to a number and change the `0`s you want to `1`. To play seasons 1 to 13, add them the same way (`"1": []`).
+
+Before enabling it: each month the season changes, so characters created in the season leave it, as at a real season end (use a fixed `season` for a stable seasonal character). Season numbers outside the ones the game shipped with have not been tested.
 
 ### Dates
 
-The game is strict about the format `Www, DD Mon YYYY hh:mm:ss GMT`, for example `Sat, 09 Feb 2025 00:00:00 GMT`. The day of the month must have **two digits** (`09`, not `9`) or the file cannot be parsed. Season dates are read from `seasons_config.txt`; the buff window uses the same format in `config.txt`.
+The format is `Www, DD Mon YYYY hh:mm:ss GMT`, for example `Sat, 09 Feb 2025 00:00:00 GMT`. The day must have **two digits** (`09`, not `9`) or the file cannot be parsed.
 
-## Serving other files
+## Challenge Rifts
 
-The lobby looks a requested file up in the `pubfiles/` folder by name, ignoring case, so any file you put there is served to a client that asks for it by that name. In every logged session the game asked for exactly four files: the three generated ones and `update-1.cpk`, which is answered as absent.
+When the Challenge Rift menu opens (it needs a high character level), the game asks for `challengerift_config.dat` (challenge number, start, end, hash) and then `challengerift_<number>.dat` (the weekly rift). d3hack feeds the game the same two files from `sd:/config/d3hack-nx/rift_data/`; this server can serve them instead.
 
-### Challenge Rifts
+1. Copy `challengerift_config.dat` and the `challengerift_NN.dat` files from d3hack's release zip (`config/d3hack-nx/rift_data/`) into `D3_RIFTDATA` (default `riftdata/`). They are captured game data, not part of this repository.
+2. That is all; files are read on every request. Without a `challengerift_config.dat` there, the requests are answered as absent.
 
-These are not served by this server. The game gets the weekly Challenge Rift data (two protobuf messages, `ChallengeData` and `WeeklyChallengeData`) through a different request than the publisher files: in the logged sessions it never asked for `challengerift_config.dat`, and the requests this server answers with an empty success (services 68/3, 29/11, 27/2, 23/1 and 10/10) have not been identified as the rift request.
+The server rewrites the config's times as d3hack does (start 0, end 2038), since captured configs carry a week long past. The number it puts in the config picks the file the game asks for next, mapped onto your files and wrapping to the first after the last.
 
-d3hack does not fetch them from a server either. It hooks the game's result callback and feeds it files from `sd:/config/d3hack-nx/rift_data/` (`challengerift_config.dat` and numbered `challengerift_NN.dat`), forcing the start time to 0 and the end time far into the future so a week never expires. To serve them from here, the request would first have to be found by opening the Challenge Rift menu while connected and reading the log for unhandled tasks.
+```json
+"challenge_rifts": { "mode": "weekly" }
+```
+
+| `mode` | behaviour |
+|---|---|
+| `weekly` (default) | The number advances every week, cycling through your files. |
+| `fixed` | Always the file for `number`: `{ "mode": "fixed", "number": 3 }`. |
+| `random` | A different file on each request. |
+
+Untested on a live game: the request names come from d3hack's source, and the menu's level requirement has prevented a real test.
+
+Any other file in `pubfiles/` is served by name (case-insensitive) to a client that asks for it. In the logged sessions the game asked only for the three generated files and `update-1.cpk`, which is answered as absent.
 
 ## Not supported yet
 
-- **Blacklist entries.** `blacklist_config.txt` is always written with two empty sections. d3hack documents the line formats as `[GBID]` with `<GBIDName>,<allowDrop>` and `[SNO]` with `<SNOGroup>,<SNOName>,<allowSpawn>` (strings without quotes). What the `0`/`1` value means has not been confirmed on a running game, so there is no `pubfiles.json` field for it yet. Editing the generated file by hand does not last, because it is rewritten on every start.
-- **More than one season block**, and **any `Config.txt` key beyond the ones above.** The keys above are the ones d3hack itself writes when it plays offline, and they are all the game has been observed to need.
+- **Blacklist entries.** d3hack documents `[GBID]` lines as `<GBIDName>,<allowDrop>` and `[SNO]` lines as `<SNOGroup>,<SNOName>,<allowSpawn>` (no quotes), but what the `0`/`1` means is unconfirmed on a live game, so there is no setting yet. Hand edits do not last.
+- **More than one season block**, and **`Config.txt` keys beyond those above**: the keys here are the ones d3hack writes offline and all the game has been seen to need.

@@ -6,7 +6,7 @@ Diablo III does not use NEX: its online layer is **Demonware**. This server spea
 
 ## What works
 
-- Login and "connected to the Diablo network"; season and community events served from `pubfiles.json`
+- Login and "connected to the Diablo network"; season and community events served from `pubfiles.json`, with optional monthly season rotation and weekly Challenge Rifts (see Optional features)
 - Public games: create, find, join, player counts, NAT introductions
 - Co-op between a Switch and an emulator (tested: CFW Switch, Citron 2.7.7)
 - Friend lookups inside the game, and presence reported to nextendo-account
@@ -80,13 +80,20 @@ Copy `example.env` to `.env` and edit it; every variable is documented there. At
 
 Open the ports in the host firewall before the first run. A dismissed firewall prompt creates a silent block rule.
 
-The season, community events and the item blacklist are generated from `pubfiles.json` (every setting is explained in [PUBFILES.md](PUBFILES.md)):
+The season, community events and the item blacklist are generated from `pubfiles.json` (every setting is explained in [PUBFILES.md](PUBFILES.md), the season themes in [SEASONS.md](SEASONS.md)):
 
     server.exe pubfiles    # regenerate Config.txt / Seasons.txt / Blacklist.txt and exit
 
 The lobby reads the publisher files on every request, so changing the season or an event needs no restart.
 
-Runtime state (`sessions/`, `pubfiles/`, `dumps/`) is created next to the binary and ignored by git. `D3_DUMPS=<dir>` records raw auth bodies and lobby frames; `D3_VERBOSE=1` logs every decrypted lobby message.
+## Optional features
+
+Both are off or inert until you set them up, and neither has been tried against a running game yet (the settings and the code are covered by tests).
+
+- **Monthly season rotation.** The season advances every month through all the seasons the server knows (14 to 39 built in, more added in `pubfiles.json`), with the theme of each season switched on, and starts over after the last. Set `"season_rotation": { "enabled": true }` in `pubfiles.json`. See [PUBFILES.md](PUBFILES.md#season-rotation) and [SEASONS.md](SEASONS.md).
+- **Weekly Challenge Rifts.** Put `challengerift_config.dat` and the `challengerift_NN.dat` files from d3hack's release zip (`config/d3hack-nx/rift_data/`) in `D3_RIFTDATA` (default `riftdata/`) and the server serves them, one per week, looping back to the first. The files are captured game data and are not in this repository. See [PUBFILES.md](PUBFILES.md#challenge-rifts).
+
+Runtime state (`sessions/`, `pubfiles/`, `dumps/`) is created next to the binary and ignored by git; `riftdata/` is yours to fill and is ignored too. `D3_DUMPS=<dir>` records raw auth bodies and lobby frames; `D3_VERBOSE=1` logs every decrypted lobby message.
 
 ## Credits
 

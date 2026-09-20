@@ -17,5 +17,30 @@
   "cross_platform_save_migration": true,
   "seasonal_global_leaderboards": true,
   "diablo4_advertisement": false,
-  "update_version": "1"
+  "update_version": "1",
+  "season_themes": {
+    "template": {
+      "DoubleGoblins": 0,
+      "DoubleBountyBags": 0,
+      "RoyalGrandeur": 0,
+      "LegacyOfNightmares": 0,
+      "TriunesWill": 0,
+      "Pandemonium": 0,
+      "KanaiPowers": 0,
+      "TrialsOfTempests": 0,
+      "SeasonOnly": 0,
+      "ShadowClones": 0,
+      "FourthKanaisCubeSlot": 0,
+      "EtherealItems": 0,
+      "SoulShards": 0,
+      "SwarmRifts": 0,
+      "SanctifiedItems": 0,
+      "DarkAlchemy": 0,
+      "ParagonCap": 0,
+      "NestingPortals": 0,
+      "EasterEggWorld": 0,
+      "DoubleRiftKeystones": 0,
+      "DoubleBloodShards": 0
+    }
+  }
 }

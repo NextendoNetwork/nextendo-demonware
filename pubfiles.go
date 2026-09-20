@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 )
 
 // pubConfig drives the served content. One file to edit to change the season
@@ -57,6 +58,17 @@ type pubConfig struct {
 	SeasonalGlobalLeaderboards  bool   `json:"seasonal_global_leaderboards"`
 	Diablo4Advertisement        bool   `json:"diablo4_advertisement"`
 	UpdateVersion               string `json:"update_version"`
+
+	// Challenge Rifts: how the files in D3_RIFTDATA are served (riftdata.go).
+	ChallengeRifts riftSettings `json:"challenge_rifts"`
+
+	// Season rotation: advance the season every month (seasons.go). Off by default.
+	SeasonRotation seasonRotation `json:"season_rotation"`
+
+	// SeasonThemes adds or replaces the events of a season's theme, by season
+	// number, e.g. {"40": ["SanctifiedItems"]} or {"40": {"SanctifiedItems": 1, ...}}. It extends the built-in table
+	// (seasons.go), so a new season needs no code change.
+	SeasonThemes map[string]seasonEvents `json:"season_themes"`
 }
 
 // knownEvents is the complete list of buffs the game recognizes, in the order
@@ -105,6 +117,8 @@ func defaultPubConfig() pubConfig {
 		SeasonalGlobalLeaderboards:  true,
 		Diablo4Advertisement:        false,
 		UpdateVersion:               "1",
+		ChallengeRifts:              riftSettings{Mode: "weekly"},
+		SeasonRotation:              seasonRotation{Anchor: "2026-09", ThemeEvents: true},
 	}
 }
 
@@ -183,6 +197,7 @@ func writePubfiles(cfgPath, outDir string) error {
 	if err != nil {
 		return err
 	}
+	cfg = effectiveConfig(cfg, time.Now())
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
 	}
@@ -232,6 +247,14 @@ func pubfilesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if name != filepath.Base(name) || strings.Contains(name, "..") {
 		http.NotFound(w, r)
+		return
+	}
+	if b, _, ok := rotatedPubfile(name, time.Now()); ok {
+		_, _ = w.Write(b)
+		return
+	}
+	if b, _, ok := riftFile(name, time.Now()); ok {
+		_, _ = w.Write(b)
 		return
 	}
 	b, err := os.ReadFile(filepath.Join(pubDir, name))

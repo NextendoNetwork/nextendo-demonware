@@ -25,3 +25,4 @@ stderr.txt
 stdout.txt
 *.log
 *.err
+/riftdata/
