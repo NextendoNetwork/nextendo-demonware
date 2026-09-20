@@ -36,19 +36,23 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 )
 
 const (
-	frameFlag     = 0xAB
-	lobbyVersion  = 220 // le plus haut accepte ; le client en propose 210 et 220
-	helloLen      = 28
-	msgServerHi   = 0x81
-	msgClientAuth = 0x82
-	msgServerOK   = 0x83
-	msgError      = 0x84
-	msgEncrypted  = 0x85
+	frameFlag      = 0xAB
+	lobbyVersion   = 220 // le plus haut accepte ; le client en propose 210 et 220
+	helloLen       = 28
+	msgServerHi    = 0x81
+	msgClientAuth  = 0x82
+	msgServerOK    = 0x83
+	msgError       = 0x84
+	msgEncrypted   = 0x85
+	msgMigrateInit = 0x87
+	msgMigrateAck  = 0x88
+	msgMigrateGo   = 0x89
 )
 
 var serverIDs atomic.Uint64
@@ -81,7 +85,14 @@ type lobbyConn struct {
 	keys    *sessionKeys
 	player  *playerID
 	s2cSeq  uint32
+	sendMu  sync.Mutex
 	msgSeen int
+
+	// Dernier document d'hote recu en 145/2, rendu tel quel en 145/3.
+	lobbyDoc string
+
+	// Emis apres la reponse de tache en cours (messages pousses).
+	afterReply func()
 }
 
 func (l *lobbyConn) logf(format string, a ...any) {
@@ -133,6 +144,7 @@ func (l *lobbyConn) dump(tag string, b []byte) {
 func (l *lobbyConn) run() {
 	defer l.c.Close()
 	defer dropSessionsOf(l.n)
+	defer ctrMM.leave(l, 0)
 	defer dropOnline(l.n)
 	l.logf("==== CONNECT from=%s", l.c.RemoteAddr())
 
@@ -240,6 +252,15 @@ func (l *lobbyConn) onClientAuth(raw []byte) bool {
 					return false
 				}
 				l.logf("-> 0x83 chk=%X ; session chiffree etablie", k.serverChk)
+				// Le 0x83 met deja [+0x258]=3, seule condition de getStatus()==2 : le 0x87 n'apporte rien
+				// et fait attendre au jeu une migration (fermeture au bout de ~12s). Garde sous CTR_MIGRATE.
+				if migrateEnabled {
+					if err := l.sendEncrypted(msgMigrateInit, []byte{1}); err != nil {
+						l.logf("envoi 0x87: %v", err)
+						return false
+					}
+					l.logf("-> 0x87 migrate-init")
+				}
 				return true
 			}
 		}
@@ -372,11 +393,57 @@ func (l *lobbyConn) onEncrypted(raw []byte) {
 	}
 	if inner == 0x86 {
 		l.onTask(pt[5 : 5+n])
+		return
 	}
+	if inner == msgMigrateAck {
+		// Le 0x88 clot le 0x87 : rien n'est attendu ensuite. Un 0x89 declencherait une vraie migration.
+		if !migrateEnabled {
+			l.logf("0x88 migrate-ack — login LSG complet")
+			return
+		}
+		if err := l.sendEncrypted(msgMigrateGo, migrateGoPayload()); err != nil {
+			l.logf("envoi 0x89: %v", err)
+			return
+		}
+		l.logf("-> 0x89 migrate-go %s:%d", migrateIP(), migratePort)
+		return
+	}
+	l.logf("message interne 0x%02X ignore (%d octets)", inner, n)
+}
+
+// Le jeu reprend la poignee de main complete sur la connexion migree, donc on
+// le renvoie sur le port d'ecoute habituel.
+const migratePort uint16 = 3074
+
+var migrateEnabled = os.Getenv("CTR_MIGRATE") == "1"
+
+func migrateIP() net.IP {
+	ip := net.ParseIP(nextendoHost).To4()
+	if ip == nil {
+		ip = net.IPv4(127, 0, 0, 1).To4()
+	}
+	return ip
+}
+
+// migrateGoPayload : 01 | type 2 (adresse fournie) | taille de l'adresse | bdAddr | u16 taille du
+// jeton | jeton | u32. parse220MigrateAck exige ce dernier u32 (millisecondes, *0.001 et plafonne
+// a 30s dans +0x764) : sans lui elle rend false et process220MigrateAck ferme la connexion.
+const migrateAddrLen = 6
+const migrateDelayMS uint32 = 1000
+
+func migrateGoPayload() []byte {
+	p := []byte{1, 2, migrateAddrLen}
+	p = append(p, migrateIP()...)
+	p = append(p, byte(migratePort&0xFF), byte(migratePort>>8))
+	p = append(p, 0, 0)
+	d := migrateDelayMS
+	return append(p, byte(d), byte(d>>8), byte(d>>16), byte(d>>24))
 }
 
 // sendEncrypted emet un 0x85 : u32 seq | iv | AES-CBC(u32 N | type | charge | bourrage) | tag.
 func (l *lobbyConn) sendEncrypted(innerType byte, payload []byte) error {
+	l.sendMu.Lock()
+	defer l.sendMu.Unlock()
 	pt := make([]byte, 0, 5+len(payload)+16)
 	pt = append(pt, u32le(uint32(len(payload)))...)
 	pt = append(pt, innerType)

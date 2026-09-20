@@ -33,12 +33,23 @@ const ticketMagic uint32 = 0xEFBDADDE
 var authReqNum atomic.Uint64
 
 func serveAuth() error {
+	ctrSigner, err := loadCTRAuthSigner(os.Getenv("CTR_AUTH_SIGNING_KEY"))
+	if err != nil {
+		return err
+	}
+	if ctrSigner != nil {
+		log.Printf("[CTR Auth] signed replies enabled for title 5775 (client trust mod required)")
+	}
 	dumps := runDumpDir("auth")
 
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		n := authReqNum.Add(1)
 		body, _ := io.ReadAll(io.LimitReader(r.Body, 1<<20))
 		r.Body.Close()
+		if r.URL.Path == "/v1.0/tokens/lsg/" {
+			handleCTRUmbrella(w, r, body, n, dumps)
+			return
+		}
 
 		// Ligne de requete seulement : le corps porte l'id_token NSA du joueur.
 		log.Printf("[D3 Auth] #%d %s %s%s from %s (%d bytes)", n, r.Method, r.Host, r.URL.RequestURI(), r.RemoteAddr, len(body))
@@ -84,11 +95,26 @@ func serveAuth() error {
 		clientTicket := make([]byte, 128)
 		binary.LittleEndian.PutUint32(clientTicket[0:], ticketMagic)
 		clientTicket[4] = 1
-		binary.LittleEndian.PutUint32(clientTicket[5:], 5745) // title id
-		binary.LittleEndian.PutUint32(clientTicket[9:], 0)    // reserve
+		// Echo the title the client announced (Diablo III 5745, Crash Team Racing
+		// 5775) instead of assuming one: a ticket stamped with another game's title
+		// is not the ticket this client asked for.
+		titleID := uint32(5745)
+		if v, err := strconv.ParseUint(req.TitleID, 10, 32); err == nil && v != 0 {
+			titleID = uint32(v)
+		}
+		binary.LittleEndian.PutUint32(clientTicket[5:], titleID)
+		binary.LittleEndian.PutUint32(clientTicket[9:], 0) // reserve
 		binary.LittleEndian.PutUint32(clientTicket[13:], uint32(time.Now().Unix()))
-		binary.LittleEndian.PutUint64(clientTicket[17:], 1) // user id
-		binary.LittleEndian.PutUint64(clientTicket[25:], uint64(time.Now().Unix()+86400))
+		// CTR lit son identifiant en ligne en +25, la ou Diablo range l'expiration.
+		// Il doit etre stable : le jeu rattache une partie a son hote via
+		// CFriendManager::getFriendByOnlineId(Net::MatchMakingInfo +0x170), et un
+		// identifiant qui change a chaque connexion ne correspond a aucun ami.
+		userID, expiry := uint64(1), uint64(time.Now().Unix()+86400)
+		if titleID == 5775 {
+			userID, expiry = id.PID, id.PID
+		}
+		binary.LittleEndian.PutUint64(clientTicket[17:], userID)
+		binary.LittleEndian.PutUint64(clientTicket[25:], expiry)
 		if _, err := rand.Read(clientTicket[33:97]); err != nil { // cle de session
 			log.Printf("[D3 Auth] rand: %v", err)
 		}
@@ -131,11 +157,14 @@ func serveAuth() error {
 		// auth_task, code, iv_seed, client_ticket, server_ticket), d'ou une
 		// struct et pas une map.
 		//
-		// extra_data est une CHAINE contenant du JSON ; le client y lit
-		// nso_subscription_status. L'etat d'abonnement fait donc partie de la
-		// reponse d'auth : aucun patch du jeu.
+		// extra_data est une CHAINE contenant du JSON ; bdAuthSwitch::processPlatformData y lit
+		// nso_subscription_status ET extended_data. Sans extended_data (non vide, <= 4096 car.)
+		// bdExtendedAuthInfo reste vide, bdAntiCheat::reportExtendedAuthInfo abandonne et la
+		// tache igNetTaskReportExtendedAuthInfo echoue, ce qui fait echouer TOUTE la sequence
+		// de login LSG : le jeu reessaie en backoff puis se met hors ligne jusqu'au redemarrage.
 		extra, _ := json.Marshal(map[string]string{
 			"nso_subscription_status": "1",
+			"extended_data":           fmt.Sprintf("nextendo:%d", id.PID),
 		})
 
 		resp := struct {
@@ -154,6 +183,15 @@ func serveAuth() error {
 			ExtraData:    string(extra),
 		}
 		out, _ := json.Marshal(resp)
+		if titleID == 5775 && ctrSigner != nil {
+			signature, err := ctrSigner.sign(out)
+			if err != nil {
+				log.Printf("[CTR Auth] %v", err)
+				http.Error(w, "authentication signing failed", http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("X-Signature", signature)
+		}
 
 		loginsTotal.Add(1)
 		log.Printf("[D3 Auth] #%d %q pid=%d kind=%s -> 200 code=700 auth_task=%s", n, id.Username, id.PID, id.Kind, authTask)

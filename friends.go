@@ -162,6 +162,24 @@ func refreshAliases() {
 	}
 }
 
+// pidOnline rend le PID Nextendo d'un joueur connecte designe par id (PID ou
+// identifiant d'appareil/NSA).
+func pidOnline(id uint64) uint64 {
+	retryPending()
+	refreshAliases()
+	aliasMu.Lock()
+	name := aliases[id]
+	aliasMu.Unlock()
+	onlineMu.Lock()
+	defer onlineMu.Unlock()
+	for _, p := range online {
+		if (p.PID != 0 && p.PID == id) || (name != "" && strings.EqualFold(p.Username, name)) {
+			return p.PID
+		}
+	}
+	return 0
+}
+
 // nicknameOnline rend le surnom d'un joueur connecte designe par id (PID ou
 // identifiant d'appareil/NSA).
 func nicknameOnline(id uint64) string {

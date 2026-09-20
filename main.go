@@ -103,6 +103,7 @@ func main() {
 	go startDashboard()
 	startPresenceReporter()
 	go serveNAT(natPort)
+	go reapSessions()
 	startLobby()
 
 	if err := serveAuth(); err != nil {
