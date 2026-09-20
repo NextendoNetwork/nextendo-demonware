@@ -35,7 +35,7 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 | `season_themes` | 14 to 39 | The events of each season: the one place they are listed ([below](#season-themes)). |
 | `challenge_rifts` | `weekly` | Weekly Challenge Rifts ([below](#challenge-rifts)). |
 
-**Season and client build.** A client may have to match the season the server serves. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Newer seasons (38, 39 and above) have not been tested against those builds, and a console on 2.7.6 refused to create a new character while season 39 was served (the cause is not confirmed). If a client will not accept a character, serve season 37.
+**Season and client build.** A client may have to match the season the server serves. Game builds 2.7.6 and 2.7.7 were tested working with season 37, with this server and with each other. Newer seasons (38, 39 and above) have not been tested against those builds. A hero is tied to the season it was created in: after the served season changes, the game reports heroes from another season as "not a seasonal hero" (seen while different seasons were served to one console; the exact rule is not confirmed). So choose one season and keep it, and create heroes while it is being served; rotation changes it on purpose.
 
 Example, a file that keeps season 39 and its theme, adds doubled goblins and 2x experience:
 
