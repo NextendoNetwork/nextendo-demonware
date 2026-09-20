@@ -129,6 +129,7 @@ What this server does not do, and what has not been checked. Read this before re
 **Friends are lightly tested, and why.** Only two accounts on two devices, a CFW Switch and Citron on a local test stack, have ever been used, so there has never been a real friend graph to test against.
 - Citron friends resolve by Nextendo PID and were checked in both directions between those two accounts.
 - Console friends are identified by Nintendo ids, not PIDs. They resolve either from a local `baas-proxy` log (`BAASPROXY_LOG`, which exists only on a local stack) or by asking nextendo-account's `/internal/resolve`. The account lookup is covered by tests against a stand-in service only. It has never run against real friend ids, because a console's real friend list is built by nx-account, which is private.
+- **The in-game "friends online" indicator does not come from this server.** It comes from Nintendo friend presence (`nn::friends`), which Nextendo supplies. This server reports who is connected to nextendo-account (`/internal/presence-batch`); the devices read presence from the account service of their deployment. On a local test stack with real Nextendo accounts the two never meet: the local account service does not know those accounts and the devices do not ask it, so no friend has ever been seen shown as online, on either device. The server's answer to the friend lookup was checked in the log (the game was told the friend was online) and the game still showed nobody. Checking the indicator needs a deployment where the account service that receives this server's report is the one the devices ask.
 - Friend status (rich presence) uses CollectingW's `ctr_presence.go`, whose layout matches what Diablo III sends in our logs. It looks a friend up by the raw id the game asks about, so it matches a Citron PID but not yet a console's Nintendo id. It has not been seen working in a live Diablo III game.
 
 **Empty services.** The game asks for leaderboards and stats, hero upload, mail, counters and event logging, and the server accepts each request and answers with nothing. Leaderboard screens are empty and uploaded heroes are not stored.
@@ -149,7 +150,7 @@ What this server does not do, and what has not been checked. Read this before re
 - Persist public games, user data and friend status.
 - Expire stale games and honor the search filters.
 - Refuse the all-zero lobby key; add rate limits.
-- Check console friends and friend status against real accounts on a real deployment.
+- Check console friends, friend status and the "friends online" indicator against real accounts on a real deployment.
 - Try Challenge Rifts and season rotation on a running game.
 - Translate the French comments and log strings left in `ctr_*.go` and `lobbydoc.go`.
 - Let rich presence resolve a console friend id to a PID, as friend lookups already do (`onlinePlayerFor`).
