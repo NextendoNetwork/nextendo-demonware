@@ -1,6 +1,6 @@
 # diablo-3
 
-Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network). Source only — no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
+Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network), with **Crash Team Racing Nitro-Fueled** support contributed by CollectingW (see [Crash Team Racing](#crash-team-racing)). Source only — no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
 
 Diablo III does not use NEX: its online layer is **Demonware**. This server speaks it end to end (auth, the encrypted lobby, remote tasks, matchmaking, NAT discovery) and plugs into the Nextendo stack like the other game servers: a route in sni-router, the account gates and presence of nextendo-account, and `/api/stats` for nextendo-dashboard.
 
@@ -11,6 +11,7 @@ Diablo III does not use NEX: its online layer is **Demonware**. This server spea
 - Public games: create, find, join, player counts, NAT introductions.
 - Co-op between a Switch and an emulator. Tested: game builds 2.7.6 (CFW Switch) and 2.7.7 (Citron), both with season 37, working against this server and against each other.
 - Friend lookups inside the game and friend status, with presence reported to nextendo-account. Lightly tested: see [Known limits](#known-limits).
+- Crash Team Racing Nitro-Fueled (Demonware title 5775): login, contextual matchmaking, async matchmaking, friend sessions and rich presence, all written by CollectingW. Not tested on a running game by us: see [Crash Team Racing](#crash-team-racing).
 
 ## Requirements
 
@@ -90,6 +91,24 @@ The season, the community events with their multipliers, and the item blacklist 
 
 The lobby reads them on every request, so a change needs no restart; players see it the next time they connect.
 
+## Crash Team Racing
+
+Crash Team Racing Nitro-Fueled (Demonware title 5775) speaks the same lobby protocol as Diablo III, so its support lives in this server instead of a fork. It was written by **CollectingW** (pull request #1 of `nx-mod/diablo-3`) and is merged here with the comments and log strings translated to English and a few lines of glue to fit our friend lookup. Every CTR-specific path is gated on the title the client announces; title 5745 (Diablo III) behaves as before.
+
+What it adds, from the pull request:
+
+- **Login.** The ticket carries the title the client announced instead of always 5745. For 5775 the online id is the player's stable Nextendo PID, which CTR needs to tie a game to its host. `extra_data` carries both `nso_subscription_status` and `extended_data`.
+- **Signed auth replies.** CTR checks an `X-Signature` header before it reads the ticket, so an unsigned reply cannot log in. Set `CTR_AUTH_SIGNING_KEY` to the path of an RSA-2048 private key (PEM, exponent 65537); `openssl` must be on the `PATH`. Replies for 5775 are signed with RSA-PSS/SHA-256, zero-length salt, each verified before it is sent. The server refuses to start if the key or `openssl` cannot produce a valid signature. The matching public key must be installed in the CTR client mod, which is not part of this repository, and no key is shipped.
+- **Umbrella tokens.** `/v1.0/tokens/lsg/` answers on its own and requires an unexpired ticket this server issued.
+- **Contextual sessions (service 138).** Create, update, delete, request an id and initialize, with owner checks and context separation; friend sessions (138/14) so friends show as joinable.
+- **Async matchmaking (service 145).** Search validation, a queue that pairs players on matching filters and capacity, host and backend documents, and host-document sync before a guest joins.
+- **Rich presence (service 68)** and the reply formats CTR's tasks need (`bdHTTPProxyResponse`, structured replies).
+- `CTR_MIGRATE=1` sends the lobby migration message CTR was first tried with. Off by default: it makes the game wait for a migration and close after about 12 seconds.
+
+The merge changed one thing for Diablo III: games whose host disconnects are now orphaned and removed when the host does not come back, instead of staying findable until the connection closes. A task the server cannot parse now gets an empty success instead of no answer.
+
+Not checked by us: this merge builds and every test passes, including CollectingW's, but we have not run Crash Team Racing against it, and Diablo III has not been re-tested on a running game since the merge. CTR's hostnames for the hosts entries and its sni-router route have not been verified.
+
 ## Optional features
 
 Both are off or inert until you set them up. Season rotation changes the season for every save that plays on the server, and changing the season, up or down, can damage a savegame: see [PUBFILES.md](PUBFILES.md#settings). Neither has been tried on a running game yet; the code and settings are covered by tests.
@@ -110,7 +129,7 @@ What this server does not do, and what has not been checked. Read this before re
 **Friends are lightly tested, and why.** Only two accounts on two devices, a CFW Switch and Citron on a local test stack, have ever been used, so there has never been a real friend graph to test against.
 - Citron friends resolve by Nextendo PID and were checked in both directions between those two accounts.
 - Console friends are identified by Nintendo ids, not PIDs. They resolve either from a local `baas-proxy` log (`BAASPROXY_LOG`, which exists only on a local stack) or by asking nextendo-account's `/internal/resolve`. The account lookup is covered by tests against a stand-in service only. It has never run against real friend ids, because a console's real friend list is built by nx-account, which is private.
-- Friend status (rich presence) is written from a layout confirmed by what the game sends and by the Crash Team Racing support proposed in pull request #1 of `nx-mod/diablo-3`. It has not been seen working in a live game.
+- Friend status (rich presence) uses CollectingW's `ctr_presence.go`, whose layout matches what Diablo III sends in our logs. It looks a friend up by the raw id the game asks about, so it matches a Citron PID but not yet a console's Nintendo id. It has not been seen working in a live Diablo III game.
 
 **Empty services.** The game asks for leaderboards and stats, hero upload, mail, counters and event logging, and the server accepts each request and answers with nothing. Leaderboard screens are empty and uploaded heroes are not stored.
 
@@ -132,6 +151,9 @@ What this server does not do, and what has not been checked. Read this before re
 - Refuse the all-zero lobby key; add rate limits.
 - Check console friends and friend status against real accounts on a real deployment.
 - Try Challenge Rifts and season rotation on a running game.
+- Translate the French comments and log strings left in `ctr_*.go` and `lobbydoc.go`.
+- Let rich presence resolve a console friend id to a PID, as friend lookups already do (`onlinePlayerFor`).
+- Run Diablo III and Crash Team Racing on the merged server and confirm neither changed.
 - Find the `Config.txt` keys the game reads, and the meaning of the blacklist values.
 
 ## Credits
@@ -140,7 +162,7 @@ What this server does not do, and what has not been checked. Read this before re
   — the Switch online stack this server plugs into: NSA/BaaS accounts, dauth,
   the SNI router that carries Demonware traffic, and the game-server pattern
   (gates, presence, dashboard) this server follows.
-- **CollectingW**, whose Crash Team Racing support (pull request #1 of `nx-mod/diablo-3`) documents the rich presence service that this server's friend status follows.
+- **CollectingW** — wrote the Crash Team Racing Nitro-Fueled support in this server (pull request #1 of `nx-mod/diablo-3`): title-aware login, signed auth replies, umbrella tokens, contextual and async matchmaking, friend sessions and the rich presence service, with tests. The reverse engineering of CTR's Demonware behaviour is theirs.
 - **[D3Hack](https://github.com/god-jester/D3StudioFork)** by **jester**, on
   [exlaunch](https://github.com/shadowninja108/exlaunch) by **Shadow** — used
   as the instrumentation platform (hooks and logging inside the game) and as the
