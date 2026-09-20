@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"os"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -55,5 +57,56 @@ func TestSeasonEventsForms(t *testing.T) {
 	}
 	if err := json.Unmarshal([]byte(`{"a": {"SoulShards": "yes"}}`), &m); err == nil {
 		t.Error("a string value was accepted")
+	}
+}
+
+// The shipped pubfiles.json must say what the docs say the defaults are, so a
+// fresh install behaves like the documented one (no event on, rotation off).
+func TestShippedPubfilesMatchDefaults(t *testing.T) {
+	got, err := loadPubConfig("pubfiles.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := defaultPubConfig()
+	for name, on := range got.Events {
+		if on {
+			t.Errorf("shipped pubfiles.json switches event %s on", name)
+		}
+	}
+	if got.Season != want.Season || got.SeasonStart != want.SeasonStart || got.SeasonEnd != want.SeasonEnd ||
+		got.BuffStart != want.BuffStart || got.BuffEnd != want.BuffEnd {
+		t.Errorf("season or buff window differs from the defaults")
+	}
+	if got.XP != want.XP || got.GoldFind != want.GoldFind || got.LegendaryFind != want.LegendaryFind {
+		t.Errorf("multipliers differ from the defaults")
+	}
+	if got.HeroPublishFrequencyMinutes != want.HeroPublishFrequencyMinutes || got.UpdateVersion != want.UpdateVersion ||
+		got.CrossPlatformSaveMigration != want.CrossPlatformSaveMigration ||
+		got.SeasonalGlobalLeaderboards != want.SeasonalGlobalLeaderboards || got.Diablo4Advertisement != want.Diablo4Advertisement {
+		t.Errorf("flags differ from the defaults")
+	}
+	if got.SeasonRotation != want.SeasonRotation || got.ChallengeRifts != want.ChallengeRifts {
+		t.Errorf("rotation or rift settings differ from the defaults: %+v %+v", got.SeasonRotation, got.ChallengeRifts)
+	}
+}
+
+// Every built-in season is listed in the shipped pubfiles.json, exactly as the
+// built-in table has it, so the file is an accurate menu.
+func TestShippedSeasonsMatchBuiltIn(t *testing.T) {
+	c, err := loadPubConfig("pubfiles.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, n := range seasonList(seasonRotation{}, nil) {
+		key := strconv.Itoa(int(n))
+		listed, ok := c.SeasonThemes[key]
+		if !ok {
+			t.Errorf("season %s is not listed in the shipped pubfiles.json", key)
+			continue
+		}
+		th, _ := themeOf(n)
+		if strings.Join(listed, ",") != strings.Join(th.events, ",") {
+			t.Errorf("season %s: shipped %v, built-in %v", key, listed, th.events)
+		}
 	}
 }

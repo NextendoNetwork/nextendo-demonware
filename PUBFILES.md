@@ -20,8 +20,8 @@ Fields you leave out keep their defaults.
 
 | field | default | effect |
 |---|---|---|
-| `season` | `37` | Season number. |
-| `season_start`, `season_end` | 2025-02-09, 2036-02-09 | Season window ([dates](#dates)). |
+| `season` | `39` | Season number: the latest known one. |
+| `season_start`, `season_end` | 2020-01-01, 2050-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
 | `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
 | `events` | `{}` | Community events by name, `true` or `false` ([events](#events)). |
 | `legendary_find`, `gold_find`, `xp` | `"1.0"` | Multipliers, as text. `"1.0"` is normal. |
@@ -73,7 +73,7 @@ A season is a number and window plus a theme, which the game receives as communi
 }
 ```
 
-Either way the game always gets all 21 events. The shipped `pubfiles.json` has a `"template"` entry with all 21 set to `0`; it is not a season number, so it is ignored. Copy it to a number and change the `0`s you want to `1`. To play seasons 1 to 13, add them the same way (`"1": []`).
+Either way the game always gets all 21 events. The shipped `pubfiles.json` is a full menu: every event is listed (all off), every built-in season is listed with its theme (change any of them), and a `"template"` entry has all 21 events at `0`. `"template"` is not a season number, so it is ignored; copy it to a number and change the `0`s you want to `1`. To play seasons 1 to 13, add them the same way (`"1": []`).
 
 Before enabling it: each month the season changes, so characters created in the season leave it, as at a real season end (use a fixed `season` for a stable seasonal character). Season numbers outside the ones the game shipped with have not been tested.
 

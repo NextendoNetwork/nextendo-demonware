@@ -30,8 +30,8 @@ import (
 // pubConfig drives the served content. One file to edit to change the season
 // or turn an event on.
 type pubConfig struct {
-	// Active season. d3hack ran on 37: we keep the same default so behavior
-	// matches what has already been tested.
+	// Active season: the latest known one (39), with a window wide enough
+	// that it never ends.
 	Season uint32 `json:"season"`
 
 	// Season window. The game requires "???, DD MMM YYYY hh:mm:ss GMT" with a
@@ -101,9 +101,9 @@ var knownEvents = []string{
 
 func defaultPubConfig() pubConfig {
 	return pubConfig{
-		Season:      37,
-		SeasonStart: "Sat, 09 Feb 2025 00:00:00 GMT",
-		SeasonEnd:   "Tue, 09 Feb 2036 01:00:00 GMT",
+		Season:      39,
+		SeasonStart: "Wed, 01 Jan 2020 00:00:00 GMT",
+		SeasonEnd:   "Sat, 01 Jan 2050 00:00:00 GMT",
 		BuffStart:   "Sat, 16 Sep 2023 00:00:00 GMT",
 		BuffEnd:     "Wed, 01 Dec 2027 01:00:00 GMT",
 		// Nothing on by default: a server should look like production until

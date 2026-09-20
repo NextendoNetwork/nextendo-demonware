@@ -1,14 +1,31 @@
 {
-  "season": 37,
-  "season_start": "Sat, 09 Feb 2025 00:00:00 GMT",
-  "season_end": "Tue, 09 Feb 2036 01:00:00 GMT",
+  "season": 39,
+  "season_start": "Wed, 01 Jan 2020 00:00:00 GMT",
+  "season_end": "Sat, 01 Jan 2050 00:00:00 GMT",
   "buff_start": "Sat, 16 Sep 2023 00:00:00 GMT",
   "buff_end": "Wed, 01 Dec 2027 01:00:00 GMT",
   "events": {
-    "DarkAlchemy": true,
-    "KanaiPowers": true,
-    "NestingPortals": true,
-    "SwarmRifts": true
+    "DoubleGoblins": false,
+    "DoubleBountyBags": false,
+    "RoyalGrandeur": false,
+    "LegacyOfNightmares": false,
+    "TriunesWill": false,
+    "Pandemonium": false,
+    "KanaiPowers": false,
+    "TrialsOfTempests": false,
+    "SeasonOnly": false,
+    "ShadowClones": false,
+    "FourthKanaisCubeSlot": false,
+    "EtherealItems": false,
+    "SoulShards": false,
+    "SwarmRifts": false,
+    "SanctifiedItems": false,
+    "DarkAlchemy": false,
+    "ParagonCap": false,
+    "NestingPortals": false,
+    "EasterEggWorld": false,
+    "DoubleRiftKeystones": false,
+    "DoubleBloodShards": false
   },
   "legendary_find": "1.0",
   "gold_find": "1.0",
@@ -18,6 +35,14 @@
   "seasonal_global_leaderboards": true,
   "diablo4_advertisement": false,
   "update_version": "1",
+  "season_rotation": {
+    "enabled": false,
+    "anchor": "2026-09",
+    "theme_events": true
+  },
+  "challenge_rifts": {
+    "mode": "weekly"
+  },
   "season_themes": {
     "template": {
       "DoubleGoblins": 0,
@@ -41,6 +66,85 @@
       "EasterEggWorld": 0,
       "DoubleRiftKeystones": 0,
       "DoubleBloodShards": 0
-    }
+    },
+    "14": [
+      "DoubleGoblins"
+    ],
+    "15": [
+      "DoubleBountyBags"
+    ],
+    "16": [
+      "RoyalGrandeur"
+    ],
+    "17": [
+      "LegacyOfNightmares"
+    ],
+    "18": [
+      "TriunesWill"
+    ],
+    "19": [
+      "Pandemonium"
+    ],
+    "20": [
+      "KanaiPowers"
+    ],
+    "21": [
+      "TrialsOfTempests"
+    ],
+    "22": [
+      "ShadowClones",
+      "FourthKanaisCubeSlot"
+    ],
+    "23": [],
+    "24": [
+      "EtherealItems"
+    ],
+    "25": [
+      "SoulShards"
+    ],
+    "26": [
+      "SwarmRifts"
+    ],
+    "27": [
+      "SanctifiedItems"
+    ],
+    "28": [
+      "DarkAlchemy"
+    ],
+    "29": [
+      "NestingPortals"
+    ],
+    "30": [
+      "SoulShards"
+    ],
+    "31": [
+      "KanaiPowers"
+    ],
+    "32": [
+      "EtherealItems"
+    ],
+    "33": [
+      "ShadowClones",
+      "FourthKanaisCubeSlot"
+    ],
+    "34": [
+      "SanctifiedItems"
+    ],
+    "35": [
+      "Pandemonium"
+    ],
+    "36": [
+      "SoulShards"
+    ],
+    "37": [
+      "KanaiPowers"
+    ],
+    "38": [
+      "EtherealItems"
+    ],
+    "39": [
+      "ShadowClones",
+      "FourthKanaisCubeSlot"
+    ]
   }
 }
