@@ -20,7 +20,7 @@ Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `con
 
 | field | default | effect |
 |---|---|---|
-| `season` | `39` | Season number: the latest known one. The tested one is 37 (see below). Ignored while rotation is on. |
+| `season` | `37` | Season number. 37 is the one tested on real game builds; 39 is the latest known (see below). Ignored while rotation is on. |
 | `season_start`, `season_end` | 2020-01-01, 2036-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
 | `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
 | `season_theme` | `true` | Switch on the served season's theme events automatically ([season themes](#season-themes)). |

@@ -190,6 +190,9 @@ func (l *lobbyConn) onTask(payload []byte) {
 			reply = taskReply(task, 0, nil)
 		}
 
+	case service == svcRichPresence:
+		reply = l.onRichPresence(task, r)
+
 	case service == svcMatchMaking:
 		if reply = l.onMatchMaking(task, r); reply == nil {
 			reply = taskReply(task, 0, nil)

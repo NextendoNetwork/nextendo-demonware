@@ -90,8 +90,8 @@ func TestThemeAppliesToTheServedSeason(t *testing.T) {
 	if on := strings.Join(eventsOn(got), ","); on != "ShadowClones,FourthKanaisCubeSlot" {
 		t.Errorf("season 22 events: %s", on)
 	}
-	// the default season (39) repeats that theme
-	if on := strings.Join(eventsOn(effectiveConfig(defaultPubConfig(), time.Now())), ","); on != "ShadowClones,FourthKanaisCubeSlot" {
+	// the default season (37) has the Forbidden Archives theme
+	if on := strings.Join(eventsOn(effectiveConfig(defaultPubConfig(), time.Now())), ","); on != "KanaiPowers" {
 		t.Errorf("default season events: %s", on)
 	}
 	// season_theme off: nothing is added, extras still apply

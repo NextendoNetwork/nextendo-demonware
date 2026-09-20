@@ -106,9 +106,21 @@ func retryPending() {
 
 func dropOnline(conn uint64) {
 	onlineMu.Lock()
+	var pid uint64
+	if p := online[conn]; p != nil {
+		pid = p.PID
+		for other, q := range online {
+			if other != conn && q.PID == pid { // still connected on another connection
+				pid = 0
+			}
+		}
+	}
 	delete(online, conn)
 	delete(pending, conn)
 	onlineMu.Unlock()
+	if pid != 0 {
+		dropPresence(pid) // a player who left must not look joinable
+	}
 }
 
 // refreshAliases re-reads the friend lists baas-proxy relayed (at most once
@@ -163,22 +175,46 @@ func refreshAliases() {
 	}
 }
 
-// nicknameOnline returns the nickname of a connected player identified by id
-// (PID or device/NSA identifier).
-func nicknameOnline(id uint64) string {
+// onlinePlayerFor returns the connected player a friend id stands for, or nil.
+// The id is a PID (Citron), or a console's device/NSA id (resolved from the
+// baas-proxy log, or by asking nextendo-account).
+func onlinePlayerFor(id uint64) *playerID {
 	retryPending()
 	refreshAliases()
 	aliasMu.Lock()
 	name := aliases[id]
 	aliasMu.Unlock()
+	if p := onlineUser(id, name); p != nil {
+		return p
+	}
+	// A console friend id is not a PID: ask nextendo-account who owns it, so a
+	// deployment does not depend on the local baas-proxy log (accountlookup.go).
+	if pid, ok := pidForConsoleID(id); ok {
+		return onlineUser(pid, "")
+	}
+	return nil
+}
+
+// nicknameOnline returns the nickname of a connected player identified by id
+// (PID or device/NSA identifier).
+func nicknameOnline(id uint64) string {
+	if p := onlinePlayerFor(id); p != nil {
+		return p.Username
+	}
+	return ""
+}
+
+// onlineUser returns the connected player whose PID is id, or whose name is
+// alias (ignoring case).
+func onlineUser(id uint64, alias string) *playerID {
 	onlineMu.Lock()
 	defer onlineMu.Unlock()
 	for _, p := range online {
-		if (p.PID != 0 && p.PID == id) || (name != "" && strings.EqualFold(p.Username, name)) {
-			return p.Username
+		if (p.PID != 0 && p.PID == id) || (alias != "" && strings.EqualFold(p.Username, alias)) {
+			return p
 		}
 	}
-	return ""
+	return nil
 }
 
 func (w *bdWriter) str(s string) {

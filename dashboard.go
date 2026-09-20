@@ -109,6 +109,7 @@ var serviceNames = map[byte]string{
 var taskNames = map[[2]byte]string{
 	{10, 10}: "uploadFile", {10, 21}: "getPublisherFile",
 	{12, 6}: "getServerTime", {12, 9}: "getUserNames",
+	{68, 3}: "setRichPresence", {68, 4}: "getRichPresence", {68, 5}: "getAndSubscribeRichPresence", {68, 7}: "unsubscribeRichPresence",
 	{21, 1}: "createSession", {21, 2}: "updateSession", {21, 3}: "deleteSession",
 	{21, 5}: "findSessions", {21, 12}: "updateSessionPlayers",
 	{29, 1}: "set", {29, 4}: "get", {29, 11}: "query",

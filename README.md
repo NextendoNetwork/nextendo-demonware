@@ -10,7 +10,7 @@ Diablo III does not use NEX: its online layer is **Demonware**. This server spea
 - Season and community events served from `pubfiles.json` ([PUBFILES.md](PUBFILES.md)), with optional monthly season rotation and weekly Challenge Rifts (see [Optional features](#optional-features)).
 - Public games: create, find, join, player counts, NAT introductions.
 - Co-op between a Switch and an emulator. Tested: game builds 2.7.6 (CFW Switch) and 2.7.7 (Citron), both with season 37, working against this server and against each other.
-- Friend lookups inside the game, and presence reported to nextendo-account.
+- Friend lookups inside the game and friend status, with presence reported to nextendo-account. Lightly tested: see [Known limits](#known-limits).
 
 ## Requirements
 
@@ -103,12 +103,44 @@ Both are off or inert until you set them up. Season rotation changes the season 
 - `D3_DUMPS=<dir>` records raw auth bodies and lobby frames; `D3_VERBOSE=1` logs every decrypted lobby message.
 - For co-op between a console running d3hack and a stock peer, keep d3hack's cheat sections off and set `MaxParagonLevel = 20000`. Gameplay-changing patches on one side desync the session and the game drops the join a few seconds later. Community buffs come from this server instead.
 
+## Known limits
+
+What this server does not do, and what has not been checked. Read this before relying on it.
+
+**Friends are lightly tested, and why.** Only two accounts on two devices, a CFW Switch and Citron on a local test stack, have ever been used, so there has never been a real friend graph to test against.
+- Citron friends resolve by Nextendo PID and were checked in both directions between those two accounts.
+- Console friends are identified by Nintendo ids, not PIDs. They resolve either from a local `baas-proxy` log (`BAASPROXY_LOG`, which exists only on a local stack) or by asking nextendo-account's `/internal/resolve`. The account lookup is covered by tests against a stand-in service only. It has never run against real friend ids, because a console's real friend list is built by nx-account, which is private.
+- Friend status (rich presence) is written from a layout confirmed by what the game sends and by the Crash Team Racing support proposed in pull request #1 of `nx-mod/diablo-3`. It has not been seen working in a live game.
+
+**Empty services.** The game asks for leaderboards and stats, hero upload, mail, counters and event logging, and the server accepts each request and answers with nothing. Leaderboard screens are empty and uploaded heroes are not stored.
+
+**No persistence.** Public games, user data and friend status live in memory and are lost on restart.
+
+**Matchmaking.** Games never expire (one whose host went away stays findable until it disconnects), search filters are ignored, and play is peer to peer only.
+
+**Security.** The lobby also accepts a fixed all-zero key, so a client with no ticket can complete the handshake. There is no rate limiting or moderation beyond the account gate (`NEXTENDO_REQUIRE_ACCOUNT`).
+
+**Seasons.** Only season 37 is tested, on game builds 2.7.6 and 2.7.7. Changing the served season, up or down, can damage a savegame (see [PUBFILES.md](PUBFILES.md#settings)). Season rotation and Challenge Rifts have not been tried on a running game.
+
+**Unknowns.** Whether the game reads `Config.txt` keys beyond the ones sent, what the blacklist's `0` and `1` mean, and the request and reply formats of the empty services.
+
+## To do
+
+- Leaderboards, stats and hero storage: read the request formats from the game and add storage.
+- Persist public games, user data and friend status.
+- Expire stale games and honor the search filters.
+- Refuse the all-zero lobby key; add rate limits.
+- Check console friends and friend status against real accounts on a real deployment.
+- Try Challenge Rifts and season rotation on a running game.
+- Find the `Config.txt` keys the game reads, and the meaning of the blacklist values.
+
 ## Credits
 
 - **[Nextendo Network](https://nextendo.network)** ([NextendoNetwork](https://github.com/NextendoNetwork))
   — the Switch online stack this server plugs into: NSA/BaaS accounts, dauth,
   the SNI router that carries Demonware traffic, and the game-server pattern
   (gates, presence, dashboard) this server follows.
+- **CollectingW**, whose Crash Team Racing support (pull request #1 of `nx-mod/diablo-3`) documents the rich presence service that this server's friend status follows.
 - **[D3Hack](https://github.com/god-jester/D3StudioFork)** by **jester**, on
   [exlaunch](https://github.com/shadowninja108/exlaunch) by **Shadow** — used
   as the instrumentation platform (hooks and logging inside the game) and as the

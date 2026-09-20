@@ -26,7 +26,7 @@ func TestStripJSONComments(t *testing.T) {
 // fresh install starts from: it must say what the docs say the defaults are.
 func TestShippedDefaults(t *testing.T) {
 	c := defaultPubConfig()
-	if c.Season != 39 || c.SeasonStart != "Wed, 01 Jan 2020 00:00:00 GMT" || c.SeasonEnd != "Tue, 01 Jan 2036 00:00:00 GMT" {
+	if c.Season != 37 || c.SeasonStart != "Wed, 01 Jan 2020 00:00:00 GMT" || c.SeasonEnd != "Tue, 01 Jan 2036 00:00:00 GMT" {
 		t.Errorf("season %d %q %q", c.Season, c.SeasonStart, c.SeasonEnd)
 	}
 	if !c.SeasonTheme {
