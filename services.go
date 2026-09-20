@@ -24,6 +24,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -37,11 +38,31 @@ const (
 	tagU64    = 0x0A
 	tagString = 0x10
 	tagBlob   = 0x13
+	tagStruct = 0x17
 
 	innerTaskReply = 0x01
+	innerPush      = 0x02
 
-	svcStorage        = 10
-	svcTitleUtilities = 12
+	svcStorage          = 10
+	svcTitleUtilities   = 12
+	svcAsyncMatchMaking = 145 // bdAsyncMatchMaking
+	svcHTTPProxy        = 194 // bdABTesting, via bdHTTPProxyRequest/Response
+
+	// Numeros ET types de resultat lus dans le bdTaskParams de chaque fonction de
+	// bdAsyncMatchMaking. bdUInt64Result::deserialize = readUInt64, bdStringResult = readString,
+	// bdBoolResult = readBool, bdLobbyDocuments = deux chaines.
+	taskSetPlayerInfo      = 2  // aucun resultat
+	taskGetPlayerToken     = 3  // bdUInt64Result
+	taskQoSHostsReply      = 4  // aucun resultat
+	taskGetMMStatus        = 5  // bdStringResult
+	taskInitMatchMaking    = 6  // bdStringResult
+	taskStartMatchMaking   = 7  // bdStringResult
+	taskLobbyDisbanded     = 10 // aucun resultat
+	taskGetLobbyDocuments  = 13 // bdLobbyDocuments
+	taskAckExpectGame      = 14 // aucun resultat
+	taskSyncLobbyDocuments = 15 // bdBoolResult
+	taskInitiateDCQoS      = 17 // bdStringResult
+	taskStartSearch        = 18 // bdStringResult
 
 	taskGetPublisherFile = 21
 	taskGetServerTime    = 6
@@ -57,6 +78,18 @@ var transactions atomic.Uint64
 type bdWriter struct{ b []byte }
 
 func (w *bdWriter) u8(v byte) { w.b = append(w.b, tagU8, v) }
+func (w *bdWriter) strv(s string) {
+	w.b = append(w.b, tagString)
+	w.b = append(w.b, s...)
+	w.b = append(w.b, 0)
+}
+func (w *bdWriter) boolv(v bool) {
+	b := byte(0)
+	if v {
+		b = 1
+	}
+	w.b = append(w.b, tagBool, b)
+}
 func (w *bdWriter) u32(v uint32) {
 	w.b = append(w.b, tagU32)
 	w.b = binary.LittleEndian.AppendUint32(w.b, v)
@@ -65,10 +98,53 @@ func (w *bdWriter) u64(v uint64) {
 	w.b = append(w.b, tagU64)
 	w.b = binary.LittleEndian.AppendUint64(w.b, v)
 }
+
+// raw64 ecrit 8 octets SANS etiquette (bdByteBuffer::read, pas readUInt64).
+func (w *bdWriter) raw64(v uint64) {
+	w.b = binary.LittleEndian.AppendUint64(w.b, v)
+}
 func (w *bdWriter) blobv(p []byte) {
 	w.b = append(w.b, tagBlob)
 	w.u32(uint32(len(p)))
 	w.b = append(w.b, p...)
+}
+
+// structv writes a bdStructBuffer (protobuf), as the client sends it.
+func (w *bdWriter) structv(p []byte) {
+	w.b = append(w.b, tagStruct)
+	w.u32(uint32(len(p)))
+	w.b = append(w.b, p...)
+}
+
+func appendVarint(b []byte, v uint64) []byte {
+	for v >= 0x80 {
+		b = append(b, byte(v)|0x80)
+		v >>= 7
+	}
+	return append(b, byte(v))
+}
+
+// httpProxyReply returns a bdHTTPProxyResponse: { 1: HTTP code, 2: HTTP code, 3: body }.
+// The code is written TWICE because two readers coexist:
+// bdHTTPProxyResponse::deserializeStatusCode reads field 2, but the REST path taken by
+// bdABTesting (bdRESTInternalResponse::deserialize -> bdRESTResponseMessage::initFromBuffer ->
+// bdRESTLSGResponseMessageDeserializer::deserialize) reads field 1. An unknown field is ignored,
+// so both can coexist; without field 1 initFromBuffer fails and sets error 4.
+func httpProxyReply(task byte, status uint32, body []byte) []byte {
+	sb := appendVarint([]byte{0x08}, uint64(status))
+	sb = appendVarint(append(sb, 0x10), uint64(status))
+	sb = append(sb, 0x1A)
+	sb = appendVarint(sb, uint64(len(body)))
+	sb = append(sb, body...)
+	// bdRemoteTask::handleTaskReply consumes transaction, error and task.
+	// bdStructBufferTask::deserializeTaskReply then reads StructStart directly;
+	// ordinary result-count fields make it fail with BD_HANDLE_TASK_FAILED (4).
+	w := &bdWriter{}
+	w.u64(transactions.Add(1))
+	w.u32(0)
+	w.u8(task)
+	w.structv(sb)
+	return w.b
 }
 
 // bdReader reads a typed bdByteBuffer (request arguments).
@@ -118,7 +194,22 @@ func (r *bdReader) str() (string, error) {
 	return s, nil
 }
 
+// sendPush sends a pushed message (inner type 0x02). bdLobbyService::handlePushMessage reads a
+// tagged u32: the bdEventType, resolved in the table of registered handlers.
+func (l *lobbyConn) sendPush(event uint32, build func(w *bdWriter)) error {
+	w := &bdWriter{}
+	w.u32(event)
+	if build != nil {
+		build(w)
+	}
+	return l.sendEncrypted(innerPush, w.b)
+}
+
 // taskReply builds the payload of a task reply.
+//
+// bdRemoteTaskManager::handleTaskReply reads this header RAW (bdByteBuffer::read(dst, 8)), but
+// handleLSGTaskReply, the path our tasks take, reads no id: it simply takes the first pending
+// task. The 0A tag is therefore kept (original form, verified).
 func taskReply(task byte, errCode uint32, results func(w *bdWriter) uint32) []byte {
 	w := &bdWriter{}
 	w.u64(transactions.Add(1))
@@ -151,7 +242,16 @@ func (l *lobbyConn) onTask(payload []byte) {
 	r := &bdReader{b: payload, off: 1}
 	task, err := r.u8()
 	if err != nil {
-		l.logf("task: service %d without a task id (%v): %X", service, err, payload)
+		// Never leave a task unanswered: the game waits for it until the timeout, which
+		// fails the whole LSG login sequence and restarts a full reconnection.
+		if len(payload) >= 3 {
+			task = payload[2]
+		}
+		l.logf("task: service %d task id unreadable (%v), empty success task=%d: %X",
+			service, err, task, payload)
+		if err := l.sendEncrypted(innerTaskReply, taskReply(task, 0, nil)); err != nil {
+			l.logf("send reply: %v", err)
+		}
 		return
 	}
 	noteTask(l, service, task)
@@ -190,8 +290,117 @@ func (l *lobbyConn) onTask(payload []byte) {
 			reply = taskReply(task, 0, nil)
 		}
 
+	case service == 138:
+		ctx, err := r.str()
+		if err != nil || ctx == "" {
+			reply = taskReply(task, errUnhandled, nil)
+			break
+		}
+		if task == mmCreateSession || task == mmUpdateSession || task == mmDeleteSession || task == mmUpdatePlayers || task == mmRequestSessionID || task == mmInitializeSession {
+			reply = l.onMatchMakingContext(task, r, "ctr:"+ctx)
+		} else if task == 14 {
+			reply = l.onFriendSessions(task, r, "ctr:"+ctx)
+		} else {
+			l.logf("CTR matchmaking unimplemented task=%d context=%q", task, ctx)
+			reply = taskReply(task, errUnhandled, nil)
+		}
 	case service == svcRichPresence:
 		reply = l.onRichPresence(task, r)
+
+	case service == svcAsyncMatchMaking && task == taskSetPlayerInfo:
+		// bdAsyncMatchMaking::setPlayerInfo(const char*, u32): the game uploads its
+		// listen_server{local_address,security_id,security_key} here. The function has no
+		// result, so an empty success is the right answer. It is the FIRST task of the
+		// matchmaking registration: failing it brings down everything after it.
+		if doc, err := r.str(); err == nil && doc != "" {
+			l.lobbyDoc = doc
+		}
+		reply = taskReply(task, 0, nil)
+		l.logf("task bdAsyncMatchMaking.setPlayerInfo -> success (%d bytes)", len(l.lobbyDoc))
+
+	case service == svcAsyncMatchMaking && task == taskSyncLobbyDocuments:
+		id, e1 := r.u64()
+		version, e2 := r.u64()
+		raw, e3 := r.str()
+		ok := false
+		if e1 == nil && e2 == nil && e3 == nil {
+			var notices []ctrNotice
+			ok, notices = ctrMM.syncDoc(l, id, version, raw)
+			l.afterReply = func() { sendCTRNotices(notices) }
+		}
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.boolv(ok); return 1 })
+		l.logf("CTR sync lobby=%d version=%d accepted=%v", id, version, ok)
+
+	case service == svcAsyncMatchMaking && task == taskGetPlayerToken:
+		// getMatchMakingPlayerToken -> bdUInt64Result (readUInt64). This is the
+		// requestPlayerToken step of CNetworkTaskAsyncMatchMakingRegistration: without a token the
+		// registration state machine cannot advance.
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.u64(l.pid()); return 1 })
+		l.logf("task bdAsyncMatchMaking.getMatchMakingPlayerToken -> %d", l.pid())
+
+	case service == svcAsyncMatchMaking && task == taskStartSearch:
+		raw, err := r.str()
+		if err != nil {
+			reply = taskReply(task, errUnhandled, nil)
+			break
+		}
+		search, err := parseCTRSearch(l, raw)
+		if err != nil {
+			l.logf("CTR search rejected: %v", err)
+			reply = taskReply(task, errUnhandled, nil)
+			break
+		}
+		doc := "{\"mm_id\":" + strconv.FormatUint(search.id, 10) + "}"
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.strv(doc); return 1 })
+		l.afterReply = func() {
+			notices := ctrMM.enqueue(search)
+			l.logf("CTR search id=%d registered; notifications=%d", search.id, len(notices))
+			sendCTRNotices(notices)
+		}
+
+	case service == svcAsyncMatchMaking && task == 8:
+		id, err := r.u64()
+		ok := err == nil && ctrMM.cancel(l, id)
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.boolv(ok); return 1 })
+	case service == svcAsyncMatchMaking && task == taskLobbyDisbanded:
+		id, err := r.u64()
+		if err == nil {
+			ctrMM.leave(l, id)
+		}
+		reply = taskReply(task, 0, nil)
+
+	case service == svcAsyncMatchMaking &&
+		(task == taskInitMatchMaking || task == taskStartMatchMaking ||
+			task == taskGetMMStatus || task == taskInitiateDCQoS):
+		// All of these return a bdStringResult (readString).
+		id := strconv.FormatUint(l.pid(), 10)
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.strv(id); return 1 })
+		l.logf("task bdAsyncMatchMaking task=%d -> string %q", task, id)
+
+	case service == svcAsyncMatchMaking &&
+		(task == taskQoSHostsReply || task == taskAckExpectGame):
+		// No result.
+		reply = taskReply(task, 0, nil)
+		l.logf("task bdAsyncMatchMaking task=%d -> empty success", task)
+
+	case service == svcAsyncMatchMaking && task == taskGetLobbyDocuments:
+		id, err := r.u64()
+		h, b, ok := ctrMM.documents(l, id)
+		if err != nil || !ok {
+			reply = taskReply(task, errUnhandled, nil)
+			break
+		}
+		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.strv(h); w.strv(b); return 1 })
+
+	case service == svcHTTPProxy && task == 1:
+		// bdABTesting::enroll. The body is parsed as JSON: expiresIn, ABToken,
+		// enrollments. No experiment is active, but the reply must be well
+		// formed, or the task fails on every connection.
+		// ABToken NON-EMPTY: bdABTestingEnrollResponse reads it with getString, and an empty string
+		// fails deserialization -> bdRemoteTask error 4 -> the login sequence fails.
+		body := []byte(`{"expiresIn":3600,"ABToken":"nextendo","enrollments":[]}`)
+		reply = httpProxyReply(task, 200, body)
+		l.logf("task bdABTesting.enroll -> 200 (%d bytes)", len(body))
 
 	case service == svcMatchMaking:
 		if reply = l.onMatchMaking(task, r); reply == nil {
@@ -206,6 +415,10 @@ func (l *lobbyConn) onTask(payload []byte) {
 		l.logf("task UNHANDLED service=%d task=%d (empty success) args:\n%s", service, task, hex.Dump(payload))
 	}
 
+	if pending := l.afterReply; pending != nil {
+		l.afterReply = nil
+		defer pending()
+	}
 	if err := l.sendEncrypted(innerTaskReply, reply); err != nil {
 		l.logf("send reply: %v", err)
 	}

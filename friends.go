@@ -104,6 +104,13 @@ func retryPending() {
 	}
 }
 
+// dropPresence forgets a player's rich presence (ctr_presence.go keeps the store).
+func dropPresence(pid uint64) {
+	richMu.Lock()
+	delete(rich, pid)
+	richMu.Unlock()
+}
+
 func dropOnline(conn uint64) {
 	onlineMu.Lock()
 	var pid uint64
@@ -323,4 +330,13 @@ func (l *lobbyConn) onUserData(task byte, r *bdReader) []byte {
 		})
 	}
 	return nil
+}
+
+// pidOnline returns the Nextendo PID of a connected player identified by id (PID or
+// device/NSA identifier), or 0. Used by the Crash Team Racing code.
+func pidOnline(id uint64) uint64 {
+	if p := onlinePlayerFor(id); p != nil {
+		return p.PID
+	}
+	return 0
 }
