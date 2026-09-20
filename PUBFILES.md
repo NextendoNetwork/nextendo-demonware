@@ -12,7 +12,7 @@ When an online session starts, Diablo III asks the lobby for three small text fi
 
 Edit `pubfiles.json` (`D3_PUBFILES_CONFIG`), never the generated files: they are rewritten on every start, and `pubfiles/` is not committed. Then run `server pubfiles` (regenerate and exit) or restart. The lobby reads the files on every request, and the game fetches them when a session starts, so players see a change the next time they connect. A missing `pubfiles.json` is created with the defaults.
 
-Check what is served at `http://<server>:8093/pubfiles/` (`/pubfiles/<name>` for one file).
+Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `config.txt`, `seasons_config.txt` or `challengerift_config.dat`. This shows the current generated content, including rotation and rifts. The listing at `/pubfiles/` only shows the files on disk.
 
 ## Settings
 
@@ -49,7 +49,7 @@ Only `DarkAlchemy`, `KanaiPowers`, `NestingPortals` and `SwarmRifts` have been r
 
 ### Season rotation
 
-A season is a number and window plus a theme, which the game receives as community events ([SEASONS.md](SEASONS.md) lists them; seasons 1 to 13 have none). With rotation on, the season advances every month through **all the seasons the server knows**: the built-in 14 to 39 plus any you add, sorted by number, looping back to the first after the last and skipping gaps. `season`, `season_start` and `season_end` are then ignored, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end`, so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
+A season is a number and window plus a theme, which the game receives as community events ([SEASONS.md](SEASONS.md) lists them; seasons 1 to 13 have none). With rotation on, the season advances every month through **all the seasons the server knows**: the built-in 14 to 39 plus any you add, sorted by number, looping back to the first after the last and skipping gaps. `season` and `season_start` are then ignored, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end` (2036 by default), so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
 
 ```json
 "season_rotation": { "enabled": true, "anchor": "2026-09" }
