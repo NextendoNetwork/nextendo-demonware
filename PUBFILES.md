@@ -10,60 +10,52 @@ When an online session starts, Diablo III asks the lobby for three small text fi
 | `Seasons.txt` | `seasons_config.txt` | one `[Season N]` block with a start and end date |
 | `Blacklist.txt` | `blacklist_config.txt` | `[GBID]` and `[SNO]` sections, empty for now |
 
-Edit `pubfiles.json` (`D3_PUBFILES_CONFIG`), never the generated files: they are rewritten on every start, and `pubfiles/` is not committed. Then run `server pubfiles` (regenerate and exit) or restart. The lobby reads the files on every request, and the game fetches them when a session starts, so players see a change the next time they connect. A missing `pubfiles.json` is created with the defaults.
+Edit `pubfiles.json` (`D3_PUBFILES_CONFIG`). The season and event files are generated from it on every request, so a change needs no restart and no regeneration: players see it the next time they connect, because the game fetches the files when a session starts. The shipped file lists every setting with its default and explains each one in comments; comments (`//` and `/* */`) are allowed in it. A setting you leave out keeps its default, so your own file can be short, and a missing `pubfiles.json` is created from the shipped one.
+
+`server pubfiles` writes copies of the generated files to `pubfiles/` (`D3_PUBFILES`) for you to inspect; the game does not read them.
 
 Check what is served at `http://<server>:8093/pubfiles/<name>`, for example `config.txt`, `seasons_config.txt` or `challengerift_config.dat`. This shows the current generated content, including rotation and rifts. The listing at `/pubfiles/` only shows the files on disk.
 
 ## Settings
 
-Fields you leave out keep their defaults.
-
 | field | default | effect |
 |---|---|---|
-| `season` | `39` | Season number: the latest known one. |
+| `season` | `39` | Season number: the latest known one. Ignored while rotation is on. |
 | `season_start`, `season_end` | 2020-01-01, 2050-01-01 | Season window, wide enough that it never ends ([dates](#dates)). |
 | `buff_start`, `buff_end` | 2023-09-16, 2027-12-01 | Window in which the community events apply. |
-| `events` | `{}` | Community events by name, `true` or `false` ([events](#events)). |
+| `season_theme` | `true` | Switch on the served season's theme events automatically ([season themes](#season-themes)). |
+| `events` | all off | Extra community events on top of the theme, by name ([events](#events)). |
 | `legendary_find`, `gold_find`, `xp` | `"1.0"` | Multipliers, as text. `"1.0"` is normal. |
 | `hero_publish_frequency_minutes` | `"30"` | `HeroPublishFrequencyMinutes`. |
 | `cross_platform_save_migration` | `true` | `EnableCrossPlatformSaveMigration`. |
 | `seasonal_global_leaderboards` | `true` | `SeasonalGlobalLeaderboardsEnabled`. |
 | `diablo4_advertisement` | `false` | `EnableDiablo4Advertisement`. |
 | `update_version` | `"1"` | `UpdateVersion`. |
-| `season_rotation`, `season_themes` | off | Monthly rotation ([below](#season-rotation)). |
+| `season_rotation` | off | Advance the season every month ([below](#season-rotation)). |
+| `season_themes` | 14 to 39 | The events of each season: the one place they are listed ([below](#season-themes)). |
 | `challenge_rifts` | `weekly` | Weekly Challenge Rifts ([below](#challenge-rifts)). |
 
-Example, doubled goblins and bounty bags with 2x experience:
+Example, a file that keeps season 39 and its theme, adds doubled goblins and 2x experience:
 
 ```json
-{ "events": { "DoubleGoblins": true, "DoubleBountyBags": true }, "xp": "2.0" }
+{ "events": { "DoubleGoblins": true }, "xp": "2.0" }
 ```
 
 ### Events
 
-Each event becomes `CommunityBuff<Name> "1"` or `"0"` in `config.txt`. The game knows exactly these 21 names, and the server always sends all of them, `"0"` for any you leave out (a missing line is not the same as an off one). Unknown names are ignored. What an event does is defined by the game.
+Each event becomes `CommunityBuff<Name> "1"` or `"0"` in `config.txt`. The game knows exactly these 21 names, and the server always sends all of them, `"0"` for any that is off (a missing line is not the same as an off one). Unknown names are ignored. What an event does is defined by the game.
 
 `DoubleGoblins` `DoubleBountyBags` `RoyalGrandeur` `LegacyOfNightmares` `TriunesWill` `Pandemonium` `KanaiPowers` `TrialsOfTempests` `SeasonOnly` `ShadowClones` `FourthKanaisCubeSlot` `EtherealItems` `SoulShards` `SwarmRifts` `SanctifiedItems` `DarkAlchemy` `ParagonCap` `NestingPortals` `EasterEggWorld` `DoubleRiftKeystones` `DoubleBloodShards`
 
+What is on is the season's theme (next section) **plus** whatever you set to `true` in `events`. So `events` only holds extras; leave them all `false` to get exactly the season's theme. The shipped file lists all 21, each with the seasons that use it.
+
 Only `DarkAlchemy`, `KanaiPowers`, `NestingPortals` and `SwarmRifts` have been run in live co-op. Leave `SeasonOnly` and `ParagonCap` off: d3hack notes that any `SeasonOnly` value other than `1` crashes on item drop, yet its own generated file writes `0` and so does this server. That conflict is unresolved, and `ParagonCap` is untested.
 
-### Season rotation
+### Season themes
 
-A season is a number and window plus a theme, which the game receives as community events ([SEASONS.md](SEASONS.md) lists them; seasons 1 to 13 have none). With rotation on, the season advances every month through **all the seasons the server knows**: the built-in 14 to 39 plus any you add, sorted by number, looping back to the first after the last and skipping gaps. `season` and `season_start` are then ignored, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end` (2036 by default), so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
+A season is a number and window plus a theme, which the game receives as the events above. **`season_themes` in `pubfiles.json` is the one place each season's events are listed.** With `season_theme` on (the default), the served season's events are switched on automatically, for a fixed `season` and for a rotating one alike. Turn `season_theme` off to get no theme and control every event yourself in `events`.
 
-```json
-"season_rotation": { "enabled": true, "anchor": "2026-09" }
-```
-
-| field | default | meaning |
-|---|---|---|
-| `enabled` | `false` | Turn rotation on. |
-| `anchor` | `"2026-09"` | Month (`YYYY-MM`) in which the first season of the list runs. |
-| `theme_events` | `true` | Also switch on the current season's events. Your own `events` stay on. |
-| `first`, `last` | `0`, `0` | Optional inclusive bounds on which seasons take part; `0` is no bound. |
-| `interval_seconds` | `0` | For testing: seconds per season instead of a month, counted from `anchor` (`YYYY-MM-DD` works too). |
-
-**To add a season, no code change:** give it a theme in `season_themes`, as a list of the events that are on or as an object with `0` or `1` for each. An entry also replaces a built-in theme. An empty list is a season with no theme.
+The shipped file lists seasons 14 to 39, the ones that had a theme ([SEASONS.md](SEASONS.md) names them; seasons 1 to 13 had none). To add a season, add a line; to change one, edit its line. Give the events as a list of names, or as an object with `0` or `1` for each. An empty list is a season with no theme.
 
 ```json
 "season_themes": {
@@ -73,7 +65,22 @@ A season is a number and window plus a theme, which the game receives as communi
 }
 ```
 
-Either way the game always gets all 21 events. The shipped `pubfiles.json` is a full menu: every event is listed (all off), every built-in season is listed with its theme (change any of them), and a `"template"` entry has all 21 events at `0`. `"template"` is not a season number, so it is ignored; copy it to a number and change the `0`s you want to `1`. To play seasons 1 to 13, add them the same way (`"1": []`).
+The `"template"` entry in the shipped file has all 21 events at `0`. It is not a season number, so it is ignored: copy it to a number and change the `0`s you want to `1`.
+
+### Season rotation
+
+With rotation on, the season advances every month through **the seasons listed in `season_themes`**, sorted by number, looping back to the first after the last and skipping gaps. With 39 and 420 listed, the month after 39 is 420. `season` and `season_start` are then ignored, the season's theme follows automatically, and the files are generated on every request, so it rolls over without a restart. Only the start date moves: the end stays at `season_end` (2050 by default), so a season never ends under a connected player, and the season changes when the game next connects. Each served file is logged as `[D3 Season]` (and rifts as `[D3 Rift]`).
+
+```json
+"season_rotation": { "enabled": true, "anchor": "2026-09" }
+```
+
+| field | default | meaning |
+|---|---|---|
+| `enabled` | `false` | Turn rotation on. |
+| `anchor` | `"2026-09"` | Month (`YYYY-MM`) in which the first listed season runs. |
+| `first`, `last` | `0`, `0` | Optional inclusive bounds on which seasons take part; `0` is no bound. |
+| `interval_seconds` | `0` | For testing: seconds per season instead of a month, counted from `anchor` (`YYYY-MM-DD` works too). |
 
 Before enabling it: each month the season changes, so characters created in the season leave it, as at a real season end (use a fixed `season` for a stable seasonal character). Season numbers outside the ones the game shipped with have not been tested.
 

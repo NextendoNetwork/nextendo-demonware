@@ -1,52 +1,97 @@
+// diablo-3 publisher settings: what the game is told about the season, the community events and the multipliers.
+// Every setting is shown here with its default. This file may carry comments (// and /* */).
+// Players see a change the next time they connect; the server needs no restart. Full documentation: PUBFILES.md.
 {
+  // ---- Season --------------------------------------------------------------------------------
+
+  // Season number served while rotation is off. 39 is the latest known season.
   "season": 39,
+
+  // The season's window, as "Www, DD Mon YYYY hh:mm:ss GMT". The day of the month MUST have two digits (09, not 9).
+  // Keep the end far in the future so a season never ends while a player is connected.
   "season_start": "Wed, 01 Jan 2020 00:00:00 GMT",
   "season_end": "Sat, 01 Jan 2050 00:00:00 GMT",
+
+  // true: the served season's theme events are switched on automatically, taken from "season_themes" below.
+  // false: no theme is applied and you control every event yourself in "events".
+  "season_theme": true,
+
+  // Rotation: advance the season on its own. It walks through the seasons listed in "season_themes" in number order,
+  // one per month, and starts again at the first after the last (gaps in the numbering are skipped).
   "season_rotation": {
+    // true turns rotation on. Then "season" and "season_start" are ignored; "season_end" still applies.
     "enabled": false,
+    // The month (YYYY-MM) in which the first listed season runs. Each later month is the next season.
     "anchor": "2026-09",
-    "theme_events": true,
+    // Optional bounds: only seasons from "first" to "last" (inclusive) take part. 0 means no bound.
     "first": 0,
     "last": 0,
+    // For testing only: this many seconds per season instead of a month. 0 means off.
     "interval_seconds": 0
   },
+
+  // ---- Community events ----------------------------------------------------------------------
+
+  // The window in which the community events apply, same date format as above.
   "buff_start": "Sat, 16 Sep 2023 00:00:00 GMT",
   "buff_end": "Wed, 01 Dec 2027 01:00:00 GMT",
+
+  // Extra events switched on for everyone, ON TOP of the season's theme (so leave these off unless you want more).
+  // The game knows exactly these 21; the server always sends all of them. true = on.
+  // Leave SeasonOnly and ParagonCap off: see PUBFILES.md.
   "events": {
-    "DoubleGoblins": false,
-    "DoubleBountyBags": false,
-    "RoyalGrandeur": false,
-    "LegacyOfNightmares": false,
-    "TriunesWill": false,
-    "Pandemonium": false,
-    "KanaiPowers": false,
-    "TrialsOfTempests": false,
-    "SeasonOnly": false,
-    "ShadowClones": false,
-    "FourthKanaisCubeSlot": false,
-    "EtherealItems": false,
-    "SoulShards": false,
-    "SwarmRifts": false,
-    "SanctifiedItems": false,
-    "DarkAlchemy": false,
-    "ParagonCap": false,
-    "NestingPortals": false,
-    "EasterEggWorld": false,
-    "DoubleRiftKeystones": false,
-    "DoubleBloodShards": false
+    "DoubleGoblins": false, // season theme: 14
+    "DoubleBountyBags": false, // season theme: 15
+    "RoyalGrandeur": false, // season theme: 16
+    "LegacyOfNightmares": false, // season theme: 17
+    "TriunesWill": false, // season theme: 18
+    "Pandemonium": false, // season theme: 19, 35
+    "KanaiPowers": false, // season theme: 20, 31, 37
+    "TrialsOfTempests": false, // season theme: 21
+    "SeasonOnly": false, // not a season theme
+    "ShadowClones": false, // season theme: 22, 33, 39
+    "FourthKanaisCubeSlot": false, // season theme: 22, 33, 39
+    "EtherealItems": false, // season theme: 24, 32, 38
+    "SoulShards": false, // season theme: 25, 30, 36
+    "SwarmRifts": false, // season theme: 26
+    "SanctifiedItems": false, // season theme: 27, 34
+    "DarkAlchemy": false, // season theme: 28
+    "ParagonCap": false, // not a season theme
+    "NestingPortals": false, // season theme: 29
+    "EasterEggWorld": false, // not a season theme
+    "DoubleRiftKeystones": false, // not a season theme
+    "DoubleBloodShards": false // not a season theme
   },
-  "legendary_find": "1.0",
-  "gold_find": "1.0",
+
+  // ---- Multipliers and flags -----------------------------------------------------------------
+
+  // Multipliers, as text: "1.0" is normal, "2.0" doubles it.
   "xp": "1.0",
+  "gold_find": "1.0",
+  "legendary_find": "1.0",
+
+  // The values the game reads as HeroPublishFrequencyMinutes, EnableCrossPlatformSaveMigration,
+  // SeasonalGlobalLeaderboardsEnabled, EnableDiablo4Advertisement and UpdateVersion.
   "hero_publish_frequency_minutes": "30",
   "cross_platform_save_migration": true,
   "seasonal_global_leaderboards": true,
   "diablo4_advertisement": false,
   "update_version": "1",
-  "challenge_rifts": {
-    "mode": "weekly"
-  },
+
+  // ---- Challenge Rifts -----------------------------------------------------------------------
+
+  // Serves the rift files in D3_RIFTDATA (see PUBFILES.md); does nothing without them.
+  // mode: "weekly" = a new rift every week, looping back to the first file when they run out;
+  //       "fixed"  = always the file for "number";  "random" = a different file on every request.
+  "challenge_rifts": { "mode": "weekly", "number": 0 },
+
+  // ---- Season themes: THE one place each season's events are listed ---------------------------
+
+  // Each season number lists the events it switches on. Give it as a list of names, ["KanaiPowers"],
+  // or as an object with 0/1 for every event. To add a season, add a line. Seasons 1-13 had no theme and are not
+  // listed; rotation only walks through the numbers listed here.
   "season_themes": {
+    // Not a season: copy it to a season number and set the events you want to 1. Ignored by the server.
     "template": {
       "DoubleGoblins": 0,
       "DoubleBountyBags": 0,
@@ -70,84 +115,31 @@
       "DoubleRiftKeystones": 0,
       "DoubleBloodShards": 0
     },
-    "14": [
-      "DoubleGoblins"
-    ],
-    "15": [
-      "DoubleBountyBags"
-    ],
-    "16": [
-      "RoyalGrandeur"
-    ],
-    "17": [
-      "LegacyOfNightmares"
-    ],
-    "18": [
-      "TriunesWill"
-    ],
-    "19": [
-      "Pandemonium"
-    ],
-    "20": [
-      "KanaiPowers"
-    ],
-    "21": [
-      "TrialsOfTempests"
-    ],
-    "22": [
-      "ShadowClones",
-      "FourthKanaisCubeSlot"
-    ],
-    "23": [],
-    "24": [
-      "EtherealItems"
-    ],
-    "25": [
-      "SoulShards"
-    ],
-    "26": [
-      "SwarmRifts"
-    ],
-    "27": [
-      "SanctifiedItems"
-    ],
-    "28": [
-      "DarkAlchemy"
-    ],
-    "29": [
-      "NestingPortals"
-    ],
-    "30": [
-      "SoulShards"
-    ],
-    "31": [
-      "KanaiPowers"
-    ],
-    "32": [
-      "EtherealItems"
-    ],
-    "33": [
-      "ShadowClones",
-      "FourthKanaisCubeSlot"
-    ],
-    "34": [
-      "SanctifiedItems"
-    ],
-    "35": [
-      "Pandemonium"
-    ],
-    "36": [
-      "SoulShards"
-    ],
-    "37": [
-      "KanaiPowers"
-    ],
-    "38": [
-      "EtherealItems"
-    ],
-    "39": [
-      "ShadowClones",
-      "FourthKanaisCubeSlot"
-    ]
+    "14": ["DoubleGoblins"], // Season of Greed
+    "15": ["DoubleBountyBags"], // Boon of the Horadrim
+    "16": ["RoyalGrandeur"], // Season of Grandeur
+    "17": ["LegacyOfNightmares"], // Season of Nightmares
+    "18": ["TriunesWill"], // Season of the Triune
+    "19": ["Pandemonium"], // Eternal Conflict
+    "20": ["KanaiPowers"], // Forbidden Archives
+    "21": ["TrialsOfTempests"], // Trials of the Tempests
+    "22": ["ShadowClones", "FourthKanaisCubeSlot"], // Shades of the Nephalem
+    "23": [], // Disciples of Sanctuary
+    "24": ["EtherealItems"], // Ethereal Memory
+    "25": ["SoulShards"], // Lords of Hell
+    "26": ["SwarmRifts"], // Echoing Nightmare
+    "27": ["SanctifiedItems"], // Light's Calling
+    "28": ["DarkAlchemy"], // Rites of Sanctuary
+    "29": ["NestingPortals"], // Visions of Enmity
+    "30": ["SoulShards"], // Lords of Hell (repeat of 25)
+    "31": ["KanaiPowers"], // Forbidden Archives (repeat of 20)
+    "32": ["EtherealItems"], // Ethereal Memory (repeat of 24)
+    "33": ["ShadowClones", "FourthKanaisCubeSlot"], // Shades of the Nephalem (repeat of 22)
+    "34": ["SanctifiedItems"], // Light's Calling (repeat of 27)
+    "35": ["Pandemonium"], // Eternal Conflict (repeat of 19)
+    "36": ["SoulShards"], // Lords of Hell (repeat of 25)
+    "37": ["KanaiPowers"], // Forbidden Archives (repeat of 20)
+    "38": ["EtherealItems"], // Ethereal Memory (repeat of 24)
+    "39": ["ShadowClones", "FourthKanaisCubeSlot"] // Shades of the Nephalem (repeat of 22)
   }
 }

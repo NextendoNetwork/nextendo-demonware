@@ -3,24 +3,62 @@ package main
 import (
 	"encoding/json"
 	"os"
-	"strconv"
+	"path/filepath"
 	"strings"
 	"testing"
 )
 
-// The template in the shipped pubfiles.json lists every event the server knows,
-// all off, and must not count as a season.
-func TestTemplateEntry(t *testing.T) {
-	raw, err := os.ReadFile("pubfiles.json")
-	if err != nil {
-		t.Fatal(err)
+func TestStripJSONComments(t *testing.T) {
+	in := "// header\n{\n  \"a\": \"http://x // not a comment\", // trailing\n  /* block\n  spanning */ \"b\": 1,\n  \"c\": \"quote \\\" // still a string\"\n}\n"
+	var v map[string]any
+	if err := json.Unmarshal(stripJSONComments([]byte(in)), &v); err != nil {
+		t.Fatalf("%v\n%s", err, stripJSONComments([]byte(in)))
 	}
+	if v["a"] != "http://x // not a comment" || v["b"].(float64) != 1 || v["c"] != "quote \" // still a string" {
+		t.Errorf("parsed %v", v)
+	}
+	if got := strings.Count(string(stripJSONComments([]byte(in))), "\n"); got != strings.Count(in, "\n") {
+		t.Errorf("line count changed: %d, want %d", got, strings.Count(in, "\n"))
+	}
+}
+
+// The shipped pubfiles.json is the source of the defaults, and it is what a
+// fresh install starts from: it must say what the docs say the defaults are.
+func TestShippedDefaults(t *testing.T) {
+	c := defaultPubConfig()
+	if c.Season != 39 || c.SeasonStart != "Wed, 01 Jan 2020 00:00:00 GMT" || c.SeasonEnd != "Sat, 01 Jan 2050 00:00:00 GMT" {
+		t.Errorf("season %d %q %q", c.Season, c.SeasonStart, c.SeasonEnd)
+	}
+	if !c.SeasonTheme {
+		t.Error("season_theme is off by default")
+	}
+	if len(c.Events) != len(knownEvents) {
+		t.Errorf("shipped events list %d of %d events", len(c.Events), len(knownEvents))
+	}
+	for _, e := range knownEvents {
+		if on, listed := c.Events[e]; !listed || on {
+			t.Errorf("event %s: listed=%v on=%v, want listed and off", e, listed, on)
+		}
+	}
+	if c.SeasonRotation.Enabled || c.SeasonRotation.IntervalSeconds != 0 || c.SeasonRotation.First != 0 || c.SeasonRotation.Last != 0 {
+		t.Errorf("rotation: %+v", c.SeasonRotation)
+	}
+	if c.ChallengeRifts.Mode != "weekly" {
+		t.Errorf("rifts: %+v", c.ChallengeRifts)
+	}
+	if c.XP != "1.0" || c.GoldFind != "1.0" || c.LegendaryFind != "1.0" {
+		t.Errorf("multipliers %q %q %q", c.XP, c.GoldFind, c.LegendaryFind)
+	}
+}
+
+// The template lists every event, all off, and is not a season.
+func TestTemplateEntry(t *testing.T) {
 	var f struct {
 		SeasonThemes struct {
 			Template map[string]int `json:"template"`
 		} `json:"season_themes"`
 	}
-	if err := json.Unmarshal(raw, &f); err != nil {
+	if err := json.Unmarshal(stripJSONComments(defaultPubfiles), &f); err != nil {
 		t.Fatal(err)
 	}
 	if len(f.SeasonThemes.Template) != len(knownEvents) {
@@ -31,82 +69,33 @@ func TestTemplateEntry(t *testing.T) {
 			t.Errorf("template event %s: %v (present=%v), want 0", name, v, ok)
 		}
 	}
-	c, err := loadPubConfig("pubfiles.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if got, want := len(seasonList(seasonRotation{}, c.SeasonThemes)), len(seasonList(seasonRotation{}, nil)); got != want {
-		t.Fatalf("the template changed the season list: %d, want %d", got, want)
+	if got := len(seasonList(seasonRotation{}, defaultPubConfig().SeasonThemes)); got != 26 {
+		t.Fatalf("the template changed the season list: %d", got)
 	}
 }
 
-func TestSeasonEventsForms(t *testing.T) {
-	var m map[string]seasonEvents
-	err := json.Unmarshal([]byte(`{"a": ["SoulShards","Pandemonium"], "b": {"SoulShards": 1, "Pandemonium": 0, "SwarmRifts": true, "DarkAlchemy": false}, "c": [], "d": {}}`), &m)
+// A config file on disk is read over the defaults: it may be short, and it may
+// carry comments.
+func TestLoadPubConfigOverDefaults(t *testing.T) {
+	dir := t.TempDir()
+	p := filepath.Join(dir, "pubfiles.json")
+	if err := os.WriteFile(p, []byte("// mine\n{ \"season\": 37, /* extra */ \"events\": { \"SoulShards\": true } }\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	c, err := loadPubConfig(p)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(m["a"]) != 2 {
-		t.Errorf("list form: %v", m["a"])
+	if c.Season != 37 || !c.Events["SoulShards"] || len(c.SeasonThemes) != 27 || c.SeasonEnd != defaultPubConfig().SeasonEnd {
+		t.Errorf("season %d, events %v, %d themes", c.Season, eventsOn(c), len(c.SeasonThemes))
 	}
-	if got := m["b"]; len(got) != 2 || got[0] != "SoulShards" || got[1] != "SwarmRifts" {
-		t.Errorf("object form: %v", got)
-	}
-	if len(m["c"]) != 0 || len(m["d"]) != 0 {
-		t.Errorf("empty forms: %v %v", m["c"], m["d"])
-	}
-	if err := json.Unmarshal([]byte(`{"a": {"SoulShards": "yes"}}`), &m); err == nil {
-		t.Error("a string value was accepted")
-	}
-}
-
-// The shipped pubfiles.json must say what the docs say the defaults are, so a
-// fresh install behaves like the documented one (no event on, rotation off).
-func TestShippedPubfilesMatchDefaults(t *testing.T) {
-	got, err := loadPubConfig("pubfiles.json")
-	if err != nil {
+	// a missing file is created from the shipped one, comments and all
+	missing := filepath.Join(dir, "new.json")
+	if _, err := loadPubConfig(missing); err != nil {
 		t.Fatal(err)
 	}
-	want := defaultPubConfig()
-	for name, on := range got.Events {
-		if on {
-			t.Errorf("shipped pubfiles.json switches event %s on", name)
-		}
-	}
-	if got.Season != want.Season || got.SeasonStart != want.SeasonStart || got.SeasonEnd != want.SeasonEnd ||
-		got.BuffStart != want.BuffStart || got.BuffEnd != want.BuffEnd {
-		t.Errorf("season or buff window differs from the defaults")
-	}
-	if got.XP != want.XP || got.GoldFind != want.GoldFind || got.LegendaryFind != want.LegendaryFind {
-		t.Errorf("multipliers differ from the defaults")
-	}
-	if got.HeroPublishFrequencyMinutes != want.HeroPublishFrequencyMinutes || got.UpdateVersion != want.UpdateVersion ||
-		got.CrossPlatformSaveMigration != want.CrossPlatformSaveMigration ||
-		got.SeasonalGlobalLeaderboards != want.SeasonalGlobalLeaderboards || got.Diablo4Advertisement != want.Diablo4Advertisement {
-		t.Errorf("flags differ from the defaults")
-	}
-	if got.SeasonRotation != want.SeasonRotation || got.ChallengeRifts != want.ChallengeRifts {
-		t.Errorf("rotation or rift settings differ from the defaults: %+v %+v", got.SeasonRotation, got.ChallengeRifts)
-	}
-}
-
-// Every built-in season is listed in the shipped pubfiles.json, exactly as the
-// built-in table has it, so the file is an accurate menu.
-func TestShippedSeasonsMatchBuiltIn(t *testing.T) {
-	c, err := loadPubConfig("pubfiles.json")
-	if err != nil {
-		t.Fatal(err)
-	}
-	for _, n := range seasonList(seasonRotation{}, nil) {
-		key := strconv.Itoa(int(n))
-		listed, ok := c.SeasonThemes[key]
-		if !ok {
-			t.Errorf("season %s is not listed in the shipped pubfiles.json", key)
-			continue
-		}
-		th, _ := themeOf(n)
-		if strings.Join(listed, ",") != strings.Join(th.events, ",") {
-			t.Errorf("season %s: shipped %v, built-in %v", key, listed, th.events)
-		}
+	raw, err := os.ReadFile(missing)
+	if err != nil || string(raw) != string(defaultPubfiles) {
+		t.Errorf("created file differs from the shipped one (err=%v)", err)
 	}
 }

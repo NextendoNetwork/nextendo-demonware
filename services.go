@@ -77,14 +77,14 @@ type bdReader struct {
 	off int
 }
 
-var errShort = errors.New("tampon trop court")
+var errShort = errors.New("buffer too short")
 
 func (r *bdReader) tag(want byte) error {
 	if r.off >= len(r.b) {
 		return errShort
 	}
 	if r.b[r.off] != want {
-		return errors.New("etiquette inattendue")
+		return errors.New("unexpected tag")
 	}
 	r.off++
 	return nil
@@ -214,7 +214,7 @@ func (l *lobbyConn) publisherFile(name string) ([]byte, string) {
 	if data, path, ok := riftFile(name, time.Now()); ok {
 		return data, path
 	}
-	if data, path, ok := rotatedPubfile(name, time.Now()); ok {
+	if data, path, ok := generatedPubfile(name, time.Now()); ok {
 		return data, path
 	}
 	base := filepath.Base(name)

@@ -16,6 +16,7 @@ package main
 // "server.exe pubfiles"; the lobby re-reads them on every request.
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -62,12 +63,16 @@ type pubConfig struct {
 	// Challenge Rifts: how the files in D3_RIFTDATA are served (riftdata.go).
 	ChallengeRifts riftSettings `json:"challenge_rifts"`
 
+	// SeasonTheme switches on the served season's theme events automatically,
+	// taken from SeasonThemes; Events then only holds extras.
+	SeasonTheme bool `json:"season_theme"`
+
 	// Season rotation: advance the season every month (seasons.go). Off by default.
 	SeasonRotation seasonRotation `json:"season_rotation"`
 
-	// SeasonThemes adds or replaces the events of a season's theme, by season
-	// number, e.g. {"40": ["SanctifiedItems"]} or {"40": {"SanctifiedItems": 1, ...}}. It extends the built-in table
-	// (seasons.go), so a new season needs no code change.
+	// SeasonThemes is the theme of every season: the events it switches on, by
+	// season number, e.g. {"40": ["SanctifiedItems"]} or {"40": {"SanctifiedItems": 1, ...}}.
+	// It is the one place these are listed, so a new season needs no code change.
 	SeasonThemes map[string]seasonEvents `json:"season_themes"`
 }
 
@@ -99,27 +104,19 @@ var knownEvents = []string{
 	"DoubleBloodShards",
 }
 
+// defaultPubfiles is the shipped pubfiles.json. It is the source of the defaults,
+// so the file people read and the behavior of an empty config cannot differ, and
+// it is what a missing pubfiles.json is created from.
+//
+//go:embed pubfiles.json
+var defaultPubfiles []byte
+
 func defaultPubConfig() pubConfig {
-	return pubConfig{
-		Season:      39,
-		SeasonStart: "Wed, 01 Jan 2020 00:00:00 GMT",
-		SeasonEnd:   "Sat, 01 Jan 2050 00:00:00 GMT",
-		BuffStart:   "Sat, 16 Sep 2023 00:00:00 GMT",
-		BuffEnd:     "Wed, 01 Dec 2027 01:00:00 GMT",
-		// Nothing on by default: a server should look like production until
-		// we decide otherwise.
-		Events:                      map[string]bool{},
-		LegendaryFind:               "1.0",
-		GoldFind:                    "1.0",
-		XP:                          "1.0",
-		HeroPublishFrequencyMinutes: "30",
-		CrossPlatformSaveMigration:  true,
-		SeasonalGlobalLeaderboards:  true,
-		Diablo4Advertisement:        false,
-		UpdateVersion:               "1",
-		ChallengeRifts:              riftSettings{Mode: "weekly"},
-		SeasonRotation:              seasonRotation{Anchor: "2026-09", ThemeEvents: true},
+	var c pubConfig
+	if err := json.Unmarshal(stripJSONComments(defaultPubfiles), &c); err != nil {
+		panic("embedded pubfiles.json: " + err.Error())
 	}
+	return c
 }
 
 func boolStr(b bool) string {
@@ -176,8 +173,7 @@ func loadPubConfig(path string) (pubConfig, error) {
 	if os.IsNotExist(err) {
 		// First run: write the default file so there is something to edit,
 		// rather than failing.
-		out, _ := json.MarshalIndent(c, "", "  ")
-		if werr := os.WriteFile(path, out, 0o644); werr == nil {
+		if werr := os.WriteFile(path, defaultPubfiles, 0o644); werr == nil {
 			log.Printf("[D3 Pubfiles] %s created with defaults", path)
 		}
 		return c, nil
@@ -185,7 +181,7 @@ func loadPubConfig(path string) (pubConfig, error) {
 	if err != nil {
 		return c, err
 	}
-	if err := json.Unmarshal(raw, &c); err != nil {
+	if err := json.Unmarshal(stripJSONComments(raw), &c); err != nil {
 		return c, fmt.Errorf("%s: %w", path, err)
 	}
 	return c, nil
@@ -249,7 +245,7 @@ func pubfilesHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	if b, _, ok := rotatedPubfile(name, time.Now()); ok {
+	if b, _, ok := generatedPubfile(name, time.Now()); ok {
 		_, _ = w.Write(b)
 		return
 	}
