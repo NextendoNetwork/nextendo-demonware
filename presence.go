@@ -26,18 +26,40 @@ const (
 	presenceInterval = 30 * time.Second
 	presenceStatus   = 2 // playing
 	d3AppID          = "01001b300b9be000"
+	ctrAppID         = "0100f9f00c696000"
 )
 
+// appIDForTitle maps the announced Demonware title to the Switch title id the
+// account server shows on a player's card. Crash Team Racing runs on this same
+// server, so reporting one fixed id told every CTR player's friends they were
+// playing Diablo III.
+func appIDForTitle(title uint32) string {
+	if title == 5775 {
+		return ctrAppID
+	}
+	return d3AppID
+}
+
 // onlinePIDs returns the Nextendo PIDs of players connected to the lobby.
+// onlinePIDs returns every connected player's PID, regardless of game.
 func onlinePIDs() []uint64 {
+	out := []uint64{}
+	for _, pids := range onlinePIDsByApp() {
+		out = append(out, pids...)
+	}
+	return out
+}
+
+func onlinePIDsByApp() map[string][]uint64 {
 	onlineMu.Lock()
 	defer onlineMu.Unlock()
 	seen := map[uint64]bool{}
-	out := []uint64{}
+	out := map[string][]uint64{}
 	for _, p := range online {
 		if p.PID != 0 && !seen[p.PID] {
 			seen[p.PID] = true
-			out = append(out, p.PID)
+			app := appIDForTitle(p.Title)
+			out[app] = append(out[app], p.PID)
 		}
 	}
 	return out
@@ -48,36 +70,39 @@ func startPresenceReporter() {
 	base := envOr("NEXTENDO_ACCOUNT_URL", "http://127.0.0.1:8080")
 	key := os.Getenv("NEXTENDO_INTERNAL_KEY")
 	client := &http.Client{Timeout: 5 * time.Second}
-	log.Printf("[presence] reporting D3 players to %s/internal/presence-batch every %s", base, presenceInterval)
+	log.Printf("[presence] reporting players to %s/internal/presence-batch every %s", base, presenceInterval)
 	go func() {
-		lastLogged := -1
+		lastLogged := map[string]int{}
 		for {
 			time.Sleep(presenceInterval)
-			pids := onlinePIDs()
-			if len(pids) == 0 {
-				continue
-			}
-			body, err := json.Marshal(map[string]any{"appId": d3AppID, "status": presenceStatus, "pids": pids})
-			if err != nil {
-				continue
-			}
-			req, err := http.NewRequest("POST", base+"/internal/presence-batch", bytes.NewReader(body))
-			if err != nil {
-				continue
-			}
-			req.Header.Set("Content-Type", "application/json")
-			if key != "" {
-				req.Header.Set("X-Internal-Key", key)
-			}
-			resp, err := client.Do(req)
-			if err != nil {
-				log.Printf("[presence] %v", err)
-				continue
-			}
-			resp.Body.Close()
-			if resp.StatusCode != http.StatusOK || len(pids) != lastLogged {
-				log.Printf("[presence] %d player(s) %v -> HTTP %d", len(pids), pids, resp.StatusCode)
-				lastLogged = len(pids)
+			// One batch PER GAME: this server hosts both Diablo III and Crash Team
+			// Racing, and a single appId put every CTR player on a Diablo III card.
+			for app, pids := range onlinePIDsByApp() {
+				if len(pids) == 0 {
+					continue
+				}
+				body, err := json.Marshal(map[string]any{"appId": app, "status": presenceStatus, "pids": pids})
+				if err != nil {
+					continue
+				}
+				req, err := http.NewRequest("POST", base+"/internal/presence-batch", bytes.NewReader(body))
+				if err != nil {
+					continue
+				}
+				req.Header.Set("Content-Type", "application/json")
+				if key != "" {
+					req.Header.Set("X-Internal-Key", key)
+				}
+				resp, err := client.Do(req)
+				if err != nil {
+					log.Printf("[presence] %v", err)
+					continue
+				}
+				resp.Body.Close()
+				if resp.StatusCode != http.StatusOK || len(pids) != lastLogged[app] {
+					log.Printf("[presence] app=%s %d player(s) %v -> HTTP %d", app, len(pids), pids, resp.StatusCode)
+					lastLogged[app] = len(pids)
+				}
 			}
 		}
 	}()

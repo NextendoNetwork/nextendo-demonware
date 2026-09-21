@@ -35,6 +35,11 @@ type playerID struct {
 	PID      uint64 `json:"pid"`
 	Sub      string `json:"sub"`
 	Kind     string `json:"kind,omitempty"` // "switch" or "ryujinx" (emulator), see identity.go
+
+	// Demonware title this connection announced (5745 Diablo III, 5775 Crash Team
+	// Racing). Taken from the ticket, never from the stored identity file: one
+	// account can play either game, and presence must name the right one.
+	Title uint32 `json:"-"`
 }
 
 var (
@@ -81,6 +86,10 @@ func (l *lobbyConn) tryIdentity(ticket []byte) bool {
 	var id playerID
 	if json.Unmarshal(raw, &id) != nil || id.Username == "" {
 		return false
+	}
+	// auth.go stamps the announced title into the ticket at offset 5.
+	if len(ticket) >= 9 {
+		id.Title = binary.LittleEndian.Uint32(ticket[5:9])
 	}
 	l.player = &id
 	onlineMu.Lock()

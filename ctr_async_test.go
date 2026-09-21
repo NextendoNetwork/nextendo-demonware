@@ -87,11 +87,16 @@ func TestCTRPublicPairingAndDocuments(t *testing.T) {
 	if ok, _ := m.syncDoc(b.conn, id, 1, h); ok {
 		t.Fatal("guest modified host document")
 	}
-	if ok, updates := m.syncDoc(a.conn, id, 2, h); !ok || len(updates) != 0 {
+	// The host re-syncs at the SAME version: the version tracks membership and
+	// nobody has joined since. This is what the real client does -- it echoes the
+	// update_id of the document it composed, so requiring a higher number here
+	// refused every host sync from the second one onwards, and with it the host's
+	// ability to close its own lobby.
+	if ok, updates := m.syncDoc(a.conn, id, 1, h); !ok || len(updates) != 0 {
 		t.Fatal("host sync failed")
 	}
-	if ok, _ := m.syncDoc(a.conn, id, 1, h); ok {
-		t.Fatal("stale version accepted")
+	if ok, _ := m.syncDoc(a.conn, id, 99, h); ok {
+		t.Fatal("wrong version accepted")
 	}
 	m.leave(a.conn, 0)
 	if len(m.rooms) != 0 {

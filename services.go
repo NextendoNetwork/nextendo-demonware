@@ -48,18 +48,18 @@ const (
 	svcAsyncMatchMaking = 145 // bdAsyncMatchMaking
 	svcHTTPProxy        = 194 // bdABTesting, via bdHTTPProxyRequest/Response
 
-	// Numeros ET types de resultat lus dans le bdTaskParams de chaque fonction de
-	// bdAsyncMatchMaking. bdUInt64Result::deserialize = readUInt64, bdStringResult = readString,
-	// bdBoolResult = readBool, bdLobbyDocuments = deux chaines.
-	taskSetPlayerInfo      = 2  // aucun resultat
+	// Numbers AND result types read from the bdTaskParams of each bdAsyncMatchMaking
+	// function. bdUInt64Result::deserialize = readUInt64, bdStringResult = readString,
+	// bdBoolResult = readBool, bdLobbyDocuments = two strings.
+	taskSetPlayerInfo      = 2  // no result
 	taskGetPlayerToken     = 3  // bdUInt64Result
-	taskQoSHostsReply      = 4  // aucun resultat
+	taskQoSHostsReply      = 4  // no result
 	taskGetMMStatus        = 5  // bdStringResult
 	taskInitMatchMaking    = 6  // bdStringResult
 	taskStartMatchMaking   = 7  // bdStringResult
-	taskLobbyDisbanded     = 10 // aucun resultat
+	taskLobbyDisbanded     = 10 // no result
 	taskGetLobbyDocuments  = 13 // bdLobbyDocuments
-	taskAckExpectGame      = 14 // aucun resultat
+	taskAckExpectGame      = 14 // no result
 	taskSyncLobbyDocuments = 15 // bdBoolResult
 	taskInitiateDCQoS      = 17 // bdStringResult
 	taskStartSearch        = 18 // bdStringResult
@@ -99,7 +99,7 @@ func (w *bdWriter) u64(v uint64) {
 	w.b = binary.LittleEndian.AppendUint64(w.b, v)
 }
 
-// raw64 ecrit 8 octets SANS etiquette (bdByteBuffer::read, pas readUInt64).
+// raw64 writes 8 bytes with NO tag (bdByteBuffer::read, not readUInt64).
 func (w *bdWriter) raw64(v uint64) {
 	w.b = binary.LittleEndian.AppendUint64(w.b, v)
 }
@@ -354,7 +354,8 @@ func (l *lobbyConn) onTask(payload []byte) {
 		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.strv(doc); return 1 })
 		l.afterReply = func() {
 			notices := ctrMM.enqueue(search)
-			l.logf("CTR search id=%d registered; notifications=%d", search.id, len(notices))
+			l.logf("CTR search id=%d registered; seats=%d filter=%s notifications=%d",
+				search.id, search.seats, search.filterID, len(notices))
 			sendCTRNotices(notices)
 		}
 
