@@ -11,7 +11,7 @@ Diablo III does not use NEX: its online layer is **Demonware**. This server spea
 - Public games: create, find, join, player counts, NAT introductions.
 - Co-op between a Switch and an emulator. Tested: game builds 2.7.6 (CFW Switch) and 2.7.7 (Citron), both with season 37, working against this server and against each other.
 - Friend lookups inside the game and friend status, with presence reported to nextendo-account. Lightly tested: see [Known limits](#known-limits).
-- Crash Team Racing Nitro-Fueled (Demonware title 5775): login, contextual matchmaking, async matchmaking, friend sessions and rich presence, all written by CollectingW. Not tested on a running game by us: see [Crash Team Racing](#crash-team-racing).
+- Crash Team Racing Nitro-Fueled (Demonware title 5775): login, async matchmaking, friend sessions and rich presence, all written by CollectingW. Tested on console & emulator with production already running this additional game.
 
 ## Requirements
 
