@@ -90,10 +90,10 @@ type lobbyConn struct {
 	sendMu  sync.Mutex
 	msgSeen int
 
-	// Dernier document d'hote recu en 145/2, rendu tel quel en 145/3.
+	// Last host document received in 145/2, returned as-is in 145/3.
 	lobbyDoc string
 
-	// Emis apres la reponse de tache en cours (messages pousses).
+	// Sent after the in-flight task reply (pushed messages).
 	afterReply func()
 }
 
@@ -398,23 +398,23 @@ func (l *lobbyConn) onEncrypted(raw []byte) {
 		return
 	}
 	if inner == msgMigrateAck {
-		// Le 0x88 clot le 0x87 : rien n'est attendu ensuite. Un 0x89 declencherait une vraie migration.
+		// 0x88 closes 0x87: nothing is expected after it. A 0x89 would trigger a real migration.
 		if !migrateEnabled {
-			l.logf("0x88 migrate-ack — login LSG complet")
+			l.logf("0x88 migrate-ack — LSG login complete")
 			return
 		}
 		if err := l.sendEncrypted(msgMigrateGo, migrateGoPayload()); err != nil {
-			l.logf("envoi 0x89: %v", err)
+			l.logf("sending 0x89: %v", err)
 			return
 		}
 		l.logf("-> 0x89 migrate-go %s:%d", migrateIP(), migratePort)
 		return
 	}
-	l.logf("message interne 0x%02X ignore (%d octets)", inner, n)
+	l.logf("internal message 0x%02X ignored (%d bytes)", inner, n)
 }
 
-// Le jeu reprend la poignee de main complete sur la connexion migree, donc on
-// le renvoie sur le port d'ecoute habituel.
+// The game restarts the full handshake on the migrated connection, so it is
+// sent back to the usual listening port.
 const migratePort uint16 = 3074
 
 var migrateEnabled = os.Getenv("CTR_MIGRATE") == "1"
@@ -427,9 +427,9 @@ func migrateIP() net.IP {
 	return ip
 }
 
-// migrateGoPayload : 01 | type 2 (adresse fournie) | taille de l'adresse | bdAddr | u16 taille du
-// jeton | jeton | u32. parse220MigrateAck exige ce dernier u32 (millisecondes, *0.001 et plafonne
-// a 30s dans +0x764) : sans lui elle rend false et process220MigrateAck ferme la connexion.
+// migrateGoPayload: 01 | type 2 (address supplied) | address length | bdAddr | u16 token length |
+// token | u32. parse220MigrateAck requires that trailing u32 (milliseconds, *0.001 and capped at
+// 30s in +0x764): without it it returns false and process220MigrateAck closes the connection.
 const migrateAddrLen = 6
 const migrateDelayMS uint32 = 1000
 

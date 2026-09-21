@@ -79,7 +79,7 @@ func handleCTRUmbrella(w http.ResponseWriter, r *http.Request, body []byte, n ui
 		deny(401, fmt.Sprintf("ticket not issued here (%d on file)", len(files)))
 		return
 	}
-	// +25 porte l'identifiant en ligne pour CTR : l'age se lit sur l'emission (+13).
+	// +25 carries the online id for CTR: age is read from the issue time (+13).
 	if issued := binary.LittleEndian.Uint32(ticket[13:17]); time.Since(time.Unix(int64(issued), 0)) > 24*time.Hour {
 		deny(401, fmt.Sprintf("ticket issued at %d is too old", issued))
 		return

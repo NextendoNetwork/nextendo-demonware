@@ -62,7 +62,7 @@ func TestCTRUmbrellaIssuedTicket(t *testing.T) {
 	}
 }
 
-// Un ami reste joignable pendant que son hote se reconnecte.
+// A friend stays joinable while their host reconnects.
 func TestCTRFriendSessionSurvivesReconnect(t *testing.T) {
 	host := &lobbyConn{n: 5551, player: &playerID{Username: "Mars", PID: 1800000119}}
 	defer dropSessionsOf(host.n)
@@ -72,7 +72,7 @@ func TestCTRFriendSessionSurvivesReconnect(t *testing.T) {
 	info.u32(8)
 	host.onMatchMakingContext(mmCreateSession, &bdReader{b: info.b}, "ctr:Delta")
 
-	dropSessionsOf(host.n) // l'hote perd sa connexion
+	dropSessionsOf(host.n) // the host loses its connection
 
 	friend := &lobbyConn{n: 5552, player: &playerID{Username: "Collecting", PID: 1800003406}}
 	ask := &bdWriter{}
@@ -96,8 +96,8 @@ func TestCTRFriendSessionSurvivesReconnect(t *testing.T) {
 	}
 }
 
-// Le code HTTP est ecrit dans les champs 1 ET 2 : bdHTTPProxyResponse lit le champ 2, la voie REST
-// (bdRESTLSGResponseMessageDeserializer) lit le champ 1. Le corps reste le champ 3.
+// The HTTP code is written into fields 1 AND 2: bdHTTPProxyResponse reads field 2, the REST path
+// (bdRESTLSGResponseMessageDeserializer) reads field 1. The body stays field 3.
 func TestCTRHTTPProxyReplyEncoding(t *testing.T) {
 	body := []byte(`{"enrollments":[]}`)
 	reply := httpProxyReply(1, 200, body)
@@ -105,14 +105,14 @@ func TestCTRHTTPProxyReplyEncoding(t *testing.T) {
 	if len(reply) < i+6 || reply[i] != tagStruct {
 		t.Fatalf("no struct buffer immediately after task header: %x", reply)
 	}
-	sb := reply[i+6:] // tagStruct + (tagU32 + u32 longueur)
+	sb := reply[i+6:] // tagStruct + (tagU32 + u32 length)
 	want := append([]byte{0x08, 0xC8, 0x01, 0x10, 0xC8, 0x01, 0x1A, byte(len(body))}, body...)
 	if !bytes.Equal(sb, want) {
 		t.Fatalf("struct buffer\n got %x\nwant %x", sb, want)
 	}
 }
 
-// La presence d'un ami connecte revient ; celle d'un joueur parti, non.
+// A connected friend's presence comes back; a departed player's does not.
 func TestCTRRichPresenceRoundTrip(t *testing.T) {
 	host := &lobbyConn{n: 7771, player: &playerID{Username: "Mars", PID: 1800000119}}
 	onlineMu.Lock()

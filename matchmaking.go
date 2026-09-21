@@ -56,8 +56,8 @@ type mmSession struct {
 	reserved   bool // ID allocated, but no room information published yet.
 }
 
-// orphanGrace : le client se reauthentifie en boucle, donc une partie doit
-// survivre a la reconnexion de son hote pour rester joignable.
+// orphanGrace: the client re-authenticates in a loop, so a game must survive its
+// host reconnecting in order to stay joinable.
 const orphanGrace = 2 * time.Minute
 
 func (l *lobbyConn) pid() uint64 {
@@ -75,7 +75,7 @@ func (l *lobbyConn) owns(s *mmSession) bool {
 	return pid != 0 && s.ownerPID == pid
 }
 
-// reapSessions retire les parties dont l'hote n'est pas revenu.
+// reapSessions removes games whose host never came back.
 func reapSessions() {
 	for range time.Tick(30 * time.Second) {
 		reapSessionsOnce()
@@ -270,7 +270,7 @@ func (l *lobbyConn) onMatchMakingContext(task byte, r *bdReader, context string)
 		_, _ = rand.Read(s.id[:])
 		s.context = context
 		sessionsMu.Lock()
-		// Un hote qui recree sa partie apres une reconnexion remplace l'ancienne.
+		// A host recreating its game after reconnecting replaces the old one.
 		if s.ownerPID != 0 {
 			for old, prev := range sessions {
 				if prev.ownerPID == s.ownerPID && prev.context == context {

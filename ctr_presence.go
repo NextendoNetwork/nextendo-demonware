@@ -1,12 +1,12 @@
 package main
 
-// bdRichPresenceService (service 68). CTR l'interroge en boucle pour ses amis
-// une fois la session LSG etablie.
+// bdRichPresenceService (service 68). CTR polls it for its friends once the
+// LSG session is established.
 //
-//	bdUserAccountID    : 0A u64 identifiant | 10 chaine plateforme
+//	bdUserAccountID    : 0A u64 id | 10 platform string
 //	bdRichPresenceData : bdUserAccountID | 03 u8 | 13 blob
 //
-// Requete get : 10 contexte | 08 u32 nombre | nombre x bdUserAccountID.
+// get request: 10 context | 08 u32 count | count x bdUserAccountID.
 
 import (
 	"encoding/binary"
@@ -50,7 +50,7 @@ func (r *bdReader) u64() (uint64, error) {
 	return v, nil
 }
 
-// accountIDs lit « u32 nombre | nombre x bdUserAccountID ».
+// accountIDs reads "u32 count | count x bdUserAccountID".
 func (r *bdReader) accountIDs() []accountID {
 	n, err := r.u32()
 	if err != nil || n > 4096 {
@@ -68,7 +68,7 @@ func (r *bdReader) accountIDs() []accountID {
 	return out
 }
 
-// onlinePIDSet rend les joueurs connectes, indexes pour la recherche.
+// onlinePIDSet returns the connected players, indexed for lookup.
 func onlinePIDSet() map[uint64]bool {
 	retryPending()
 	out := map[uint64]bool{}
@@ -99,7 +99,7 @@ func (l *lobbyConn) onRichPresence(task byte, r *bdReader) []byte {
 		richMu.Lock()
 		rich[id] = richPresence{plat, flag, data}
 		richMu.Unlock()
-		l.logf("richpresence SET pid=%d ctx=%q %d octets", id, ctx, len(data))
+		l.logf("richpresence SET pid=%d ctx=%q %d bytes", id, ctx, len(data))
 		return taskReply(task, 0, nil)
 
 	case rpGet, rpGetAndSubscribe:
@@ -117,8 +117,8 @@ func (l *lobbyConn) onRichPresence(task byte, r *bdReader) []byte {
 			if id == 0 {
 				id = me
 			}
-			// Une presence gardee pour un joueur parti ferait croire a une
-			// partie joignable qui n'existe plus.
+			// Presence kept for a player who left would advertise a joinable
+			// game that no longer exists.
 			if id != me && !live[id] {
 				continue
 			}

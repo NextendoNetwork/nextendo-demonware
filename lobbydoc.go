@@ -1,17 +1,17 @@
 package main
 
-// Document d'hote rendu par bdAsyncMatchMaking::getLobbyDocuments (145/3).
+// Host document returned by bdAsyncMatchMaking::getLobbyDocuments (145/3).
 //
-// Net::igNetLobbyHostDoc::deserialize lit, dans cet ordre : update_time (u64), update_id (u64),
-// game_id (u64, precede d'un hasKey), lobby_open (bool), lobby_open_for_pres_join (bool), puis
+// Net::igNetLobbyHostDoc::deserialize reads, in this order: update_time (u64), update_id (u64),
+// game_id (u64, preceded by a hasKey), lobby_open (bool), lobby_open_for_pres_join (bool), then
 // player_state, listen_server, dedicated_server, team_balance{can_change_teams},
-// ruleset_payload et attachment. listen_server porte host_address (bdCommonAddr en base64,
-// passe a bdBase64::decode) et host_player_id (u64) ; player_state est parcouru par index,
-// chaque champ etant un u32.
+// ruleset_payload and attachment. listen_server carries host_address (a bdCommonAddr in base64,
+// passed to bdBase64::decode) and host_player_id (u64); player_state is walked by index,
+// each field being a u32.
 //
-// Le document que le client TELEVERSE en 145/2 a une forme differente
-// (listen_server{local_address,security_id,security_key,nat}) : le rendre tel quel ne donne
-// aucune des cles attendues. On en extrait seulement l'adresse pour composer celui-ci.
+// The document the client UPLOADS in 145/2 has a different shape
+// (listen_server{local_address,security_id,security_key,nat}): returning it as-is yields
+// none of the expected keys. Only the address is extracted from it to compose this one.
 
 import (
 	"encoding/json"
@@ -42,7 +42,7 @@ type lobbyTeamBalance struct {
 	CanChangeTeams bool `json:"can_change_teams"`
 }
 
-// uploadedHostAddress rend listen_server.local_address du document televerse en 145/2.
+// uploadedHostAddress returns listen_server.local_address from the document uploaded in 145/2.
 func uploadedHostAddress(doc string) string {
 	if doc == "" {
 		return ""
