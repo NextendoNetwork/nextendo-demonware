@@ -107,7 +107,7 @@ What it adds, from the pull request:
 
 The merge changed one thing for Diablo III: games whose host disconnects are now orphaned and removed when the host does not come back, instead of staying findable until the connection closes. A task the server cannot parse now gets an empty success instead of no answer.
 
-Checked by us: this merge builds and every test passes, including CollectingW's, and Diablo III was run on the merged build on a local stack (a CFW Switch and a Citron phone logged in, season 37 was served, and a game was created and found). Not checked by us: Crash Team Racing itself, which we have never run against this server. CTR's hostnames for the hosts entries and its sni-router route have not been verified.
+Checked by us: this merge builds and every test passes, including CollectingW's, and Diablo III was run on the merged build on a local stack (a CFW Switch and a Citron phone logged in, season 37 was served, and a game was created and found). CTR has also been verified operational across Prelude/Ryujinx/Citron users when Nextendo Demonware was officially ported to Prod.
 
 ## Optional features
 
