@@ -1,3 +1,3 @@
-module github.com/NextendoNetwork/diablo-3
+module github.com/NextendoNetwork/nextendo-demonware
 
 go 1.23.0

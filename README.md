@@ -152,7 +152,6 @@ What this server does not do, and what has not been checked. Read this before re
 - Refuse the all-zero lobby key; add rate limits.
 - Check console friends, friend status and the "friends online" indicator against real accounts on a real deployment.
 - Try Challenge Rifts and season rotation on a running game.
-- Translate the French comments and log strings left in `ctr_*.go` and `lobbydoc.go`.
 - Let rich presence resolve a console friend id to a PID, as friend lookups already do (`onlinePlayerFor`).
 - Run Diablo III and Crash Team Racing on the merged server and confirm neither changed.
 - Find the `Config.txt` keys the game reads, and the meaning of the blacklist values.
@@ -188,4 +187,4 @@ facts were read from them and **reimplemented** here in Go; no code was copied.
 
 Everything specific to Diablo III (ticket layout, lobby handshake and crypto, task reply format, the service/task map) was reverse-engineered from the game binary; the addresses and layouts are documented in the source comments.
 
-Crash Team Racing Nitro-Fueled (title 5775): the server code for it is **[CollectingW](https://github.com/CollectingW)**'s, from the [`crash-team-racing` branch of CollectingW/diablo-3](https://github.com/CollectingW/diablo-3/tree/crash-team-racing) (pull request #1 of `nx-mod/diablo-3`). It is merged here as sent, with English comments and log strings only where the merge touched them; the French left in `ctr_*.go` and `lobbydoc.go` is theirs and still to translate. The reverse engineering of CTR's Demonware behaviour is theirs.
+Crash Team Racing Nitro-Fueled (title 5775): the server code for it is **[CollectingW](https://github.com/CollectingW)**'s, from the [`crash-team-racing` branch of CollectingW/diablo-3](https://github.com/CollectingW/diablo-3/tree/crash-team-racing) (pull request #1 of `nx-mod/diablo-3`). It is merged here as sent; its comments and log strings have since been translated to English throughout. The reverse engineering of CTR's Demonware behaviour is theirs.
