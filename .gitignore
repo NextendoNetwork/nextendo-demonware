@@ -27,3 +27,7 @@ stdout.txt
 *.err
 /riftdata/
 /pubfiles.local.json
+
+# Persistent economy and per-player runtime state
+/wallets/
+/economy-v2.json

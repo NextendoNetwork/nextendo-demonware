@@ -99,10 +99,12 @@ func main() {
 		log.Printf("[D3 Pubfiles] %v", err)
 	}
 	loadGates()
+	loadWallets()
 
 	go startDashboard()
 	startPresenceReporter()
 	go serveNAT(natPort)
+	startCTRRelay(envOrInt("CTR_RELAY_PORT_LOW", 0), envOrInt("CTR_RELAY_PORT_HIGH", 0), nextendoHost)
 	go reapSessions()
 	startLobby()
 

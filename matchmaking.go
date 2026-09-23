@@ -227,7 +227,7 @@ func (l *lobbyConn) onFriendSessions(task byte, r *bdReader, context string) []b
 	// which is a raw bdMatchMakingInfo.
 	return taskReply(task, 0, func(w *bdWriter) uint32 {
 		for _, h := range found {
-			w.blobv(h.s.hostAddr)
+			w.blobv(withRelay(h.s.hostAddr, h.s.ownerPID, l.pid()))
 			w.blobv(h.s.id[:])
 			w.u32(h.s.gameType)
 			w.u32(h.s.maxPlayers)
@@ -381,7 +381,7 @@ func (l *lobbyConn) onMatchMakingContext(task byte, r *bdReader, context string)
 		l.logf("matchmaking FIND query=%d start=%d max=%d -> %d game(s)", query, start, maxr, len(found))
 		return taskReply(task, 0, func(w *bdWriter) uint32 {
 			for _, s := range found {
-				w.blobv(s.hostAddr)
+				w.blobv(withRelay(s.hostAddr, s.ownerPID, l.pid()))
 				w.blobv(s.id[:])
 				w.u32(s.gameType)
 				w.u32(s.maxPlayers)

@@ -1,3 +1,12 @@
+# CTR implementation update (2026-09-23)
+
+The current server includes CTR asynchronous party matchmaking, friend presence, optional UDP relay, persistent marketplace balances and item ownership, catalog purchases, Pit Stop refreshes, and original race reward tables. Marketplace and refresh behavior have been verified in-game. Economy writes are persisted atomically per account.
+
+Wumpa Challenges remain incomplete: Window Shopping has persistent completion and a 25-coin reward, with duplicate completion notifications suppressed; other challenge predicates and client balance notification behavior still need work. Leaderboard service 4 remains unimplemented. The testing starter balance remains 10,000 coins pending an explicitly requested reset.
+
+The older Diablo III assessment below is historical and is not a current audit of CTR. In particular its statements about all state being volatile and the absence of a relay do not describe the new CTR economy and relay implementation.
+
+---
 # What is missing, and what is unknown
 
 What this server does today, what a complete Diablo III server would also do, and what we do not know yet. Each point says how it is known: **code** (read from this repository), **log** (seen in a live session), **binary** (from the game's own call sites), or **guess**.

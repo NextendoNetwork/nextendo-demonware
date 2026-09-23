@@ -93,7 +93,16 @@ func serveNAT(port int) {
 				log.Printf("[D3 NAT] INTRO to %s: %v", to, err)
 			} else {
 				natIntros.Add(1)
-				log.Printf("[D3 NAT] INTRO %s -> %s (id=%X)", addr, to, buf[3:13])
+				// The host answers 0x0C to sourceAddress from INSIDE the packet, not to
+				// where we saw the request come from. A client that fills in its LAN
+				// address there is unreachable and the join fails with "failed to connect".
+				src := buf[17:23]
+				srcAddr := &net.UDPAddr{IP: net.IPv4(src[0], src[1], src[2], src[3]),
+					Port: int(binary.LittleEndian.Uint16(src[4:6]))}
+				ua, _ := addr.(*net.UDPAddr)
+				mismatch := ua == nil || !ua.IP.Equal(srcAddr.IP) || ua.Port != srcAddr.Port
+				log.Printf("[D3 NAT] INTRO %s -> %s (id=%X) claimed_src=%s mismatch=%v",
+					addr, to, buf[3:13], srcAddr, mismatch)
 			}
 			continue
 		}

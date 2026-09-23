@@ -1,0 +1,353 @@
+{
+  "117971320": {
+    "positions": [
+      46,
+      41,
+      39,
+      35
+    ],
+    "track": "t113_mystery_caves"
+  },
+  "1206967470": {
+    "positions": [
+      43,
+      39,
+      37,
+      32
+    ],
+    "track": "t121_slide_coliseum"
+  },
+  "1227583174": {
+    "positions": [
+      35,
+      32,
+      30,
+      26
+    ],
+    "track": "t142_dragon_mines"
+  },
+  "1396190282": {
+    "positions": [
+      43,
+      39,
+      37,
+      32
+    ],
+    "track": "t114_sewer_speedway"
+  },
+  "1495027830": {
+    "positions": [
+      73,
+      66,
+      62,
+      55
+    ],
+    "track": "t144_tiny_arena"
+  },
+  "1522200187": {
+    "positions": [
+      41,
+      37,
+      35,
+      31
+    ],
+    "track": "t222_barin_ruins"
+  },
+  "1736952365": {
+    "positions": [
+      33,
+      30,
+      28,
+      25
+    ],
+    "track": "t141_blizzard_bluff"
+  },
+  "182601193": {
+    "positions": [
+      32,
+      29,
+      27,
+      24
+    ],
+    "track": "t131_coco_park"
+  },
+  "1879698579": {
+    "positions": [
+      64,
+      58,
+      54,
+      48
+    ],
+    "track": "t154_oxide_station"
+  },
+  "1942340761": {
+    "positions": [
+      32,
+      29,
+      27,
+      24
+    ],
+    "track": "t111_crash_cove"
+  },
+  "2193966296": {
+    "positions": [
+      48,
+      43,
+      41,
+      36
+    ],
+    "track": "t223_deep_sea_driving"
+  },
+  "2275338044": {
+    "positions": [
+      46,
+      41,
+      39,
+      35
+    ],
+    "track": "t506_luminous"
+  },
+  "2275814720": {
+    "positions": [
+      53,
+      48,
+      45,
+      40
+    ],
+    "track": "t232_clockwork_wumpa"
+  },
+  "2376949914": {
+    "positions": [
+      56,
+      50,
+      48,
+      42
+    ],
+    "track": "t233_thunder_struck"
+  },
+  "2390004297": {
+    "positions": [
+      62,
+      56,
+      53,
+      47
+    ],
+    "track": "t241_assembly_lane"
+  },
+  "2411141180": {
+    "positions": [
+      45,
+      41,
+      38,
+      34
+    ],
+    "track": "t504_october_spooky"
+  },
+  "2515451791": {
+    "positions": [
+      59,
+      53,
+      50,
+      44
+    ],
+    "track": "t143_polar_pass"
+  },
+  "281708099": {
+    "positions": [
+      50,
+      45,
+      43,
+      38
+    ],
+    "track": "t501_july_world_tour"
+  },
+  "2955396317": {
+    "positions": [
+      50,
+      45,
+      43,
+      38
+    ],
+    "track": "t152_cortex_castle"
+  },
+  "3189446747": {
+    "positions": [
+      59,
+      53,
+      50,
+      44
+    ],
+    "track": "t502_back_in_time"
+  },
+  "3273086243": {
+    "positions": [
+      30,
+      27,
+      26,
+      23
+    ],
+    "track": "t212_jungle_boogie"
+  },
+  "3316393003": {
+    "positions": [
+      46,
+      41,
+      39,
+      35
+    ],
+    "track": "t213_tiny_temple"
+  },
+  "334503438": {
+    "positions": [
+      68,
+      61,
+      58,
+      51
+    ],
+    "track": "t242_android_alley"
+  },
+  "339658488": {
+    "positions": [
+      43,
+      39,
+      37,
+      32
+    ],
+    "track": "t505_nitro_festival"
+  },
+  "3493047959": {
+    "positions": [
+      56,
+      50,
+      48,
+      42
+    ],
+    "track": "t151_ngin_labs"
+  },
+  "3615343399": {
+    "positions": [
+      59,
+      53,
+      50,
+      44
+    ],
+    "track": "t255_hyper_spaceway"
+  },
+  "3777706388": {
+    "positions": [
+      40,
+      36,
+      34,
+      30
+    ],
+    "track": "t133_papus_pyramid"
+  },
+  "3823359781": {
+    "positions": [
+      80,
+      72,
+      68,
+      60
+    ],
+    "track": "t243_electron_avenue"
+  },
+  "4104699056": {
+    "positions": [
+      48,
+      43,
+      41,
+      36
+    ],
+    "track": "t507_dry_land"
+  },
+  "4126086220": {
+    "positions": [
+      36,
+      32,
+      31,
+      27
+    ],
+    "track": "t211_inferno_island"
+  },
+  "4195894807": {
+    "positions": [
+      35,
+      32,
+      30,
+      26
+    ],
+    "track": "t134_dingo_canyon"
+  },
+  "4260188721": {
+    "positions": [
+      65,
+      59,
+      55,
+      49
+    ],
+    "track": "t153_hot_air_skyway"
+  },
+  "449876368": {
+    "positions": [
+      33,
+      29,
+      27,
+      24
+    ],
+    "track": "t112_roos_tubes"
+  },
+  "459813278": {
+    "positions": [
+      41,
+      37,
+      35,
+      31
+    ],
+    "track": "t132_tiger_temple"
+  },
+  "545460167": {
+    "positions": [
+      56,
+      50,
+      48,
+      42
+    ],
+    "track": "t508_toxic"
+  },
+  "585159309": {
+    "positions": [
+      60,
+      54,
+      51,
+      45
+    ],
+    "track": "t231_out_of_time"
+  },
+  "807822675": {
+    "positions": [
+      34,
+      31,
+      29,
+      26
+    ],
+    "track": "t221_meteor_gorge"
+  },
+  "873154592": {
+    "positions": [
+      48,
+      43,
+      41,
+      36
+    ],
+    "track": "t503_september_spyro"
+  },
+  "945638404": {
+    "positions": [
+      45,
+      41,
+      38,
+      34
+    ],
+    "track": "t122_turbo_track"
+  }
+}

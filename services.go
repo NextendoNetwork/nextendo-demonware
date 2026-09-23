@@ -403,6 +403,15 @@ func (l *lobbyConn) onTask(payload []byte) {
 		reply = httpProxyReply(task, 200, body)
 		l.logf("task bdABTesting.enroll -> 200 (%d bytes)", len(body))
 
+	case service == svcAchievements:
+		reply = l.onAchievements(task, payload)
+
+	case service == svcMarketplace:
+		if reply = l.onMarketplace(task, payload); reply == nil {
+			reply = taskReply(task, 0, nil)
+			l.logf("task marketplace UNHANDLED task=%d args:\n%s", task, hex.Dump(payload))
+		}
+
 	case service == svcMatchMaking:
 		if reply = l.onMatchMaking(task, r); reply == nil {
 			reply = taskReply(task, 0, nil)
