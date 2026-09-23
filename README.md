@@ -167,9 +167,9 @@ What this server does not do, and what has not been checked. Read this before re
   [exlaunch](https://github.com/shadowninja108/exlaunch) by **Shadow**: used
   as the instrumentation platform (hooks and logging inside the game) and as the
   source of the publisher-file formats (`Config.txt`, `Seasons.txt`, `Blacklist.txt`).
-
-Demonware reference implementations consulted (all for other titles). Protocol
-facts were read from them and **reimplemented** here in Go; no code was copied.
+- **[nxmod](https://github.com/nx-mod)** creator of the original Diablo-3 repo & work
+  [original repo](https://github.com/nx-mod/nextendo-demonware) for their original
+  work and creation to make this entirely possible.
 
 - **[project-bo4/shield-development](https://github.com/project-bo4/shield-development)** (GPL-3.0):
   Demonware STUN/NAT-discovery packet format (UDP 3074, types 20/21 and 30/31);
