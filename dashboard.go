@@ -202,10 +202,15 @@ type apiStats struct {
 	Methods        []apiMethod    `json:"methods"`
 }
 
-func buildStats() apiStats {
+func buildStats() apiStats { return buildGameStats("") }
+
+func buildGameStats(game string) apiStats {
 	onlineMu.Lock()
 	who := make(map[uint64]playerID, len(online))
 	for n, p := range online {
+		if (game == "ctr" && p.Title != 5775) || (game == "d3" && p.Title == 5775) {
+			continue
+		}
 		who[n] = *p
 	}
 	onlineMu.Unlock()
@@ -225,7 +230,10 @@ func buildStats() apiStats {
 	hosting := map[uint64]apiGathering{} // host connection -> its public game
 	gs := make([]apiGathering, 0, len(snaps))
 	for _, s := range snaps {
-		host := who[s.owner]
+		host, live := who[s.owner]
+		if !live || host.PID == 0 || host.Title == 5775 {
+			continue
+		}
 		state := "searching"
 		if s.numPlayers >= 2 {
 			state = "matched"
@@ -238,6 +246,44 @@ func buildStats() apiStats {
 		}
 		hosting[s.owner] = g
 		gs = append(gs, g)
+	}
+	// CTR legacy session adverts are per-player presence, not actual rooms.
+	// Use host-confirmed membership, excluding pending reservations.
+	ctrMembership := map[uint64]apiGathering{}
+	if game != "d3" {
+		names := map[uint64]string{}
+		for _, p := range who {
+			names[p.PID] = p.Username
+		}
+		ctrMM.mu.Lock()
+		for _, room := range ctrMM.rooms {
+			if room.host == nil || names[room.host.pid] == "" {
+				continue
+			}
+			g := apiGathering{ID: uint32(room.id), HostPID: room.host.pid, HostName: names[room.host.pid], Type: "Public matchmaking", Max: uint16(room.capacity), State: "searching", Players: []apiLobbyP{}}
+			seen := map[uint64]bool{}
+			for _, search := range room.players {
+				for _, pid := range search.doc.Members {
+					if seen[pid] || names[pid] == "" || (pid != room.host.pid && room.state(pid) != 2) {
+						continue
+					}
+					seen[pid] = true
+					g.Players = append(g.Players, apiLobbyP{PID: pid, Name: names[pid], Host: pid == room.host.pid})
+				}
+			}
+			g.Count = len(g.Players)
+			if g.Count > 1 {
+				g.State = "matched"
+			}
+			if open, ok := room.hostDoc["lobby_open"].(bool); ok && !open {
+				g.State = "in game"
+			}
+			for _, p := range g.Players {
+				ctrMembership[p.PID] = g
+			}
+			gs = append(gs, g)
+		}
+		ctrMM.mu.Unlock()
 	}
 	sort.Slice(gs, func(i, j int) bool { return gs[i].ID < gs[j].ID })
 
@@ -259,6 +305,9 @@ func buildStats() apiStats {
 		}
 		if g, hosts := hosting[n]; hosts {
 			pl.State, pl.Gathering, pl.Mode, pl.IsHost = "in a lobby", g.ID, g.Type, true
+		}
+		if g, joined := ctrMembership[p.PID]; joined {
+			pl.State, pl.Gathering, pl.Mode, pl.IsHost = "in a lobby", g.ID, g.Type, p.PID == g.HostPID
 		}
 		if prev, dup := byPID[p.PID]; dup && prev.IdleSecs <= pl.IdleSecs {
 			continue
@@ -301,6 +350,7 @@ func buildStats() apiStats {
 		PeakConnected:  peakConnected,
 		NATIntros:      natIntros.Load(),
 		Server: apiServer{
+			AccessKey:  map[string]string{"ctr": "demonware-ctr", "d3": "demonware-d3"}[game],
 			NexVersion: "Demonware lobby 220", AuthPort: fmt.Sprint(authPort), SecurePort: natPort,
 			SNIHost: envOr("NEXTENDO_SNI_HOST", ""), SessionKey: 24, Stack: "demonware",
 		},
@@ -330,7 +380,7 @@ func startDashboard() {
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
-		_ = json.NewEncoder(w).Encode(buildStats())
+		_ = json.NewEncoder(w).Encode(buildGameStats(r.URL.Query().Get("game")))
 	})
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { fmt.Fprintln(w, "ok") })
 	mux.HandleFunc("/pubfiles/", pubfilesHandler)
