@@ -258,6 +258,8 @@ func (l *lobbyConn) onTask(payload []byte) {
 
 	var reply []byte
 	switch {
+	case service == 4 && l.player != nil && l.player.Title == 5775:
+		reply = l.onCTRStats(task, r)
 	case service == svcTitleUtilities && task == taskGetServerTime:
 		now := uint32(time.Now().Unix())
 		reply = taskReply(task, 0, func(w *bdWriter) uint32 { w.u32(now); return 1 })

@@ -31,3 +31,4 @@ stdout.txt
 # Persistent economy and per-player runtime state
 /wallets/
 /economy-v2.json
+/ctr-leaderboards-v1.json
