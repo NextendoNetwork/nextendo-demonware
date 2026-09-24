@@ -1,6 +1,6 @@
 # diablo-3
 
-Game server for **Diablo III** on Nintendo Switch, for [Nextendo Network](https://nextendo.network), with **Crash Team Racing Nitro-Fueled** support contributed by [CollectingW](https://github.com/CollectingW) (see [Crash Team Racing](#crash-team-racing)). Source only, no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
+Game server for **Diablo III** nxmod [creator of the original Diablo-3 repo](https://github.com/nx-mod/nextendo-demonware) & the original developer of the backend for Demonware support for [Nextendo Network](https://nextendo.network), and also with **Crash Team Racing Nitro-Fueled** support contributed by [CollectingW](https://github.com/CollectingW) (see [Crash Team Racing](#crash-team-racing)). Source only, no binaries, no certs, no game assets. Not affiliated with Blizzard, Activision, Demonware or Nintendo.
 
 Diablo III does not use NEX: its online layer is **Demonware**. This server speaks it end to end (auth, the encrypted lobby, remote tasks, matchmaking, NAT discovery) and plugs into the Nextendo stack like the other game servers: a route in sni-router, the account gates and presence of nextendo-account, and `/api/stats` for nextendo-dashboard.
 
