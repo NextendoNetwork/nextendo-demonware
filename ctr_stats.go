@@ -35,7 +35,12 @@ type ctrStatsStore struct {
 var ctrStats = &ctrStatsStore{}
 
 func timeBoard(board uint32) bool { return board > 1000 && board < 1159 }
-func statsEnd(r *bdReader) bool   { return r.off == len(r.b) || (r.off+1 == len(r.b) && r.b[r.off] == 0) }
+
+// Ring Challenge enum IDs from CTR 1.0.15. ID 100 is not a track board.
+// Ring Rally uses raw points, but shares the Octane driver extension with times.
+func ringBoard(board uint32) bool   { return board >= 89 && board <= 133 && board != 100 }
+func octaneBoard(board uint32) bool { return timeBoard(board) || ringBoard(board) }
+func statsEnd(r *bdReader) bool     { return r.off == len(r.b) || (r.off+1 == len(r.b) && r.b[r.off] == 0) }
 func statsInt64(r *bdReader) (int64, error) {
 	if err := r.tag(9); err != nil {
 		return 0, err
@@ -64,14 +69,14 @@ func parseStatWrites(r *bdReader, pid uint64, name string) ([]ctrStatWrite, erro
 			return nil, fmt.Errorf("unsupported write operation %d", op)
 		}
 		row := ctrStatWrite{ctrStat: ctrStat{Board: board, PID: pid, Score: score, Name: name, Updated: uint32(time.Now().Unix())}, Operation: op}
-		if timeBoard(board) {
+		if octaneBoard(board) {
 			var err error
 			row.Driver, err = r.u32()
 			if err != nil {
 				return nil, err
 			}
-			if op != 4 || score <= 0 || score > math.MaxUint32 {
-				return nil, fmt.Errorf("invalid encoded time record")
+			if op != 4 || score < 0 || (timeBoard(board) && (score == 0 || score > math.MaxUint32)) {
+				return nil, fmt.Errorf("invalid Octane leaderboard record for board %d", board)
 			}
 		}
 		out = append(out, row)
@@ -198,7 +203,7 @@ func statsReply(task byte, rows []ctrStat, total uint32) []byte {
 		}
 		w.strv(name)
 		w.u32(r.Updated)
-		if timeBoard(r.Board) {
+		if octaneBoard(r.Board) {
 			w.u32(r.Driver)
 		}
 	}
@@ -230,6 +235,9 @@ func (l *lobbyConn) onCTRStats(task byte, r *bdReader) []byte {
 			return fail(err)
 		}
 		l.logf("CTR stats saved pid=%d records=%d", pid, len(writes))
+		for _, row := range writes {
+			l.logf("CTR stats upload board=%d score=%d operation=%d", row.Board, row.Score, row.Operation)
+		}
 		return taskReply(task, 0, nil)
 	}
 	if task != 4 && task != 13 {

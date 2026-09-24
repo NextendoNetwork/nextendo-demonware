@@ -116,3 +116,57 @@ func TestCTRStatsRankAndFriendsRequests(t *testing.T) {
 		}
 	}
 }
+
+func TestRingRallyScoresAndDriverWire(t *testing.T) {
+	for _, board := range []uint32{89, 99, 101, 133, 1002} {
+		w := &bdWriter{}
+		w.u32(board)
+		w.u64(12)
+		w.u8(4)
+		w.i64(123456)
+		w.u32(77)
+		// A generic counter after the extended record must remain a separate write.
+		w.u32(150)
+		w.u64(12)
+		w.u8(1)
+		w.i64(1)
+		w.b = append(w.b, 0)
+		writes, err := parseStatWrites(&bdReader{b: w.b}, 12, "Racer")
+		if err != nil || len(writes) != 2 || writes[0].Driver != 77 || writes[1].Board != 150 {
+			t.Fatalf("board %d: %+v %v", board, writes, err)
+		}
+		s := &ctrStatsStore{dir: t.TempDir()}
+		if err = s.write(writes); err != nil {
+			t.Fatal(err)
+		}
+		writes[0].Score--
+		writes[0].Driver = 88
+		if err = s.write(writes[:1]); err != nil {
+			t.Fatal(err)
+		}
+		rows, err := (&ctrStatsStore{dir: s.dir}).read(board)
+		if err != nil || len(rows) != 1 || rows[0].Score != 123456 || rows[0].Driver != 77 {
+			t.Fatalf("bad saved score: %+v %v", rows, err)
+		}
+		r := &bdReader{b: statsReply(4, rows, 1)}
+		r.u64()
+		r.u32()
+		r.u8()
+		r.u32()
+		r.u32()
+		r.u64()
+		statsInt64(r)
+		r.u64()
+		r.str()
+		r.u32()
+		driver, err := r.u32()
+		if err != nil || driver != 77 || r.off != len(r.b) {
+			t.Fatalf("missing reply driver board %d", board)
+		}
+	}
+	for _, board := range []uint32{88, 100, 134, 150, 1000} {
+		if ringBoard(board) {
+			t.Fatalf("incorrect ring board %d", board)
+		}
+	}
+}
