@@ -40,7 +40,7 @@ func (l *lobbyConn) onAchievements(task byte, payload []byte) []byte {
 				l.logf("CTR refresh persistence failed: %v", err)
 				return taskReply(task, errUnhandled, nil)
 			}
-			challengeCredit, challengeUpdates, err := economy.awardWindowShopping(l.pid(), events, time.Now())
+			challengeCredit, challengeUpdates, err := economy.awardChallenges(l.pid(), events, time.Now())
 			if err != nil {
 				l.logf("CTR challenge persistence failed: %v", err)
 				return taskReply(task, errUnhandled, nil)
@@ -48,7 +48,7 @@ func (l *lobbyConn) onAchievements(task byte, payload []byte) []byte {
 			credit += challengeCredit
 			updates = append(updates, challengeUpdates...)
 			if challengeCredit != 0 {
-				l.logf("CTR Window Shopping reward=%d persisted", challengeCredit)
+				l.logf("CTR challenge reward=%d persisted", challengeCredit)
 			}
 
 			if credit != 0 {
@@ -80,8 +80,10 @@ func (l *lobbyConn) onAchievements(task byte, payload []byte) []byte {
 		if achievementRequested(payload, state) {
 			states = pbBytesField(nil, 1, state.encode())
 		}
-		if challenge, active := windowShoppingState(a, time.Now()); active && achievementRequested(payload, challenge) {
-			states = pbBytesField(states, 1, challenge.encode())
+		for _, rule := range challengeRules.Rules {
+			if challenge, _, active := rule.current(a, time.Now()); active && achievementRequested(payload, challenge) {
+				states = pbBytesField(states, 1, challenge.encode())
+			}
 		}
 		return structTaskReply(task, pbBytesField(states, 2, nil))
 

@@ -140,8 +140,8 @@ func TestCTRRichPresenceRoundTrip(t *testing.T) {
 	if n := binary.LittleEndian.Uint32(ask(1800000119)[17:21]); n != 1 {
 		t.Fatalf("online friend presence missing: %d results", n)
 	}
-	if n := binary.LittleEndian.Uint32(ask(1800999999)[17:21]); n != 0 {
-		t.Fatalf("offline player reported present: %d results", n)
+	if rows, ids := rpRows(t, ask(1800999999)); len(rows) != 1 || ids[0] != 1800999999 || rows[0].flag != 0 || len(rows[0].data) != 0 {
+		t.Fatalf("offline lookup was not resolved safely: %+v", rows)
 	}
 }
 

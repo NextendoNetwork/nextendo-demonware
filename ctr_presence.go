@@ -117,14 +117,17 @@ func (l *lobbyConn) onRichPresence(task byte, r *bdReader) []byte {
 			if id == 0 {
 				id = me
 			}
-			// Presence kept for a player who left would advertise a joinable
-			// game that no longer exists.
-			if id != me && !live[id] {
-				continue
+			// A lookup resolves every requested account, including offline users.
+			// Omitting an offline account leaves the caller with no resolved state
+			// and can provoke repeated unsubscribe/get-and-subscribe requests.
+			// Never return retained join data for a disconnected account.
+			p := richPresence{platform: a.platform}
+			if id == me || live[id] {
+				if stored, ok := rich[id]; ok {
+					p = stored
+				}
 			}
-			if p, ok := rich[id]; ok {
-				hits = append(hits, hit{id, p})
-			}
+			hits = append(hits, hit{id, p})
 		}
 		richMu.Unlock()
 		l.logf("richpresence GET ctx=%q %d demande(s) -> %d presence(s)", ctx, len(ids), len(hits))

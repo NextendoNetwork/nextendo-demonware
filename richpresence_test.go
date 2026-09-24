@@ -89,9 +89,9 @@ func TestRichPresenceSetAndGet(t *testing.T) {
 	if len(rows) != 1 || string(rows[0].data) != "hello" || rows[0].flag != 1 || ids[0] != alice.PID {
 		t.Fatalf("got %+v ids %v", rows, ids)
 	}
-	// nothing for someone who set no presence, or is not online
+	// Explicit offline states for someone with no published presence or who is offline.
 	rows, _ = rpRows(t, lb.onRichPresence(rpGet, &bdReader{b: rpGetRequest("", bob.PID, 999)}))
-	if len(rows) != 0 {
+	if len(rows) != 2 || rows[0].flag != 0 || rows[1].flag != 0 || len(rows[0].data) != 0 || len(rows[1].data) != 0 {
 		t.Fatalf("unexpected rows %+v", rows)
 	}
 	// id 0 means the asker
@@ -109,7 +109,7 @@ func TestRichPresenceGoneWhenThePlayerLeaves(t *testing.T) {
 	la.onRichPresence(rpSet, &bdReader{b: rpSetRequest("", 0, "", 1, []byte("x"))})
 
 	dropOnline(1)
-	if rows, _ := rpRows(t, lb.onRichPresence(rpGet, &bdReader{b: rpGetRequest("", alice.PID)})); len(rows) != 0 {
+	if rows, _ := rpRows(t, lb.onRichPresence(rpGet, &bdReader{b: rpGetRequest("", alice.PID)})); len(rows) != 1 || rows[0].flag != 0 || len(rows[0].data) != 0 {
 		t.Fatalf("a player who left is still shown: %+v", rows)
 	}
 	richMu.Lock()

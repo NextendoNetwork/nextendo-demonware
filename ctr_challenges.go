@@ -34,7 +34,10 @@ var windowShopping = func() windowShoppingRule {
 
 // Completion time and coin credit are committed in the same account file.
 type challengeCompletion struct {
-	Completed uint64 `json:"completed"`
+	Completed uint64            `json:"completed"`
+	Progress  uint64            `json:"progress,omitempty"`
+	Receipts  map[string]uint64 `json:"receipts,omitempty"`
+	Distinct  map[string]bool   `json:"distinct,omitempty"`
 }
 
 func windowShoppingState(a *economyAccount, now time.Time) (ctrAchievementState, bool) {

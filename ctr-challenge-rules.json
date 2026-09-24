@@ -1,0 +1,6232 @@
+{
+  "cycle_start": 1585234800,
+  "cycle_seconds": 7257600,
+  "rules": [
+    {
+      "name": "catch_gwumpa_daily",
+      "id": 251,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 259200,
+          "end": 345600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 864000,
+          "end": 950400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1468800,
+          "end": 1555200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2678400,
+          "end": 2764800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3283200,
+          "end": 3369600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4406400,
+          "end": 4492800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5011200,
+          "end": 5097600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6220800,
+          "end": 6307200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6825600,
+          "end": 6912000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "collect_X_ring_ring_race_CHARACTER_daily",
+      "id": 223,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 3715200,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dingodile"
+            ]
+          }
+        },
+        {
+          "start": 4060800,
+          "end": 4147200,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nitros Oxide"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4320000,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Krunk"
+            ]
+          }
+        },
+        {
+          "start": 4665600,
+          "end": 4752000,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Isabella"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 4924800,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        },
+        {
+          "start": 5270400,
+          "end": 5356800,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 5529600,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Coco Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 5875200,
+          "end": 5961600,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ripper Roo"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6134400,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Isabella"
+            ]
+          }
+        },
+        {
+          "start": 6480000,
+          "end": 6566400,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Big Norm"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 6739200,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Komodo Joe"
+            ]
+          }
+        },
+        {
+          "start": 7084800,
+          "end": 7171200,
+          "target": 1,
+          "x": 75.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Komodo Moe"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "collect_X_wumpas_single_race_multiplayer",
+      "id": 241,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 172800,
+          "end": 259200,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 259200,
+          "end": 345600,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 777600,
+          "end": 864000,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 864000,
+          "end": 950400,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1382400,
+          "end": 1468800,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1468800,
+          "end": 1555200,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1987200,
+          "end": 2073600,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2073600,
+          "end": 2160000,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2592000,
+          "end": 2678400,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2678400,
+          "end": 2764800,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3196800,
+          "end": 3283200,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3283200,
+          "end": 3369600,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3888000,
+          "end": 3974400,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4492800,
+          "end": 4579200,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5097600,
+          "end": 5184000,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5702400,
+          "end": 5788800,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6307200,
+          "end": 6393600,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6912000,
+          "end": 6998400,
+          "target": 1,
+          "x": 20.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_CTR_challenge_TRACKNAME",
+      "id": 58,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 0,
+          "end": 86400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t212_jungle_boogie"
+            ]
+          }
+        },
+        {
+          "start": 432000,
+          "end": 518400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 604800,
+          "end": 691200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t132_tiger_temple"
+            ]
+          }
+        },
+        {
+          "start": 1036800,
+          "end": 1123200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1296000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        },
+        {
+          "start": 1641600,
+          "end": 1728000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 1900800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        },
+        {
+          "start": 2246400,
+          "end": 2332800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 2505600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t121_slide_coliseum"
+            ]
+          }
+        },
+        {
+          "start": 2851200,
+          "end": 2937600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t211_inferno_island"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3110400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 3456000,
+          "end": 3542400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        },
+        {
+          "start": 3888000,
+          "end": 3974400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        },
+        {
+          "start": 4492800,
+          "end": 4579200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t242_android_alley"
+            ]
+          }
+        },
+        {
+          "start": 5097600,
+          "end": 5184000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t501_july_world_tour"
+            ]
+          }
+        },
+        {
+          "start": 5702400,
+          "end": 5788800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t508_toxic"
+            ]
+          }
+        },
+        {
+          "start": 6307200,
+          "end": 6393600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t221_meteor_gorge"
+            ]
+          }
+        },
+        {
+          "start": 6912000,
+          "end": 6998400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t153_hot_air_skyway"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_cup_race",
+      "id": 45,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 172800,
+          "end": 259200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "crashCup"
+            ]
+          }
+        },
+        {
+          "start": 777600,
+          "end": 864000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "desertcup"
+            ]
+          }
+        },
+        {
+          "start": 1382400,
+          "end": 1468800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "lostCup"
+            ]
+          }
+        },
+        {
+          "start": 1987200,
+          "end": 2073600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "ukaCup"
+            ]
+          }
+        },
+        {
+          "start": 2592000,
+          "end": 2678400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "akuCup"
+            ]
+          }
+        },
+        {
+          "start": 3196800,
+          "end": 3283200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "akuCup"
+            ]
+          }
+        },
+        {
+          "start": 3888000,
+          "end": 3974400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "desertcup"
+            ]
+          }
+        },
+        {
+          "start": 4492800,
+          "end": 4579200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "akuCup"
+            ]
+          }
+        },
+        {
+          "start": 5097600,
+          "end": 5184000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "lostCup"
+            ]
+          }
+        },
+        {
+          "start": 5702400,
+          "end": 5788800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "spacecup"
+            ]
+          }
+        },
+        {
+          "start": 6307200,
+          "end": 6393600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "veloCup"
+            ]
+          }
+        },
+        {
+          "start": 6912000,
+          "end": 6998400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Cup": [
+              "crashCup"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_in_mirror_mode_TRACKNAME",
+      "id": 55,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 3715200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t134_dingo_canyon"
+            ]
+          }
+        },
+        {
+          "start": 4060800,
+          "end": 4147200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t154_oxide_station"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4320000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t211_inferno_island"
+            ]
+          }
+        },
+        {
+          "start": 4665600,
+          "end": 4752000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t121_slide_coliseum"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 4924800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t241_assembly_lane"
+            ]
+          }
+        },
+        {
+          "start": 5270400,
+          "end": 5356800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t243_electron_avenue"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 5529600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 5875200,
+          "end": 5961600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6134400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t122_turbo_track"
+            ]
+          }
+        },
+        {
+          "start": 6480000,
+          "end": 6566400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t233_thunder_struck"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 6739200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        },
+        {
+          "start": 7084800,
+          "end": 7171200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_matchmaking_race_CHARACTER_daily",
+      "id": 240,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 0,
+          "end": 86400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Krunk"
+            ]
+          }
+        },
+        {
+          "start": 432000,
+          "end": 518400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Coco Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 604800,
+          "end": 691200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pura"
+            ]
+          }
+        },
+        {
+          "start": 1036800,
+          "end": 1123200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nina Cortex"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1296000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ripper Roo"
+            ]
+          }
+        },
+        {
+          "start": 1641600,
+          "end": 1728000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Penta Penguin"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 1900800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Papu Papu"
+            ]
+          }
+        },
+        {
+          "start": 2246400,
+          "end": 2332800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Crash Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 2505600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Liz"
+            ]
+          }
+        },
+        {
+          "start": 2851200,
+          "end": 2937600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3110400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Coco Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 3456000,
+          "end": 3542400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Komodo Joe"
+            ]
+          }
+        },
+        {
+          "start": 3715200,
+          "end": 3801600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Spyro"
+            ]
+          }
+        },
+        {
+          "start": 3974400,
+          "end": 4060800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Crash Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 4147200,
+          "end": 4233600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Krunk"
+            ]
+          }
+        },
+        {
+          "start": 4320000,
+          "end": 4406400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pura"
+            ]
+          }
+        },
+        {
+          "start": 4579200,
+          "end": 4665600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Big Norm"
+            ]
+          }
+        },
+        {
+          "start": 4752000,
+          "end": 4838400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ami"
+            ]
+          }
+        },
+        {
+          "start": 4924800,
+          "end": 5011200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Chick"
+            ]
+          }
+        },
+        {
+          "start": 5184000,
+          "end": 5270400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Papu Papu"
+            ]
+          }
+        },
+        {
+          "start": 5356800,
+          "end": 5443200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Penta Penguin"
+            ]
+          }
+        },
+        {
+          "start": 5529600,
+          "end": 5616000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 5788800,
+          "end": 5875200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Small Norm"
+            ]
+          }
+        },
+        {
+          "start": 5961600,
+          "end": 6048000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Polar"
+            ]
+          }
+        },
+        {
+          "start": 6134400,
+          "end": 6220800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Lab Assistant"
+            ]
+          }
+        },
+        {
+          "start": 6393600,
+          "end": 6480000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 6566400,
+          "end": 6652800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 6739200,
+          "end": 6825600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Baby Coco"
+            ]
+          }
+        },
+        {
+          "start": 6998400,
+          "end": 7084800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dr. Neo Cortex"
+            ]
+          }
+        },
+        {
+          "start": 7171200,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Real Velo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_multiplayers_without_using_powerup",
+      "id": 42,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 3715200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4060800,
+          "end": 4147200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4233600,
+          "end": 4320000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4665600,
+          "end": 4752000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4838400,
+          "end": 4924800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5270400,
+          "end": 5356800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 5529600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5875200,
+          "end": 5961600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6048000,
+          "end": 6134400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6480000,
+          "end": 6566400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 6739200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 7084800,
+          "end": 7171200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_race_without_hit_crate_multiplayer",
+      "id": 243,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 86400,
+          "end": 172800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 345600,
+          "end": 432000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 518400,
+          "end": 604800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 691200,
+          "end": 777600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 950400,
+          "end": 1036800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1123200,
+          "end": 1209600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1296000,
+          "end": 1382400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1555200,
+          "end": 1641600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1728000,
+          "end": 1814400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1900800,
+          "end": 1987200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2160000,
+          "end": 2246400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2332800,
+          "end": 2419200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2505600,
+          "end": 2592000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2764800,
+          "end": 2851200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2937600,
+          "end": 3024000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3110400,
+          "end": 3196800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3369600,
+          "end": 3456000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3542400,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3801600,
+          "end": 3888000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4406400,
+          "end": 4492800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5011200,
+          "end": 5097600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5616000,
+          "end": 5702400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6220800,
+          "end": 6307200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6825600,
+          "end": 6912000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_relic_race_TRACKNAME",
+      "id": 49,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 86400,
+          "end": 172800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t114_sewer_speedway"
+            ]
+          }
+        },
+        {
+          "start": 345600,
+          "end": 432000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t501_july_world_tour"
+            ]
+          }
+        },
+        {
+          "start": 518400,
+          "end": 604800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t233_thunder_struck"
+            ]
+          }
+        },
+        {
+          "start": 691200,
+          "end": 777600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t241_assembly_lane"
+            ]
+          }
+        },
+        {
+          "start": 950400,
+          "end": 1036800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t243_electron_avenue"
+            ]
+          }
+        },
+        {
+          "start": 1123200,
+          "end": 1209600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t113_mystery_caves"
+            ]
+          }
+        },
+        {
+          "start": 1296000,
+          "end": 1382400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t122_turbo_track"
+            ]
+          }
+        },
+        {
+          "start": 1555200,
+          "end": 1641600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t152_cortex_castle"
+            ]
+          }
+        },
+        {
+          "start": 1728000,
+          "end": 1814400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t506_luminous"
+            ]
+          }
+        },
+        {
+          "start": 1900800,
+          "end": 1987200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t151_ngin_labs"
+            ]
+          }
+        },
+        {
+          "start": 2160000,
+          "end": 2246400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t222_barin_ruins"
+            ]
+          }
+        },
+        {
+          "start": 2332800,
+          "end": 2419200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t501_july_world_tour"
+            ]
+          }
+        },
+        {
+          "start": 2505600,
+          "end": 2592000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t503_september_spyro"
+            ]
+          }
+        },
+        {
+          "start": 2764800,
+          "end": 2851200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t231_out_of_time"
+            ]
+          }
+        },
+        {
+          "start": 2937600,
+          "end": 3024000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t508_toxic"
+            ]
+          }
+        },
+        {
+          "start": 3110400,
+          "end": 3196800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t144_tiny_arena"
+            ]
+          }
+        },
+        {
+          "start": 3369600,
+          "end": 3456000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t134_dingo_canyon"
+            ]
+          }
+        },
+        {
+          "start": 3542400,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t502_back_in_time"
+            ]
+          }
+        },
+        {
+          "start": 3801600,
+          "end": 3888000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 4406400,
+          "end": 4492800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t144_tiny_arena"
+            ]
+          }
+        },
+        {
+          "start": 5011200,
+          "end": 5097600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t151_ngin_labs"
+            ]
+          }
+        },
+        {
+          "start": 5616000,
+          "end": 5702400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 6220800,
+          "end": 6307200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t505_nitro_festival"
+            ]
+          }
+        },
+        {
+          "start": 6825600,
+          "end": 6912000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_time_trial",
+      "id": 8,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 259200,
+          "end": 345600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 864000,
+          "end": 950400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1468800,
+          "end": 1555200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2073600,
+          "end": 2160000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2678400,
+          "end": 2764800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3283200,
+          "end": 3369600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3715200,
+          "end": 3801600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3974400,
+          "end": 4060800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4147200,
+          "end": 4233600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4320000,
+          "end": 4406400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4579200,
+          "end": 4665600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4752000,
+          "end": 4838400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4924800,
+          "end": 5011200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5184000,
+          "end": 5270400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5356800,
+          "end": 5443200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5529600,
+          "end": 5616000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5788800,
+          "end": 5875200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5961600,
+          "end": 6048000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6134400,
+          "end": 6220800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6393600,
+          "end": 6480000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6566400,
+          "end": 6652800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6739200,
+          "end": 6825600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6998400,
+          "end": 7084800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 7171200,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_X_Laps_ring_race_TRACKNAME_daily",
+      "id": 233,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 172800,
+          "end": 259200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t153_hot_air_skyway"
+            ]
+          }
+        },
+        {
+          "start": 777600,
+          "end": 864000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        },
+        {
+          "start": 1382400,
+          "end": 1468800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t232_clockwork_wumpa"
+            ]
+          }
+        },
+        {
+          "start": 1987200,
+          "end": 2073600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t223_deep_sea_driving"
+            ]
+          }
+        },
+        {
+          "start": 2592000,
+          "end": 2678400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t213_tiny_temple"
+            ]
+          }
+        },
+        {
+          "start": 3196800,
+          "end": 3283200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t242_android_alley"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "drift_for_X_seconds_consecutively",
+      "id": 44,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 86400,
+          "end": 172800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 345600,
+          "end": 432000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 518400,
+          "end": 604800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 691200,
+          "end": 777600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 950400,
+          "end": 1036800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1123200,
+          "end": 1209600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1296000,
+          "end": 1382400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1555200,
+          "end": 1641600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1728000,
+          "end": 1814400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1900800,
+          "end": 1987200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2160000,
+          "end": 2246400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2332800,
+          "end": 2419200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2505600,
+          "end": 2592000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2764800,
+          "end": 2851200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2937600,
+          "end": 3024000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3110400,
+          "end": 3196800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3369600,
+          "end": 3456000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3542400,
+          "end": 3628800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3628800,
+          "end": 3715200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4060800,
+          "end": 4147200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4233600,
+          "end": 4320000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4665600,
+          "end": 4752000,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4838400,
+          "end": 4924800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5270400,
+          "end": 5356800,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 5529600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5875200,
+          "end": 5961600,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6048000,
+          "end": 6134400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6480000,
+          "end": 6566400,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 6739200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 7084800,
+          "end": 7171200,
+          "target": 1,
+          "x": 3.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "finish_podium_without_using_boostpad_TRACKNAME",
+      "id": 39,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 0,
+          "end": 86400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t212_jungle_boogie"
+            ]
+          }
+        },
+        {
+          "start": 432000,
+          "end": 518400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 604800,
+          "end": 691200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t132_tiger_temple"
+            ]
+          }
+        },
+        {
+          "start": 1036800,
+          "end": 1123200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1296000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        },
+        {
+          "start": 1641600,
+          "end": 1728000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 1900800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        },
+        {
+          "start": 2246400,
+          "end": 2332800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 2505600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t121_slide_coliseum"
+            ]
+          }
+        },
+        {
+          "start": 2851200,
+          "end": 2937600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t211_inferno_island"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3110400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 3456000,
+          "end": 3542400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "finish_TRACKNAME_in_less_than_X_min",
+      "id": 14,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 3715200,
+          "target": 1,
+          "x": 130.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t134_dingo_canyon"
+            ]
+          }
+        },
+        {
+          "start": 3888000,
+          "end": 3974400,
+          "target": 1,
+          "x": 156.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        },
+        {
+          "start": 4060800,
+          "end": 4147200,
+          "target": 1,
+          "x": 250.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t154_oxide_station"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4320000,
+          "target": 1,
+          "x": 135.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t211_inferno_island"
+            ]
+          }
+        },
+        {
+          "start": 4492800,
+          "end": 4579200,
+          "target": 1,
+          "x": 235.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t242_android_alley"
+            ]
+          }
+        },
+        {
+          "start": 4665600,
+          "end": 4752000,
+          "target": 1,
+          "x": 155.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t121_slide_coliseum"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 4924800,
+          "target": 1,
+          "x": 225.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t241_assembly_lane"
+            ]
+          }
+        },
+        {
+          "start": 5097600,
+          "end": 5184000,
+          "target": 1,
+          "x": 200.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t501_july_world_tour"
+            ]
+          }
+        },
+        {
+          "start": 5270400,
+          "end": 5356800,
+          "target": 1,
+          "x": 305.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t243_electron_avenue"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 5529600,
+          "target": 1,
+          "x": 115.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 5702400,
+          "end": 5788800,
+          "target": 1,
+          "x": 171.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t508_toxic"
+            ]
+          }
+        },
+        {
+          "start": 5875200,
+          "end": 5961600,
+          "target": 1,
+          "x": 110.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6134400,
+          "target": 1,
+          "x": 165.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t122_turbo_track"
+            ]
+          }
+        },
+        {
+          "start": 6307200,
+          "end": 6393600,
+          "target": 1,
+          "x": 135.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t221_meteor_gorge"
+            ]
+          }
+        },
+        {
+          "start": 6480000,
+          "end": 6566400,
+          "target": 1,
+          "x": 220.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t233_thunder_struck"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 6739200,
+          "target": 1,
+          "x": 125.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        },
+        {
+          "start": 6912000,
+          "end": 6998400,
+          "target": 1,
+          "x": 240.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t153_hot_air_skyway"
+            ]
+          }
+        },
+        {
+          "start": 7084800,
+          "end": 7171200,
+          "target": 1,
+          "x": 156.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "hit_a_multiplayers_opponent_with_a_powerup",
+      "id": 36,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3801600,
+          "end": 3888000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4406400,
+          "end": 4492800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5011200,
+          "end": 5097600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5616000,
+          "end": 5702400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6220800,
+          "end": 6307200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6825600,
+          "end": 6912000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "perform_T_stunt_jumps_with_CHARACTERS",
+      "id": 26,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 3888000,
+          "end": 3974400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Megamix"
+            ]
+          }
+        },
+        {
+          "start": 4492800,
+          "end": 4579200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        },
+        {
+          "start": 5097600,
+          "end": 5184000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Megumi"
+            ]
+          }
+        },
+        {
+          "start": 5702400,
+          "end": 5788800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Emperor Velo XXVII"
+            ]
+          }
+        },
+        {
+          "start": 6307200,
+          "end": 6393600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 6912000,
+          "end": 6998400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pinstripe"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "perform_T_stunt_jumps_with_CHARACTERS_multiplayer",
+      "id": 242,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 259200,
+          "end": 345600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 864000,
+          "end": 950400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Polar"
+            ]
+          }
+        },
+        {
+          "start": 1468800,
+          "end": 1555200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Real Velo"
+            ]
+          }
+        },
+        {
+          "start": 2073600,
+          "end": 2160000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "N. Brio"
+            ]
+          }
+        },
+        {
+          "start": 2678400,
+          "end": 2764800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nitros Oxide"
+            ]
+          }
+        },
+        {
+          "start": 3283200,
+          "end": 3369600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ebenezer Von Clutch"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "perform_T_stunts_jumps_TRACKNAME",
+      "id": 53,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 172800,
+          "end": 259200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t153_hot_air_skyway"
+            ]
+          }
+        },
+        {
+          "start": 777600,
+          "end": 864000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        },
+        {
+          "start": 1382400,
+          "end": 1468800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t232_clockwork_wumpa"
+            ]
+          }
+        },
+        {
+          "start": 1987200,
+          "end": 2073600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t223_deep_sea_driving"
+            ]
+          }
+        },
+        {
+          "start": 2592000,
+          "end": 2678400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t213_tiny_temple"
+            ]
+          }
+        },
+        {
+          "start": 3196800,
+          "end": 3283200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t242_android_alley"
+            ]
+          }
+        },
+        {
+          "start": 3715200,
+          "end": 3801600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t503_september_spyro"
+            ]
+          }
+        },
+        {
+          "start": 3974400,
+          "end": 4060800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 4147200,
+          "end": 4233600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t212_jungle_boogie"
+            ]
+          }
+        },
+        {
+          "start": 4320000,
+          "end": 4406400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t132_tiger_temple"
+            ]
+          }
+        },
+        {
+          "start": 4579200,
+          "end": 4665600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t232_clockwork_wumpa"
+            ]
+          }
+        },
+        {
+          "start": 4752000,
+          "end": 4838400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t114_sewer_speedway"
+            ]
+          }
+        },
+        {
+          "start": 4924800,
+          "end": 5011200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t506_luminous"
+            ]
+          }
+        },
+        {
+          "start": 5184000,
+          "end": 5270400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        },
+        {
+          "start": 5356800,
+          "end": 5443200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 5529600,
+          "end": 5616000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t223_deep_sea_driving"
+            ]
+          }
+        },
+        {
+          "start": 5788800,
+          "end": 5875200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t231_out_of_time"
+            ]
+          }
+        },
+        {
+          "start": 5961600,
+          "end": 6048000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t143_polar_pass"
+            ]
+          }
+        },
+        {
+          "start": 6134400,
+          "end": 6220800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t113_mystery_caves"
+            ]
+          }
+        },
+        {
+          "start": 6393600,
+          "end": 6480000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t213_tiny_temple"
+            ]
+          }
+        },
+        {
+          "start": 6566400,
+          "end": 6652800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t222_barin_ruins"
+            ]
+          }
+        },
+        {
+          "start": 6739200,
+          "end": 6825600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t502_back_in_time"
+            ]
+          }
+        },
+        {
+          "start": 6998400,
+          "end": 7084800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t152_cortex_castle"
+            ]
+          }
+        },
+        {
+          "start": 7171200,
+          "end": 7257600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t255_hyper_spaceway"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "score_X_points_ring_race_TRACKNAME_daily",
+      "id": 219,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 259200,
+          "end": 345600,
+          "target": 1,
+          "x": 95000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t221_meteor_gorge"
+            ]
+          }
+        },
+        {
+          "start": 864000,
+          "end": 950400,
+          "target": 1,
+          "x": 125000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t143_polar_pass"
+            ]
+          }
+        },
+        {
+          "start": 1468800,
+          "end": 1555200,
+          "target": 1,
+          "x": 100000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t255_hyper_spaceway"
+            ]
+          }
+        },
+        {
+          "start": 2073600,
+          "end": 2160000,
+          "target": 1,
+          "x": 150000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 2678400,
+          "end": 2764800,
+          "target": 1,
+          "x": 190000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t154_oxide_station"
+            ]
+          }
+        },
+        {
+          "start": 3283200,
+          "end": 3369600,
+          "target": 1,
+          "x": 70000.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t505_nitro_festival"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "use_shortcut_CHARACTER",
+      "id": 50,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 172800,
+          "end": 259200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pinstripe"
+            ]
+          }
+        },
+        {
+          "start": 777600,
+          "end": 864000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Megamix"
+            ]
+          }
+        },
+        {
+          "start": 1382400,
+          "end": 1468800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Small Norm"
+            ]
+          }
+        },
+        {
+          "start": 1987200,
+          "end": 2073600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 2592000,
+          "end": 2678400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 3196800,
+          "end": 3283200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "use_shortcut_TRACKNAME",
+      "id": 51,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 0,
+          "end": 86400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t212_jungle_boogie"
+            ]
+          }
+        },
+        {
+          "start": 432000,
+          "end": 518400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 604800,
+          "end": 691200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t132_tiger_temple"
+            ]
+          }
+        },
+        {
+          "start": 1036800,
+          "end": 1123200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1296000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        },
+        {
+          "start": 1641600,
+          "end": 1728000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 1900800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        },
+        {
+          "start": 2246400,
+          "end": 2332800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 2505600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t121_slide_coliseum"
+            ]
+          }
+        },
+        {
+          "start": 2851200,
+          "end": 2937600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t211_inferno_island"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3110400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t131_coco_park"
+            ]
+          }
+        },
+        {
+          "start": 3456000,
+          "end": 3542400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        },
+        {
+          "start": 3715200,
+          "end": 3801600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t503_september_spyro"
+            ]
+          }
+        },
+        {
+          "start": 3974400,
+          "end": 4060800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 4147200,
+          "end": 4233600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t212_jungle_boogie"
+            ]
+          }
+        },
+        {
+          "start": 4320000,
+          "end": 4406400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t132_tiger_temple"
+            ]
+          }
+        },
+        {
+          "start": 4579200,
+          "end": 4665600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t232_clockwork_wumpa"
+            ]
+          }
+        },
+        {
+          "start": 4752000,
+          "end": 4838400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t114_sewer_speedway"
+            ]
+          }
+        },
+        {
+          "start": 4924800,
+          "end": 5011200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t506_luminous"
+            ]
+          }
+        },
+        {
+          "start": 5184000,
+          "end": 5270400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        },
+        {
+          "start": 5356800,
+          "end": 5443200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 5529600,
+          "end": 5616000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t223_deep_sea_driving"
+            ]
+          }
+        },
+        {
+          "start": 5788800,
+          "end": 5875200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t231_out_of_time"
+            ]
+          }
+        },
+        {
+          "start": 5961600,
+          "end": 6048000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t143_polar_pass"
+            ]
+          }
+        },
+        {
+          "start": 6134400,
+          "end": 6220800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t113_mystery_caves"
+            ]
+          }
+        },
+        {
+          "start": 6393600,
+          "end": 6480000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t213_tiny_temple"
+            ]
+          }
+        },
+        {
+          "start": 6566400,
+          "end": 6652800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t222_barin_ruins"
+            ]
+          }
+        },
+        {
+          "start": 6739200,
+          "end": 6825600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t502_back_in_time"
+            ]
+          }
+        },
+        {
+          "start": 6998400,
+          "end": 7084800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t152_cortex_castle"
+            ]
+          }
+        },
+        {
+          "start": 7171200,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t255_hyper_spaceway"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "win_mirror_mode_CHARACTER",
+      "id": 31,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 86400,
+          "end": 172800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Zam"
+            ]
+          }
+        },
+        {
+          "start": 345600,
+          "end": 432000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tawna"
+            ]
+          }
+        },
+        {
+          "start": 518400,
+          "end": 604800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Big Norm"
+            ]
+          }
+        },
+        {
+          "start": 691200,
+          "end": 777600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        },
+        {
+          "start": 950400,
+          "end": 1036800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Geary"
+            ]
+          }
+        },
+        {
+          "start": 1123200,
+          "end": 1209600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Isabella"
+            ]
+          }
+        },
+        {
+          "start": 1296000,
+          "end": 1382400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Megumi"
+            ]
+          }
+        },
+        {
+          "start": 1555200,
+          "end": 1641600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dr. Neo Cortex"
+            ]
+          }
+        },
+        {
+          "start": 1728000,
+          "end": 1814400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Hasty"
+            ]
+          }
+        },
+        {
+          "start": 1900800,
+          "end": 1987200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dr. N.Gin"
+            ]
+          }
+        },
+        {
+          "start": 2160000,
+          "end": 2246400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 2332800,
+          "end": 2419200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ami"
+            ]
+          }
+        },
+        {
+          "start": 2505600,
+          "end": 2592000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Spyro"
+            ]
+          }
+        },
+        {
+          "start": 2764800,
+          "end": 2851200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Big Norm"
+            ]
+          }
+        },
+        {
+          "start": 2937600,
+          "end": 3024000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Emperor Velo XXVII"
+            ]
+          }
+        },
+        {
+          "start": 3110400,
+          "end": 3196800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 3369600,
+          "end": 3456000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dingodile"
+            ]
+          }
+        },
+        {
+          "start": 3542400,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Baby T"
+            ]
+          }
+        },
+        {
+          "start": 3715200,
+          "end": 3801600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Spyro"
+            ]
+          }
+        },
+        {
+          "start": 3801600,
+          "end": 3888000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nina Cortex"
+            ]
+          }
+        },
+        {
+          "start": 3974400,
+          "end": 4060800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Crash Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 4147200,
+          "end": 4233600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Krunk"
+            ]
+          }
+        },
+        {
+          "start": 4320000,
+          "end": 4406400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pura"
+            ]
+          }
+        },
+        {
+          "start": 4406400,
+          "end": 4492800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 4579200,
+          "end": 4665600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Big Norm"
+            ]
+          }
+        },
+        {
+          "start": 4752000,
+          "end": 4838400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ami"
+            ]
+          }
+        },
+        {
+          "start": 4924800,
+          "end": 5011200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Chick"
+            ]
+          }
+        },
+        {
+          "start": 5011200,
+          "end": 5097600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dr. N.Gin"
+            ]
+          }
+        },
+        {
+          "start": 5184000,
+          "end": 5270400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Papu Papu"
+            ]
+          }
+        },
+        {
+          "start": 5356800,
+          "end": 5443200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Penta Penguin"
+            ]
+          }
+        },
+        {
+          "start": 5529600,
+          "end": 5616000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 5616000,
+          "end": 5702400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "N. Brio"
+            ]
+          }
+        },
+        {
+          "start": 5788800,
+          "end": 5875200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Small Norm"
+            ]
+          }
+        },
+        {
+          "start": 5961600,
+          "end": 6048000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Polar"
+            ]
+          }
+        },
+        {
+          "start": 6134400,
+          "end": 6220800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Lab Assistant"
+            ]
+          }
+        },
+        {
+          "start": 6220800,
+          "end": 6307200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tawna"
+            ]
+          }
+        },
+        {
+          "start": 6393600,
+          "end": 6480000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Tiny Tiger"
+            ]
+          }
+        },
+        {
+          "start": 6566400,
+          "end": 6652800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nash"
+            ]
+          }
+        },
+        {
+          "start": 6739200,
+          "end": 6825600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Baby Coco"
+            ]
+          }
+        },
+        {
+          "start": 6825600,
+          "end": 6912000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Crash Bandicoot"
+            ]
+          }
+        },
+        {
+          "start": 6998400,
+          "end": 7084800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Dr. Neo Cortex"
+            ]
+          }
+        },
+        {
+          "start": 7171200,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Real Velo"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "visit_pit_stop",
+      "id": 11,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 0,
+          "end": 86400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 86400,
+          "end": 172800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 345600,
+          "end": 432000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 432000,
+          "end": 518400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 518400,
+          "end": 604800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 604800,
+          "end": 691200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 691200,
+          "end": 777600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 950400,
+          "end": 1036800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1036800,
+          "end": 1123200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1123200,
+          "end": 1209600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1296000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1296000,
+          "end": 1382400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1555200,
+          "end": 1641600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1641600,
+          "end": 1728000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1728000,
+          "end": 1814400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 1900800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1900800,
+          "end": 1987200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2160000,
+          "end": 2246400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2246400,
+          "end": 2332800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2332800,
+          "end": 2419200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 2505600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2505600,
+          "end": 2592000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2764800,
+          "end": 2851200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2851200,
+          "end": 2937600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2937600,
+          "end": 3024000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3110400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3110400,
+          "end": 3196800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3369600,
+          "end": 3456000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3456000,
+          "end": 3542400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3542400,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "break_T_crates_with_ghost_TRACKNAME_theme",
+      "id": 201,
+      "kind": 3,
+      "reward": 25,
+      "periods": [
+        {
+          "start": 2073600,
+          "end": 2160000,
+          "target": 20,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 3801600,
+          "end": 3888000,
+          "target": 20,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 5616000,
+          "end": 5702400,
+          "target": 20,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "accumulate_T_air_time",
+      "id": 95,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "accumulate_T_air_time_with_CHARACTER",
+      "id": 107,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Crunch"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Koala Kong"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Hunter"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "accumulate_T_air_time_with_KARTNAME",
+      "id": 96,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Dragonfly"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Rocket"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Nostalginator"
+            ]
+          }
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Daredevil"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Trikee"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 200,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "The Nuke"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "break_up_T_crates",
+      "id": 72,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "catch_T_gwumpa_weekly",
+      "id": 250,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "collect_T_crystals",
+      "id": 74,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 75,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_T_laps_TRACKNAMES",
+      "id": 101,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t141_blizzard_bluff"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t242_android_alley"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t501_july_world_tour"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t507_dry_land"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t134_dingo_canyon"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t112_roos_tubes"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_T_laps_TRACKNAMES_2",
+      "id": 102,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t504_october_spooky"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t153_hot_air_skyway"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t122_turbo_track"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t111_crash_cove"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t255_hyper_spaceway"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 12,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t508_toxic"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_T_laps_with_CHARACTERS_2_multiplayer",
+      "id": 238,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Stew"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Yaya Panda"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Komodo Moe"
+            ]
+          }
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Ripper Roo"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Baby N. Tropy"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Spyro"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_T_laps_with_CHARACTERS_3_multiplayer",
+      "id": 239,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Fake Crash"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Pasadena O'possum"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Zam"
+            ]
+          }
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Papu Papu"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Fixed Rilla Roo"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Nina Cortex"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_T_laps_with_CHARACTERS_multiplayer",
+      "id": 237,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Chick"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Isabella"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Zem"
+            ]
+          }
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Lab Assistant"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Megumi"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 6,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Character": [
+              "Hasty"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_T_multiplayers_race_with_KARTNAMES",
+      "id": 98,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Le Chaux"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Dusty Rider"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Skull Rider"
+            ]
+          }
+        },
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Imperium"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Galactic Cruiser"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 8,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Phantom"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "destroy_T_powerups_with_powerup_weekly",
+      "id": 76,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "finish_T_races_while_juiced_up_weekly",
+      "id": 194,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 15,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 15,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 15,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "hit_T_akuaku_characters",
+      "id": 106,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "hit_T_ukauka_characters",
+      "id": 67,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 25,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "play_race_against_one_of_your_friend",
+      "id": 80,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "play_T_games_capturetheflag_TRACKNAME",
+      "id": 77,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a135_rampage_ruins"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a192_the_north_bowl"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a254_terra_drome"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "play_T_games_crystalgrab_TRACKNAME",
+      "id": 75,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a214_temple_turmoil"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a214_temple_turmoil"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 5,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a145_rocky_road"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "play_T_games_lastkartdriving_TRACKNAME",
+      "id": 104,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a155_nitro_court"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a115_skull_rock"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a155_nitro_court"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "play_T_games_limitbattle_TRACKNAME",
+      "id": 100,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a191_parking_lot"
+            ]
+          }
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a234_desert_storm"
+            ]
+          }
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a191_parking_lot"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "starts_T_race_with_start_boost",
+      "id": 88,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4233600,
+          "end": 4838400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 5443200,
+          "end": 6048000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 6652800,
+          "end": 7257600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "use_juiced_up_powerups_T_times",
+      "id": 83,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "win_game_in_T_different_battles_TRACKNAME",
+      "id": 38,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 0,
+          "end": 604800,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a191_parking_lot"
+            ]
+          }
+        },
+        {
+          "start": 604800,
+          "end": 1209600,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a192_the_north_bowl"
+            ]
+          }
+        },
+        {
+          "start": 1209600,
+          "end": 1814400,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a224_frozen_frenzy"
+            ]
+          }
+        },
+        {
+          "start": 1814400,
+          "end": 2419200,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a155_nitro_court"
+            ]
+          }
+        },
+        {
+          "start": 2419200,
+          "end": 3024000,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a135_rampage_ruins"
+            ]
+          }
+        },
+        {
+          "start": 3024000,
+          "end": 3628800,
+          "target": 3,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "a115_skull_rock"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "win_T_solo_races_with_KARTNAMES",
+      "id": 94,
+      "kind": 4,
+      "reward": 75,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 4233600,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Candy Cone",
+              "Void Manta",
+              "Nitro Sleigh"
+            ]
+          }
+        },
+        {
+          "start": 4838400,
+          "end": 5443200,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Spyromobile",
+              "Snowplower",
+              "Candy Cone"
+            ]
+          }
+        },
+        {
+          "start": 6048000,
+          "end": 6652800,
+          "target": 10,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Kart": [
+              "Probulot 2000",
+              "Gnasty Ride",
+              "Six-Pipes"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "beat_dev_ghost",
+      "id": 245,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 0,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "beat_velo_ghost_TRACKNAME",
+      "id": 253,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t142_dragon_mines"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "collect_X_ring_ring_race_TRACKNAME_pro",
+      "id": 226,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 0,
+          "end": 3628800,
+          "target": 1,
+          "x": 575.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t243_electron_avenue"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete_X_consecutive_laps_in_blue_fire",
+      "id": 143,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 0,
+          "end": 3628800,
+          "target": 1,
+          "x": 4.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "complete_X_Laps_ring_race_TRACKNAME_pro",
+      "id": 234,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 7257600,
+          "target": 1,
+          "x": 12.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t133_papus_pyramid"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "do_a_lap_under_X_in_TRACKNAME",
+      "id": 165,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 7257600,
+          "target": 1,
+          "x": 37.0,
+          "y": 0.0,
+          "filters": {
+            "Track": [
+              "t232_clockwork_wumpa"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "do_X_perfect_drift_boost_in_a_row",
+      "id": 147,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 0,
+          "end": 3628800,
+          "target": 1,
+          "x": 25.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "win_multiplayers_race_while_8th_place_at_start_second_lap",
+      "id": 140,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 3628800,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    },
+    {
+      "name": "win_multiplayers_without_using_powerup",
+      "id": 146,
+      "kind": 5,
+      "reward": 200,
+      "periods": [
+        {
+          "start": 0,
+          "end": 3628800,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        },
+        {
+          "start": 3628800,
+          "end": 7257600,
+          "target": 1,
+          "x": 0.0,
+          "y": 0.0,
+          "filters": {}
+        }
+      ]
+    }
+  ]
+}
