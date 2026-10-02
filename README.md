@@ -188,3 +188,8 @@ What this server does not do, and what has not been checked. Read this before re
 Everything specific to Diablo III (ticket layout, lobby handshake and crypto, task reply format, the service/task map) was reverse-engineered from the game binary; the addresses and layouts are documented in the source comments.
 
 Crash Team Racing Nitro-Fueled (title 5775): the server code for it is **[CollectingW](https://github.com/CollectingW)**'s, from the [`crash-team-racing` branch of CollectingW/diablo-3](https://github.com/CollectingW/diablo-3/tree/crash-team-racing) (pull request #1 of `nx-mod/diablo-3`). It is merged here as sent; its comments and log strings have since been translated to English throughout. The reverse engineering of CTR's Demonware behaviour is theirs.
+
+## License
+
+Released under the **[PolyForm Shield License 1.0.0](LICENSE.md)**, source-available: read, use,
+modify, and self-host, but do not use it to provide a product that competes with Nextendo Network.
